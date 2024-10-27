@@ -4,6 +4,8 @@
  */
 package forms;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Marko
@@ -128,6 +130,9 @@ public class LoginForm extends javax.swing.JFrame {
         if(txtMail.getText().contains("admin") && txtPassword.getText().contains("admin")){
             new MainForm().setVisible(true);
             this.dispose(); //dispose sluzi samo da ubije trenutnu formu
+        }
+        else if (txtMail.getText().contains("") || txtPassword.getText().contains("")){
+            JOptionPane.showMessageDialog(this, "Niste popunili polje za mejl ili šifru", "Greška!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

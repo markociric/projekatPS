@@ -121,12 +121,12 @@ public class RegisterForm extends javax.swing.JDialog {
                             .addGap(32, 32, 32)
                             .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(32, 32, 32)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
                             .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +145,7 @@ public class RegisterForm extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblError))
+                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboSex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -171,7 +171,25 @@ public class RegisterForm extends javax.swing.JDialog {
     }//GEN-LAST:event_txtMailActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        JOptionPane.showMessageDialog(this, "Success");
+        String s = "Da li su ovo zaista Vaši podaci? \n" 
+                + txtName.getText() + "\n" 
+                + txtLastName.getText() + "\n" 
+                + txtMail.getText() + "\n" 
+                + comboSex.getSelectedItem().toString() +"\n"
+                + txtPassword.getText() +"\n";
+        int response = JOptionPane.showConfirmDialog(this, s, "Provera podataka", JOptionPane.YES_NO_CANCEL_OPTION);
+        switch (response) {
+            case JOptionPane.YES_OPTION:
+                JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali!" + comboSex.getSelectedItem().toString());
+                break;
+            case JOptionPane.NO_OPTION:
+                JOptionPane.showMessageDialog(this, "Have a nice day!");
+                break;
+            case JOptionPane.CANCEL_OPTION:
+                JOptionPane.showMessageDialog(this, "Canceled!");
+                break;
+        }
+        this.dispose();
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     /**
