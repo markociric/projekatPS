@@ -22,6 +22,8 @@ public class RegisterForm extends javax.swing.JDialog {
      */
     public RegisterForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.setSize(600,400);
+        this.setLocationRelativeTo(null);
         initComponents();
         addListeners();
     }
@@ -160,7 +162,7 @@ public class RegisterForm extends javax.swing.JDialog {
                     .addComponent(txtRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addComponent(btnRegister)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         pack();
@@ -171,26 +173,44 @@ public class RegisterForm extends javax.swing.JDialog {
     }//GEN-LAST:event_txtMailActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+       String out="";
+        if (txtName.getText().equals("") 
+                || txtLastName.getText().equals("")
+                || txtMail.getText().equals("")
+                || txtPassword.getText().equals("")
+                || txtRepeatPassword.getText().equals("")
+           )
+        {
+            out = out + "Niste popunili sva polja\n";
+        }
+        if(txtPassword.getText().equals(txtRepeatPassword.getText()))
+        {
+        } 
+        else{
+                out = out + "Šifre se ne podudaraju\n";
+        }
+        if(!out.equals("")){
+            JOptionPane.showMessageDialog(this, out, "Greška!", JOptionPane.ERROR_MESSAGE);
+        } else{
+      
         String s = "Da li su ovo zaista Vaši podaci? \n" 
                 + txtName.getText() + "\n" 
                 + txtLastName.getText() + "\n" 
                 + txtMail.getText() + "\n" 
                 + comboSex.getSelectedItem().toString() +"\n"
                 + txtPassword.getText() +"\n";
-        int response = JOptionPane.showConfirmDialog(this, s, "Provera podataka", JOptionPane.YES_NO_CANCEL_OPTION);
+        int response = JOptionPane.showConfirmDialog(this, s, "Provera podataka", JOptionPane.YES_NO_OPTION);
         switch (response) {
             case JOptionPane.YES_OPTION:
-                JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali!" + comboSex.getSelectedItem().toString());
+                JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali!");
                 break;
             case JOptionPane.NO_OPTION:
-                JOptionPane.showMessageDialog(this, "Have a nice day!");
-                break;
-            case JOptionPane.CANCEL_OPTION:
-                JOptionPane.showMessageDialog(this, "Canceled!");
+                JOptionPane.showMessageDialog(this, "Registracija neuspešna :(");
                 break;
         }
         this.dispose();
     }//GEN-LAST:event_btnRegisterActionPerformed
+}
 
     /**
      * @param args the command line arguments

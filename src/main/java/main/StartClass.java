@@ -10,11 +10,9 @@ import forms.LoginForm;
  *
  * @author Marko
  */
-public class StartForm {
-    
-    
-    public static void main(String[] args){
-       new LoginForm().setVisible(true);
-        
+public class StartClass {
+    public static void main(String[] args) {
+               new LoginForm().setVisible(true);
+
     }
 }
