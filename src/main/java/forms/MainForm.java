@@ -15,8 +15,7 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form MainForm
      */
     public MainForm() {
-        this.setSize(600,800);
-        this.setLocationRelativeTo(null);
+       
         initComponents();
     }
 
@@ -49,7 +48,6 @@ public class MainForm extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

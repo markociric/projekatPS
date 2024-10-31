@@ -4,9 +4,19 @@
  */
 package forms;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -16,7 +26,7 @@ import javax.swing.text.BadLocationException;
  * @author Marko
  */
 public class RegisterForm extends javax.swing.JDialog {
-
+private final String EMAIL_REGEX = "^[a-z0-9.]+@[a-z]{1,20}\\.[a-z]{2,6}$";
     /**
      * Creates new form RegisterForm
      */
@@ -43,15 +53,16 @@ public class RegisterForm extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         comboSex = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        txtRepeatPassword = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtLastName = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         lblError = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JPasswordField();
+        txtRepeatPassword = new javax.swing.JPasswordField();
+        checkBoxPassword = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,6 +98,8 @@ public class RegisterForm extends javax.swing.JDialog {
 
         lblError.setForeground(new java.awt.Color(255, 0, 51));
 
+        checkBoxPassword.setText("prikaži šifru");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,38 +109,42 @@ public class RegisterForm extends javax.swing.JDialog {
                 .addComponent(btnRegister)
                 .addGap(265, 265, 265))
             .addGroup(layout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(125, 125, 125)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(87, 87, 87)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(18, 18, 18))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(comboSex, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(32, 32, 32)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(comboSex, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtRepeatPassword)))
                 .addGap(18, 18, 18)
-                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkBoxPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -148,21 +165,22 @@ public class RegisterForm extends javax.swing.JDialog {
                     .addComponent(jLabel4)
                     .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboSex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkBoxPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(txtRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addComponent(btnRegister)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         pack();
@@ -182,12 +200,23 @@ public class RegisterForm extends javax.swing.JDialog {
            )
         {
             out = out + "Niste popunili sva polja\n";
+            ArrayList<JTextField> textFields = new ArrayList<>();
+            textFields.add(txtName);
+            textFields.add(txtLastName);
+            textFields.add(txtMail);
+            textFields.add(txtPassword);
+            textFields.add(txtRepeatPassword);
+            validateTextFields(textFields);
+
         }
         if(txtPassword.getText().equals(txtRepeatPassword.getText()))
         {
         } 
         else{
                 out = out + "Šifre se ne podudaraju\n";
+        }
+        if(!lblError.getText().isEmpty()){
+            out = out + "Loš unos mail-a.";
         }
         if(!out.equals("")){
             JOptionPane.showMessageDialog(this, out, "Greška!", JOptionPane.ERROR_MESSAGE);
@@ -211,7 +240,7 @@ public class RegisterForm extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnRegisterActionPerformed
 }
-
+   
     /**
      * @param args the command line arguments
      */
@@ -219,6 +248,7 @@ public class RegisterForm extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegister;
+    private javax.swing.JCheckBox checkBoxPassword;
     private javax.swing.JComboBox<String> comboSex;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
@@ -231,20 +261,26 @@ public class RegisterForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtLastName;
     private javax.swing.JTextField txtMail;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtRepeatPassword;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JPasswordField txtRepeatPassword;
     // End of variables declaration//GEN-END:variables
 
+     public boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
     private void addListeners() {
+        
        txtMail.getDocument().addDocumentListener(new DocumentListener() {
         private void validate(DocumentEvent e) {
                 try {
                     String text =  e.getDocument().getText(0,e.getDocument().getLength());
-                    if(text.contains("@")){
+                    if(isValidEmail(text)){
                         lblError.setText("");
                     }
                     else{
-                        lblError.setText("Morate uneti znak @.");
+                        lblError.setText("Loš format email-a");
                     }
                 } catch (BadLocationException ex) {
                     Logger.getLogger(RegisterForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -268,6 +304,40 @@ public class RegisterForm extends javax.swing.JDialog {
            }
     
                });
-       
+               checkBoxPassword.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showPassword();
+                }
+
+           private void showPassword() {
+               if (checkBoxPassword.isSelected()) {
+                    String password = new String(txtPassword.getPassword());
+                    txtPassword.setText(password); 
+                    txtPassword.setEchoChar((char) 0); 
+                   
+                } 
+               else {
+                    txtPassword.setEchoChar('\u2022');
+                }
+           }
+                });
+
                }
+
+    private void validateTextFields(ArrayList<JTextField> textFields) {  
+        Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+
+        for (JTextField textField : textFields) {
+            if (textField.getText().trim().isEmpty()) {
+                textField.setBorder(redBorder); 
+                textField.setBackground(new Color(255,224, 203));
+            } else {
+                textField.setBorder(UIManager.getBorder("TextField.border")); 
+                textField.setBackground(Color.WHITE);
+            }
+        }
+    }
+
+  
 }
