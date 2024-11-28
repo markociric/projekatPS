@@ -60,7 +60,7 @@ public class MainForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1920, 980));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Vozač");
 
         btnInsert.setText("Kreiraj");
@@ -104,29 +104,27 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 550, Short.MAX_VALUE)
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnInsert)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnUpdate)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSave)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton4)))
-                        .addGap(15, 15, 15))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton4))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(274, 274, 274)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 357, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -135,20 +133,16 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(123, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnInsert)
-                            .addComponent(btnUpdate)
-                            .addComponent(btnSave)
-                            .addComponent(jButton4))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnInsert)
+                        .addComponent(btnUpdate)
+                        .addComponent(btnSave)
+                        .addComponent(jButton4)))
+                .addGap(47, 47, 47)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         pack();
@@ -211,7 +205,6 @@ public class MainForm extends javax.swing.JFrame {
             System.out.println("Konekcija sa bazom podataka uspesno uspostavljena!");
 
             Otpreminca otpremnica = new Otpreminca(1L, "10.23.4321.");
-            //Brisanje GRADA sa zadatim ZIP kodom
             String query = "UPDATE otpremnice SET idOtpremnica = ?, datum = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setLong(1, otpremnica.getIdOtpremnica());
@@ -238,40 +231,7 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-                Connection connection=null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/projsoft-projekat";
-            String user = "root";
-            String password = "";
-            connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Konekcija sa bazom podataka uspesno uspostavljena!");
-
-            //Prikazi sve gradove
-            String query = "SELECT * FROM otpremnice ORDER BY idOtpremnica";
-            Statement s = connection.createStatement();  
-            ResultSet rs =  s.executeQuery(query);
-            while(rs.next()){
-              Long idOtpremnica = rs.getLong("idOtpremnica");
-              String datum = rs.getString(2);
-                    System.out.println(idOtpremnica + "\t" + datum);
-                }
-            rs.close();
-            s.close();
-        } catch (SQLException ex) {
-            System.out.println("Desila se greska: " + ex.getMessage());
-        } finally{
-            try {
-                if(connection!=null && !connection.isClosed()){
-                    connection.close();
-                    System.out.println("Konekcija sa bazom uspesno raskinuta!");
-                }
-            } catch (SQLException ex) {
-                System.out.println("Greska! Konekcija sa bazom nije uspesno raskinuta!\n"+ex.getMessage());
-            }
-            
-        }
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInsert;

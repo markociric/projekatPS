@@ -145,9 +145,10 @@ public class LoginForm extends javax.swing.JFrame  {
             MainForm mf = new MainForm(listUser);
                     mf.setVisible(true);
                     mf.setLocationRelativeTo(null);
-                  //  mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                   mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.dispose(); //dispose sluzi samo da ubije trenutnu formu
-        } 
+        }
+          
         else{
             JOptionPane.showMessageDialog(this, "Loše uneti parametri", "Greška!", JOptionPane.ERROR_MESSAGE);
         }
