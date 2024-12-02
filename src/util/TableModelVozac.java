@@ -39,7 +39,7 @@ public class TableModelVozac extends AbstractTableModel {
             case 1:
                 return v.getPhoneNumber();
             case 2:
-                return v.getMail();
+                return v.getEmail();
             default:
                 return "n/a";
         }

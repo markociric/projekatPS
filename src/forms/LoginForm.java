@@ -42,12 +42,13 @@ public class LoginForm extends javax.swing.JFrame  {
 
         jLabel1 = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnRegister = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txtMail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
+        checkBoxPassword = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,18 +62,24 @@ public class LoginForm extends javax.swing.JFrame  {
             }
         });
 
-        jButton2.setText("Registruj se");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnRegister.setText("Registruj se");
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnRegisterActionPerformed(evt);
             }
         });
 
         jLabel2.setText("E-mail");
 
+        txtMail.setText("admin");
+
         jLabel3.setText("Šifra");
 
+        txtPassword.setText("admin");
+
         jLabel4.setText("Nemate nalog?");
+
+        checkBoxPassword.setText("prikazi sifru");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -84,18 +91,20 @@ public class LoginForm extends javax.swing.JFrame  {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btnRegister)
                         .addGap(16, 16, 16))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(227, 227, 227))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(212, 212, 212)
-                            .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(212, 212, 212)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addComponent(checkBoxPassword))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(295, 295, 295)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -105,7 +114,7 @@ public class LoginForm extends javax.swing.JFrame  {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(273, 273, 273)
                         .addComponent(btnLogin)))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,12 +128,14 @@ public class LoginForm extends javax.swing.JFrame  {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkBoxPassword))
                 .addGap(38, 38, 38)
                 .addComponent(btnLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
+                    .addComponent(btnRegister)
                     .addComponent(jLabel4))
                 .addGap(20, 20, 20))
         );
@@ -132,11 +143,11 @@ public class LoginForm extends javax.swing.JFrame  {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         RegisterForm rf = new RegisterForm(this, true);
         rf.setVisible(true);
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         List<User> listUsers = Controller.getInstance().getListUsers();
@@ -145,10 +156,9 @@ public class LoginForm extends javax.swing.JFrame  {
             MainForm mf = new MainForm(listUser);
                     mf.setVisible(true);
                     mf.setLocationRelativeTo(null);
-                   mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            this.dispose(); //dispose sluzi samo da ubije trenutnu formu
-        }
-          
+                    mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    this.dispose(); //dispose sluzi samo da ubije trenutnu formu
+        } 
         else{
             JOptionPane.showMessageDialog(this, "Loše uneti parametri", "Greška!", JOptionPane.ERROR_MESSAGE);
         }
@@ -163,7 +173,8 @@ public class LoginForm extends javax.swing.JFrame  {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnRegister;
+    private javax.swing.JCheckBox checkBoxPassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -198,6 +209,8 @@ public class LoginForm extends javax.swing.JFrame  {
                 btnLogin.setEnabled(allFilled);
             }
         });
-    }
+    } 
+          Controller.getInstance().checkboxChecked(checkBoxPassword, txtPassword);
+    
     }          
 }

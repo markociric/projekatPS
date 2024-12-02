@@ -4,24 +4,15 @@
  */
 package forms;
 
+import com.mysql.cj.xdevapi.UpdateParams;
 import controller.Controller;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import util.Otpreminca;
+import util.Otpremnica;
+import util.TableModelOtpremnica;
 import util.TableModelVozac;
 import util.User;
 import util.Vozac;
-
 
 /**
  *
@@ -36,7 +27,8 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         JOptionPane.showMessageDialog(this, "Dobrodosli: " + user.getMail());
         jLabel5.setText("Ulogovani korisnik: " + user.getMail());
-        fillTable();
+        fillTableVozac();
+        fillTableOtpremnica();
     }
 
     /**
@@ -49,24 +41,27 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        btnInsert = new javax.swing.JButton();
+        btnCreate = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        btnDetails = new javax.swing.JButton();
+        btnUpdateO = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1920, 980));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Vozač");
 
-        btnInsert.setText("Kreiraj");
-        btnInsert.addActionListener(new java.awt.event.ActionListener() {
+        btnCreate.setText("Kreiraj");
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInsertActionPerformed(evt);
+                btnCreateActionPerformed(evt);
             }
         });
 
@@ -77,12 +72,10 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        btnSave.setText("Obradi");
-
-        jButton4.setText("Obriši");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setText("Obriši");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -99,6 +92,36 @@ public class MainForm extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable2);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setText("Otpreminca");
+
+        btnDetails.setText("Detalji");
+        btnDetails.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailsActionPerformed(evt);
+            }
+        });
+
+        btnUpdateO.setText("Azuriraj");
+        btnUpdateO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateOActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,22 +132,25 @@ public class MainForm extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
                                 .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnInsert)
+                                .addGap(157, 157, 157)
+                                .addComponent(btnCreate)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnUpdate)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnSave)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton4))
+                                .addComponent(btnDelete))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(274, 274, 274)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 357, Short.MAX_VALUE)))
+                                .addComponent(jLabel2)
+                                .addGap(33, 33, 33)
+                                .addComponent(btnDetails)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnUpdateO)))
+                        .addGap(0, 463, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -132,121 +158,128 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnInsert)
-                        .addComponent(btnUpdate)
-                        .addComponent(btnSave)
-                        .addComponent(jButton4)))
-                .addGap(47, 47, 47)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(182, Short.MAX_VALUE))
+                    .addComponent(btnCreate)
+                    .addComponent(btnUpdate)
+                    .addComponent(btnDelete))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnDetails)
+                    .addComponent(btnUpdateO))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Connection connection=null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/projsoft-projekat";
-            String user = "root";
-            String password = "";
-            connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Konekcija sa bazom podataka uspesno uspostavljena!");
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
 
-            Otpreminca otpremnica = new Otpreminca(2L, "21.24.2313.");
-            //Brisanje GRADA sa zadatim ZIP kodom
-            String query = "DELETE FROM otpremnice WHERE idOtpremnica = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setLong(1, otpremnica.getIdOtpremnica());
-            ps.executeUpdate();
-            ps.close();
-            
-        
-        } catch (SQLException ex) {
-            System.out.println("Desila se greska: " + ex.getMessage());
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+        List<Vozac> listVozac = Controller.getInstance().getListVozac();
+        Vozac deleteVozac = listVozac.get(selectedRow);
+        boolean result = Controller.getInstance().deleteVozac(deleteVozac);
 
-    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
-         Connection connection=null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/projsoft-projekat";
-            String user = "root";
-            String password = "";
-            connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Konekcija sa bazom podataka uspesno uspostavljena!");
+        if (result) {
+            JOptionPane.showMessageDialog(this, "uspesno izbrisan vozac");
 
-            Otpreminca otpremnica = new Otpreminca(2L, "21.24.2313.");
-            //Brisanje GRADA sa zadatim ZIP kodom
-            String query = "INSERT INTO otpremnice VALUES(?,?)";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setLong(1, otpremnica.getIdOtpremnica());
-            ps.setString(2, otpremnica.getDatum());
-            ps.executeUpdate();
-            ps.close();
-            
-        
-        } catch (SQLException ex) {
-            System.out.println("Desila se greska: " + ex.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(this, "greska pri brisanju iz baze", "greska", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnInsertActionPerformed
+        fillTableVozac();
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        Controller.getInstance().createVozac();
+        fillTableVozac();
+    }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        Connection connection=null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/projsoft-projekat";
-            String user = "root";
-            String password = "";
-            connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Konekcija sa bazom podataka uspesno uspostavljena!");
+        int selectedRow = jTable1.getSelectedRow();
 
-            Otpreminca otpremnica = new Otpreminca(1L, "10.23.4321.");
-            String query = "UPDATE otpremnice SET idOtpremnica = ?, datum = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setLong(1, otpremnica.getIdOtpremnica());
-            ps.setString(2, otpremnica.getDatum());
-            ps.executeUpdate();
-            ps.close();
-            
-        
-        } catch (SQLException ex) {
-            System.out.println("Desila se greska: " + ex.getMessage());
-        } finally{
-            try {
-                if(connection!=null && !connection.isClosed()){
-                    connection.close();
-                    System.out.println("Konekcija sa bazom uspesno raskinuta!");
-                }
-            } catch (SQLException ex) {
-                System.out.println("Greska! Konekcija sa bazom nije uspesno raskinuta!\n"+ex.getMessage());
-            }
-            
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        List<Vozac> listVozac = Controller.getInstance().getListVozac();
+        Vozac updateVozac = listVozac.get(selectedRow);
+
+        UpdateVozacForm u = new UpdateVozacForm(this, true, updateVozac);
+        u.setLocationRelativeTo(null);
+        u.setVisible(true);
+
+        fillTableVozac();
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
+        int selectedRow = jTable2.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
+        Otpremnica otpremnica = listOtpremnica.get(selectedRow);
+
+        DetailsOtpremnicaForm otpremnicaForm = new DetailsOtpremnicaForm(this, true, otpremnica);
+        otpremnicaForm.setLocationRelativeTo(null);
+        otpremnicaForm.setVisible(true);
+    }//GEN-LAST:event_btnDetailsActionPerformed
+
+    private void btnUpdateOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOActionPerformed
+        int selectedRow = jTable2.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
+        Otpremnica otpremnica = listOtpremnica.get(selectedRow);
+
+        UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(this, true, otpremnica);
+        otpremnicaForm.setLocationRelativeTo(null);
+        otpremnicaForm.setVisible(true);
+    }//GEN-LAST:event_btnUpdateOActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnInsert;
-    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnDetails;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnUpdateO;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 
-    private void fillTable() {
+    private void fillTableVozac() {
         List<Vozac> listVozac = Controller.getInstance().getListVozac();
         TableModelVozac tmv = new TableModelVozac(listVozac);
         jTable1.setModel(tmv);
+    }
+
+    private void fillTableOtpremnica() {
+        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
+        TableModelOtpremnica tmo = new TableModelOtpremnica(listOtpremnica);
+        jTable2.setModel(tmo);
     }
 }

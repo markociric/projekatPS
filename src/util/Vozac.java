@@ -13,18 +13,18 @@ public class Vozac {
     private String nameVozac;
     private String lastNameVozac;
     private String phoneNumber;
-    private String mail;
+    private String email;
     private String password;
 
     public Vozac() {
     }
 
-    public Vozac(int idVozac, String nameVozac, String lastNameVozac, String phoneNumber, String mail, String password) {
+    public Vozac(int idVozac, String nameVozac, String lastNameVozac, String phoneNumber, String email, String password) {
         this.idVozac = idVozac;
         this.nameVozac = nameVozac;
         this.lastNameVozac = lastNameVozac;
         this.phoneNumber = phoneNumber;
-        this.mail = mail;
+        this.email = email;
         this.password = password;
     }
 
@@ -60,12 +60,12 @@ public class Vozac {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
