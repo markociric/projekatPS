@@ -5,6 +5,7 @@
 package forms;
 
 import controller.Controller;
+import java.util.List;
 import util.Otpremnica;
 
 /**
@@ -48,7 +49,12 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
         txtPhoneNU.setText(otpremnica.getNarucilacUsluge().getPhone());
         txtNameLastNameV.setText(otpremnica.getVozac().getNameVozac() + " " + otpremnica.getVozac().getLastNameVozac());
         txtMailV.setText(otpremnica.getVozac().getEmail());
-        txtDriverType.setText("treba da uradim");
+        List<String> vehicles= Controller.getInstance().getVzVV(otpremnica.getVozac().getIdVozac());
+        String v ="";
+        for (String vehicle : vehicles) {
+            v = v + " "+ vehicle;
+        }
+        txtDriverType.setText(v);
         txtPhoneV.setText(otpremnica.getVozac().getPhoneNumber());
     }
 

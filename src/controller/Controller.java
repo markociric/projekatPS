@@ -251,6 +251,12 @@ public class Controller {
         int y = c.get(Calendar.YEAR);
         return d + "." + m + "." + y + ".";
     }
+
+    public  List<String> getVzVV(int idVozac) {
+        return dbb.getVzVV(idVozac);
+    }
+
+    
     
     
 }

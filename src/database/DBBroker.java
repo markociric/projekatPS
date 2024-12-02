@@ -159,4 +159,20 @@ public class DBBroker {
         return list;
     }
 
+    public List<String> getVzVV(int idVozac) {
+        List<String> list = new ArrayList<>();
+        String query = "SELECT vv.vehicle FROM vozac v JOIN vzvv vz ON v.idVozac = vz.idVozac JOIN vrsta_vozaca vv ON vz.idVrstaVozaca = vv.idVrstaVozaca WHERE v.idVozac = "+idVozac;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                String vehicle = rs.getString(1);
+                list.add(vehicle);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
 }

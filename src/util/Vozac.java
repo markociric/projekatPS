@@ -15,6 +15,7 @@ public class Vozac {
     private String phoneNumber;
     private String email;
     private String password;
+    
 
     public Vozac() {
     }
@@ -26,6 +27,7 @@ public class Vozac {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
+       
     }
 
     public int getIdVozac() {
@@ -75,7 +77,5 @@ public class Vozac {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
     
 }
