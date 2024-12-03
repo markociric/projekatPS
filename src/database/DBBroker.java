@@ -18,6 +18,8 @@ import util.Mesto;
 import util.NarucilacUsluge;
 import util.Otpremnica;
 import util.Vozac;
+import util.VrstaVozaca;
+import util.VzVV;
 
 /**
  *
@@ -125,7 +127,7 @@ public class DBBroker {
                 //ovde treba ucitati sve za otpremnicu
                 int idOtpremnica = rs.getInt("o.idOtpremnica");
                 Date datum = rs.getDate("o.date");
-                
+
                 int idVozac = rs.getInt("v.idVozac");
                 String nameVozac = rs.getString("v.nameVozac");
                 String lastNameVozac = rs.getString("v.lastNameVozac");
@@ -133,11 +135,11 @@ public class DBBroker {
                 String mail = rs.getString("v.mail");
                 String pass = rs.getString("v.password");
                 Vozac v = new Vozac(idVozac, nameVozac, lastNameVozac, phoneNumber, mail, pass);
-                
+
                 int idNarucilacUsluge = rs.getInt("nu.idNarucilacUsluge");
                 String name = rs.getString("nu.name");
                 String lastName = rs.getString("nu.lastName");
-                String phone= rs.getString("nu.phone");
+                String phone = rs.getString("nu.phone");
                 String email = rs.getString("nu.email");
                 String adress = rs.getString("nu.adress");
 
@@ -145,13 +147,13 @@ public class DBBroker {
                 int zipcode = rs.getInt("m.zipcode");
                 String location = rs.getString("m.location");
                 Mesto mesto = new Mesto(idMesto, location, zipcode);
-                
+
                 NarucilacUsluge n = new NarucilacUsluge(idNarucilacUsluge, name, lastName, adress, phone, email, mesto);
-                
+
                 Otpremnica o = new Otpremnica(idOtpremnica, datum, v, n);
-                
+
                 list.add(o);
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,9 +161,10 @@ public class DBBroker {
         return list;
     }
 
-    public List<String> getVzVV(int idVozac) {
+    public List<String> getVehicles(int idVozac) {
         List<String> list = new ArrayList<>();
-        String query = "SELECT vv.vehicle FROM vozac v JOIN vzvv vz ON v.idVozac = vz.idVozac JOIN vrsta_vozaca vv ON vz.idVrstaVozaca = vv.idVrstaVozaca WHERE v.idVozac = "+idVozac;
+        String query = "SELECT vv.vehicle, vv.driverLicence FROM vozac v JOIN vzvv vz ON v.idVozac = vz.idVozac JOIN vrsta_vozaca vv ON vz.idVrstaVozaca = vv.idVrstaVozaca WHERE v.idVozac = " + idVozac;
+
         try {
             Statement s = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = s.executeQuery(query);
@@ -173,6 +176,59 @@ public class DBBroker {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+
+    public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
+        String query = "DELETE FROM otpremnica WHERE idOtpremnica=?";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, deleteOtpremnica.getIdOtpremnica());
+            int result = ps.executeUpdate();
+            if (result == 1) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public List<VzVV> getVzVV(int idVozac) {
+        List<VzVV> list = new ArrayList<>();
+        String query = "SELECT * FROM vzvv WHERE idVozac=" + idVozac;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+
+                int idVrstaVozaca = rs.getInt("idVrstaVozaca");
+                Date expireDateLicence = rs.getDate("expireDateLicence");
+                VzVV vzVV = new VzVV(idVozac, idVrstaVozaca, expireDateLicence);
+                list.add(vzVV);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public VrstaVozaca findVrstaVozaca(int idVrstaVozaca) {
+        VrstaVozaca result = new VrstaVozaca();
+        String query = "SELECT vehicle, driverLicence FROM vrsta_vozaca WHERE idVrstaVozaca=" + idVrstaVozaca;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) { 
+            String driverLicence = rs.getString("driverLicence");
+             String vehicle = rs.getString("vehicle");
+             return new VrstaVozaca(idVrstaVozaca, driverLicence, vehicle);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
     }
 
 }

@@ -4,7 +4,7 @@
  */
 package forms;
 
-import com.mysql.cj.xdevapi.UpdateParams;
+
 import controller.Controller;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -22,11 +22,14 @@ public class MainForm extends javax.swing.JFrame {
 
     /**
      * Creates new form MainForm
+     * @param user
      */
     public MainForm(User user) {
         initComponents();
         JOptionPane.showMessageDialog(this, "Dobrodosli: " + user.getMail());
         jLabel5.setText("Ulogovani korisnik: " + user.getMail());
+        jTable1.setShowGrid (false);
+        jTable2.setShowGrid (false);
         fillTableVozac();
         fillTableOtpremnica();
     }
@@ -41,9 +44,9 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        btnCreate = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
+        btnCreateV = new javax.swing.JButton();
+        btnUpdateV = new javax.swing.JButton();
+        btnDeleteV = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -52,30 +55,34 @@ public class MainForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnDetails = new javax.swing.JButton();
         btnUpdateO = new javax.swing.JButton();
+        btnDetailsV = new javax.swing.JButton();
+        btnCreateO = new javax.swing.JButton();
+        btnDeleteO = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Vozač");
 
-        btnCreate.setText("Kreiraj");
-        btnCreate.addActionListener(new java.awt.event.ActionListener() {
+        btnCreateV.setText("Kreiraj");
+        btnCreateV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateActionPerformed(evt);
+                btnCreateVActionPerformed(evt);
             }
         });
 
-        btnUpdate.setText("Azuriraj");
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdateV.setText("Azuriraj");
+        btnUpdateV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                btnUpdateVActionPerformed(evt);
             }
         });
 
-        btnDelete.setText("Obriši");
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+        btnDeleteV.setText("Obriši");
+        btnDeleteV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                btnDeleteVActionPerformed(evt);
             }
         });
 
@@ -106,7 +113,7 @@ public class MainForm extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTable2);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setText("Otpreminca");
+        jLabel2.setText("Otpremnica");
 
         btnDetails.setText("Detalji");
         btnDetails.addActionListener(new java.awt.event.ActionListener() {
@@ -122,36 +129,65 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        btnDetailsV.setText("Detalji");
+        btnDetailsV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailsVActionPerformed(evt);
+            }
+        });
+
+        btnCreateO.setText("Kreiraj");
+        btnCreateO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateOActionPerformed(evt);
+            }
+        });
+
+        btnDeleteO.setText("Obriši");
+        btnDeleteO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteOActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("treba dodati u azuriraj za vozaca vrstu vozaca da izabere");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(157, 157, 157)
-                                .addComponent(btnCreate)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdate)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnDelete))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(33, 33, 33)
-                                .addComponent(btnDetails)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdateO)))
-                        .addGap(0, 463, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(67, 67, 67)
+                        .addComponent(btnDetailsV)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCreateV)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdateV)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDeleteV))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(32, 32, 32)
+                        .addComponent(btnDetails)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCreateO)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdateO)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDeleteO))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addGap(64, 64, 64)
+                .addComponent(jLabel3)
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,25 +197,33 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(btnCreate)
-                    .addComponent(btnUpdate)
-                    .addComponent(btnDelete))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+                    .addComponent(btnCreateV)
+                    .addComponent(btnUpdateV)
+                    .addComponent(btnDeleteV)
+                    .addComponent(btnDetailsV))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(96, 96, 96)
+                        .addComponent(jLabel3)))
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(btnDetails)
-                    .addComponent(btnUpdateO))
+                    .addComponent(btnCreateO)
+                    .addComponent(btnUpdateO)
+                    .addComponent(btnDeleteO))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnDeleteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteVActionPerformed
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -198,14 +242,14 @@ public class MainForm extends javax.swing.JFrame {
         }
         fillTableVozac();
 
-    }//GEN-LAST:event_btnDeleteActionPerformed
+    }//GEN-LAST:event_btnDeleteVActionPerformed
 
-    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+    private void btnCreateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateVActionPerformed
         Controller.getInstance().createVozac();
         fillTableVozac();
-    }//GEN-LAST:event_btnCreateActionPerformed
+    }//GEN-LAST:event_btnCreateVActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateVActionPerformed
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -220,7 +264,7 @@ public class MainForm extends javax.swing.JFrame {
         u.setVisible(true);
 
         fillTableVozac();
-    }//GEN-LAST:event_btnUpdateActionPerformed
+    }//GEN-LAST:event_btnUpdateVActionPerformed
 
     private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
         int selectedRow = jTable2.getSelectedRow();
@@ -252,18 +296,61 @@ public class MainForm extends javax.swing.JFrame {
         otpremnicaForm.setVisible(true);
     }//GEN-LAST:event_btnUpdateOActionPerformed
 
+    private void btnDetailsVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsVActionPerformed
+      int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<Vozac> listVozac = Controller.getInstance().getListVozac();
+        Vozac vozac = listVozac.get(selectedRow);
+
+        DetailsVozacForm vozacForm = new DetailsVozacForm(this, true, vozac);
+        vozacForm.setLocationRelativeTo(null);
+        vozacForm.setVisible(true);
+    }//GEN-LAST:event_btnDetailsVActionPerformed
+
+    private void btnCreateOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCreateOActionPerformed
+
+    private void btnDeleteOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOActionPerformed
+       int selectedRow = jTable2.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
+        Otpremnica deleteOtpremnica = listOtpremnica.get(selectedRow);
+        boolean result = Controller.getInstance().deleteOtpremnica(deleteOtpremnica);
+
+        if (result) {
+            JOptionPane.showMessageDialog(this, "uspesno izbrisana otpremnica");
+
+        } else {
+            JOptionPane.showMessageDialog(this, "greska pri brisanju iz baze", "greska", JOptionPane.ERROR_MESSAGE);
+        }
+        fillTableOtpremnica();
+    }//GEN-LAST:event_btnDeleteOActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCreate;
-    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnCreateO;
+    private javax.swing.JButton btnCreateV;
+    private javax.swing.JButton btnDeleteO;
+    private javax.swing.JButton btnDeleteV;
     private javax.swing.JButton btnDetails;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnDetailsV;
     private javax.swing.JButton btnUpdateO;
+    private javax.swing.JButton btnUpdateV;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

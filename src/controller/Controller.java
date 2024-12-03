@@ -29,6 +29,8 @@ import javax.swing.text.BadLocationException;
 import util.Otpremnica;
 import util.User;
 import util.Vozac;
+import util.VrstaVozaca;
+import util.VzVV;
 
 /**
  *
@@ -252,9 +254,23 @@ public class Controller {
         return d + "." + m + "." + y + ".";
     }
 
-    public  List<String> getVzVV(int idVozac) {
+    public  List<String> getVehicles(int idVozac) {
+        return dbb.getVehicles(idVozac);
+    }
+
+    public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
+         return dbb.deleteOtpremnica(deleteOtpremnica);
+    }
+
+    public List<VzVV> getVzVV(int idVozac) {
         return dbb.getVzVV(idVozac);
     }
+
+    public VrstaVozaca findVrstaVozaca(int idVrstaVozaca) {
+        return dbb.findVrstaVozaca(idVrstaVozaca);
+    }
+
+   
 
     
     

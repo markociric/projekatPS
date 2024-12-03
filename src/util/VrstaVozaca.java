@@ -46,6 +46,13 @@ public class VrstaVozaca {
         this.vehicle = vehicle;
     }
 
+    @Override
+    public String toString() {
+        return idVrstaVozaca + "," + driverLicence + "," + vehicle;
+    }
+
+  
+
    
     
     

@@ -49,7 +49,7 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
         txtPhoneNU.setText(otpremnica.getNarucilacUsluge().getPhone());
         txtNameLastNameV.setText(otpremnica.getVozac().getNameVozac() + " " + otpremnica.getVozac().getLastNameVozac());
         txtMailV.setText(otpremnica.getVozac().getEmail());
-        List<String> vehicles= Controller.getInstance().getVzVV(otpremnica.getVozac().getIdVozac());
+        List<String> vehicles= Controller.getInstance().getVehicles(otpremnica.getVozac().getIdVozac());
         String v ="";
         for (String vehicle : vehicles) {
             v = v + " "+ vehicle;
