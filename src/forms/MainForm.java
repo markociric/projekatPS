@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import util.Otpremnica;
 import util.TableModelOtpremnica;
 import util.TableModelVozac;
-import util.User;
+
 import util.Vozac;
 
 /**
@@ -24,10 +24,10 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form MainForm
      * @param user
      */
-    public MainForm(User user) {
+    public MainForm(Vozac user) {
         initComponents();
-        JOptionPane.showMessageDialog(this, "Dobrodosli: " + user.getMail());
-        jLabel5.setText("Ulogovani korisnik: " + user.getMail());
+        JOptionPane.showMessageDialog(this, "Dobrodosli: " + user.getEmail());
+        lblLoggedUser.setText("Ulogovani korisnik: " + user.getEmail());
         jTable1.setShowGrid (false);
         jTable2.setShowGrid (false);
         fillTableVozac();
@@ -47,7 +47,7 @@ public class MainForm extends javax.swing.JFrame {
         btnCreateV = new javax.swing.JButton();
         btnUpdateV = new javax.swing.JButton();
         btnDeleteV = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
+        lblLoggedUser = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -157,10 +157,6 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -185,22 +181,31 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(btnDeleteO))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
-                .addGap(64, 64, 64)
-                .addComponent(jLabel3)
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addComponent(jLabel3)
+                        .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblLoggedUser, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(btnCreateV)
-                    .addComponent(btnUpdateV)
-                    .addComponent(btnDeleteV)
-                    .addComponent(btnDetailsV))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(btnCreateV)
+                            .addComponent(btnUpdateV)
+                            .addComponent(btnDeleteV)
+                            .addComponent(btnDetailsV)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblLoggedUser, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -231,7 +236,7 @@ public class MainForm extends javax.swing.JFrame {
             return;
         }
         List<Vozac> listVozac = Controller.getInstance().getListVozac();
-        Vozac deleteVozac = listVozac.get(selectedRow);
+        int deleteVozac = listVozac.get(selectedRow).getIdVozac();
         boolean result = Controller.getInstance().deleteVozac(deleteVozac);
 
         if (result) {
@@ -351,11 +356,11 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JLabel lblLoggedUser;
     // End of variables declaration//GEN-END:variables
 
     private void fillTableVozac() {

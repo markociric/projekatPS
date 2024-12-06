@@ -12,19 +12,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import util.User;
- 
+import util.Vozac;
+
 /**
  *
  * @author Marko
  */
-public class LoginForm extends javax.swing.JFrame  {
+public class LoginForm extends javax.swing.JFrame {
+
     List<JTextField> textFields = new ArrayList<>();
+
     /**
      * Creates new form LoginForm
      */
     public LoginForm() {
-        this.setSize(600,400);
+        this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         initComponents();
         btnLogin.setEnabled(false);
@@ -71,11 +73,11 @@ public class LoginForm extends javax.swing.JFrame  {
 
         jLabel2.setText("E-mail");
 
-        txtMail.setText("admin");
+        txtMail.setText("ciric.m2002@gmail.com");
 
         jLabel3.setText("Šifra");
 
-        txtPassword.setText("admin");
+        txtPassword.setText("markicparkic");
 
         jLabel4.setText("Nemate nalog?");
 
@@ -146,30 +148,33 @@ public class LoginForm extends javax.swing.JFrame  {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         RegisterForm rf = new RegisterForm(this, true);
         rf.setVisible(true);
-        
+
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        List<User> listUsers = Controller.getInstance().getListUsers();
-        for (User listUser : listUsers) {
-           if(txtMail.getText().contains(listUser.getMail()) && String.valueOf(txtPassword.getPassword()).contains(listUser.getPass())){
-            MainForm mf = new MainForm(listUser);
-                    mf.setVisible(true);
-                    mf.setLocationRelativeTo(null);
-                    mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                    this.dispose(); //dispose sluzi samo da ubije trenutnu formu
-        } 
-        else{
-            JOptionPane.showMessageDialog(this, "Loše uneti parametri", "Greška!", JOptionPane.ERROR_MESSAGE);
+        MainForm mf = null;
+        List<Vozac> listVozac = Controller.getInstance().getListVozac();
+        for (Vozac vozac : listVozac) {
+            if (txtMail.getText().contains(vozac.getEmail()) && String.valueOf(txtPassword.getPassword()).contains(vozac.getPassword())) {
+                mf = new MainForm(vozac);
+                mf.setVisible(true);
+                mf.setLocationRelativeTo(null);
+                mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                this.dispose(); //dispose sluzi samo da ubije trenutnu formu
+            } else {
+                continue;
+            }
+            
         }
-        }
-        
+        if (mf == null) {
+                JOptionPane.showMessageDialog(this, "Loše uneti parametri", "Greška!", JOptionPane.ERROR_MESSAGE);
+
+            }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
@@ -186,31 +191,31 @@ public class LoginForm extends javax.swing.JFrame  {
     private void addListeners() {
         textFields.add(txtPassword);
         textFields.add(txtMail);
-        
-            for (JTextField textField : textFields) {
-        textField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                checkFields();
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                checkFields();
-            }
+        for (JTextField textField : textFields) {
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    checkFields();
+                }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                checkFields();
-            }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    checkFields();
+                }
 
-            private void checkFields() {
-                boolean allFilled = Controller.validateTextFields(textFields);
-                btnLogin.setEnabled(allFilled);
-            }
-        });
-    } 
-          Controller.getInstance().checkboxChecked(checkBoxPassword, txtPassword);
-    
-    }          
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+
+                private void checkFields() {
+                    boolean allFilled = Controller.validateTextFields(textFields);
+                    btnLogin.setEnabled(allFilled);
+                }
+            });
+        }
+        Controller.getInstance().checkboxChecked(checkBoxPassword, txtPassword);
+
+    }
 }

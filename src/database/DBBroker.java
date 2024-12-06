@@ -5,7 +5,6 @@
 package database;
 
 import java.util.List;
-import util.User;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,24 +26,7 @@ import util.VzVV;
  */
 public class DBBroker {
 
-    public List<User> getListUsers() {
-        List<User> list = new ArrayList<>();
-        String query = "SELECT * FROM admins";
-        try {
-            Statement s = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rs = s.executeQuery(query);
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String user = rs.getString("mail");
-                String pass = rs.getString("password");
-                User u = new User(id, user, pass);
-                list.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
+    
 
     public List<Vozac> getListVozac() {
         List<Vozac> list = new ArrayList<>();
@@ -88,12 +70,12 @@ public class DBBroker {
         return false;
     }
 
-    public boolean deleteVozac(Vozac deleteVozac) {
+    public boolean deleteVozac(int deleteVozac) {
         String query = "DELETE FROM vozac WHERE idVozac=?";
 
         try {
             PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
-            ps.setInt(1, deleteVozac.getIdVozac());
+            ps.setInt(1, deleteVozac);
             int result = ps.executeUpdate();
             if (result == 1) {
                 return true;
@@ -230,5 +212,33 @@ public class DBBroker {
         
         return result;
     }
+
+    public int insertNewVozac(String mail, String randomPass) {
+        String query = "INSERT INTO vozac(mail,password) VALUES(?,?)";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+           
+            ps.setString(1, mail);
+            ps.setString(2, randomPass);
+            
+           int affectedRows = ps.executeUpdate();
+           if(affectedRows==0)
+               return -1;
+           ResultSet generatedKeys = ps.getGeneratedKeys();
+           if(generatedKeys.next()){
+            int newVozacId = generatedKeys.getInt(1);
+            return newVozacId;
+           }
+              
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+   
+        return -1;
+    }
+
+
 
 }
