@@ -73,11 +73,11 @@ public class LoginForm extends javax.swing.JFrame {
 
         jLabel2.setText("E-mail");
 
-        txtMail.setText("ciric.m2002@gmail.com");
+        txtMail.setText("marko@gmail.com");
 
         jLabel3.setText("Šifra");
 
-        txtPassword.setText("markicparkic");
+        txtPassword.setText("marko");
 
         jLabel4.setText("Nemate nalog?");
 
@@ -160,10 +160,8 @@ public class LoginForm extends javax.swing.JFrame {
                 mf.setVisible(true);
                 mf.setLocationRelativeTo(null);
                 mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                this.dispose(); //dispose sluzi samo da ubije trenutnu formu
-            } else {
-                continue;
-            }
+                this.dispose(); 
+            } 
             
         }
         if (mf == null) {

@@ -48,7 +48,7 @@ public class VrstaVozaca {
 
     @Override
     public String toString() {
-        return idVrstaVozaca + "," + driverLicence + "," + vehicle;
+        return vehicle;
     }
 
   

@@ -208,10 +208,7 @@ public class RegisterForm extends javax.swing.JDialog {
                             this.dispose();
                             exist = true;
                             break;
-                        } else {
-                            continue;
-                        }
-
+                        } 
                     }
                     if (!exist) {
                         String randomPass = Controller.getInstance().generateRandomPassword();

@@ -14,14 +14,16 @@ public class VzVV {
     private int idVozac;
     private int idVrstaVozaca;
     private Date expireDateLicence;
+    private int id;
 
     public VzVV() {
     }
 
-    public VzVV(int idVozac, int idVrstaVozaca, Date expireDateLicence) {
+    public VzVV(int idVozac, int idVrstaVozaca, Date expireDateLicence, int id) {
         this.idVozac = idVozac;
         this.idVrstaVozaca = idVrstaVozaca;
         this.expireDateLicence = expireDateLicence;
+        this.id = id;
     }
 
     public int getIdVozac() {
@@ -46,6 +48,14 @@ public class VzVV {
 
     public void setExpireDateLicence(Date expireDateLicence) {
         this.expireDateLicence = expireDateLicence;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     

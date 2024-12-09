@@ -5,12 +5,13 @@
 package controller;
 
 import database.DBBroker;
-import forms.RegisterForm;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -35,7 +35,9 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import util.NarucilacUsluge;
 import util.Otpremnica;
+import util.Roba;
 import util.Vozac;
 import util.VrstaVozaca;
 import util.VzVV;
@@ -75,7 +77,7 @@ public class Controller {
     public void createVozac() {
         dbb.createVozac();
     }
-    
+
     public static boolean validateTextFields(List<JTextField> textFields) {
         Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
         boolean allFilled = true;
@@ -93,7 +95,7 @@ public class Controller {
 
         return allFilled;
     }
-    
+
     public void checkboxChecked(JCheckBox checkBoxPassword, JPasswordField txtPassword) {
         checkBoxPassword.addActionListener(new ActionListener() {
             @Override
@@ -201,10 +203,10 @@ public class Controller {
     }
 
     public void checkName(JTextField txtName, JLabel lblErrorNameLastName, String out) {
-       
-            txtName.getDocument().addDocumentListener(new DocumentListener() {
-               
-            private final String NAME_REGEX = "[A-Z][a-z]+$";
+
+        txtName.getDocument().addDocumentListener(new DocumentListener() {
+
+            private final String NAME_REGEX = "[A-ZČĆŠĐ][a-zčćšđ]+$";
 
             public boolean isValidNameLastName(String phone) {
                 Pattern pattern = Pattern.compile(NAME_REGEX);
@@ -241,16 +243,16 @@ public class Controller {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
 
-            });
-           
+        });
+
     }
 
-    public List<Otpremnica> getListOtpremnica() {                 
+    public List<Otpremnica> getListOtpremnica() {
         return dbb.getListOtpremnica();
     }
 
     public String convertDate(Date datum) {
-        Calendar c= Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         c.setTime(datum);
         int d = c.get(Calendar.DAY_OF_MONTH);
         int m = c.get(Calendar.MONTH) + 1;
@@ -258,12 +260,12 @@ public class Controller {
         return d + "." + m + "." + y + ".";
     }
 
-    public  List<String> getVehicles(int idVozac) {
+    public List<String> getVehicles(int idVozac) {
         return dbb.getVehicles(idVozac);
     }
 
     public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
-         return dbb.deleteOtpremnica(deleteOtpremnica);
+        return dbb.deleteOtpremnica(deleteOtpremnica);
     }
 
     public List<VzVV> getVzVV(int idVozac) {
@@ -275,11 +277,11 @@ public class Controller {
     }
 
     public void sendMail(String mail, String randomPass) {
-       
-        final String username = "prevozrobedoo@gmail.com"; 
-        final String password = "fszh kpvh prgx abqa";       
+
+        final String username = "prevozrobedoo@gmail.com";
+        final String password = "fszh kpvh prgx abqa";
         //
-       
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -294,17 +296,17 @@ public class Controller {
         });
 
         try {
-           
+
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mail));
             message.setSubject("Vaša privremena šifra");
             message.setText("U mejlu se nalazi privremena šifra koju ćete uneti u aplikaciju kako biste mogli da nastavite sa registracijom."
-                    + "\n\nPrivremena šifra: " + randomPass );
+                    + "\n\nPrivremena šifra: " + randomPass);
 
             Transport.send(message);
 
-            System.out.println("Mejl je uspešno poslat!");
+            System.out.println("Mejl poslat!");
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -316,18 +318,13 @@ public class Controller {
         String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         String numbers = "0123456789";
 
-
         String allowedChars = upperCaseLetters + lowerCaseLetters + numbers;
-
 
         int passwordLength = 8;
 
- 
         SecureRandom random = new SecureRandom();
 
-
         StringBuilder password = new StringBuilder();
-
 
         for (int i = 0; i < passwordLength; i++) {
             int index = random.nextInt(allowedChars.length());
@@ -337,14 +334,82 @@ public class Controller {
     }
 
     public int insertVozac(String mail, String randomPass) {
-        return dbb.insertNewVozac(mail,randomPass);
+        return dbb.insertNewVozac(mail, randomPass);
+    }
+
+    public String hashPassword(String password) {
+        String input = password;
+        try {
+            // Kreiranje instance MessageDigest za algoritam SHA-256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Pretvaranje ulaznog stringa u bajte i hesiranje
+            byte[] hashBytes = digest.digest(input.getBytes());
+
+            // Konvertovanje hesiranog niza bajtova u heksadecimalni string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0'); // Dodaj nulu ako je potrebno
+                }
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Algoritam nije pronađen: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<VrstaVozaca> getListVrstaVozaca() {
+        return dbb.getListVrstaVozaca();
+    }
+
+    public boolean updateVzVV(int updateVozac, String datum) {
+        return dbb.updateVzVV(updateVozac,datum);
+    }
+
+    public boolean deleteVzVV(int delete) {
+        return dbb.deleteVzVV(delete);
+    }
+
+    public boolean insertVzVV(int idVozac, int idVrstaVozaca, String datum) {
+        return dbb.insertVzVV(idVozac,idVrstaVozaca,datum);
+    }
+
+    public boolean deleteVrstaVozaca(int delete) {
+        return dbb.deleteVrstaVozaca(delete);
+    }
+
+    public boolean insertVrstaVozaca(String vehicle, String driverLicence) {
+        return dbb.insertVrstaVozaca(vehicle,driverLicence);
+    }
+
+    public List<Roba> getListRoba() {
+        return dbb.getListRoba();
+    }
+
+    public boolean deleteRoba(int delete) {
+      return dbb.deleteRoba(delete);  
+    }
+
+    public boolean updateRoba(int updateId, double qty) {
+        return dbb.updateRoba(updateId,qty);
+    }
+
+    public boolean insertRoba(String name, double qty) {
+        return dbb.insertRoba(name,qty);
+    }
+
+    public List<NarucilacUsluge> getListNarucilacUsluge(int needSort, String search) {
+        return dbb.getListNarucilacUsluge(needSort, search);
     }
 
     
 
    
 
-    
-    
-    
+
 }

@@ -4,12 +4,11 @@
  */
 package forms;
 
-
 import controller.Controller;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import util.Otpremnica;
-import util.TableModelOtpremnica;
+import util.TableModelDetailsVozac;
 import util.TableModelVozac;
 
 import util.Vozac;
@@ -20,18 +19,26 @@ import util.Vozac;
  */
 public class MainForm extends javax.swing.JFrame {
 
+    Vozac vozac = new Vozac();
+
     /**
      * Creates new form MainForm
+     *
      * @param user
      */
     public MainForm(Vozac user) {
+        vozac = user;
         initComponents();
         JOptionPane.showMessageDialog(this, "Dobrodosli: " + user.getEmail());
-        lblLoggedUser.setText("Ulogovani korisnik: " + user.getEmail());
-        jTable1.setShowGrid (false);
-        jTable2.setShowGrid (false);
+        lblNameLastName.setText(user.getNameVozac() + " " + user.getLastNameVozac());
+        lblMail.setText(user.getEmail());
+        lblPhone.setText(user.getPhoneNumber());
+        jTable1.setShowGrid(false);
+
+       
+
         fillTableVozac();
-        fillTableOtpremnica();
+
     }
 
     /**
@@ -43,27 +50,36 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblLoggedUser = new javax.swing.JLabel();
         btnCreateV = new javax.swing.JButton();
         btnUpdateV = new javax.swing.JButton();
         btnDeleteV = new javax.swing.JButton();
-        lblLoggedUser = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        btnDetailsV = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnOtpremnicaForm = new javax.swing.JButton();
+        btnRobaForm = new javax.swing.JButton();
+        btnVrstaVozacaForm = new javax.swing.JButton();
+        btnNarucilacUslugeForm = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblNameLastName = new javax.swing.JLabel();
+        lblMail = new javax.swing.JLabel();
+        lblPhone = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
-        btnDetails = new javax.swing.JButton();
-        btnUpdateO = new javax.swing.JButton();
-        btnDetailsV = new javax.swing.JButton();
-        btnCreateO = new javax.swing.JButton();
-        btnDeleteO = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnUpdateMyInfo = new javax.swing.JButton();
+        btnUpdateMyVrstaVozaca = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setText("Vozač");
+        lblLoggedUser.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblLoggedUser.setText("Moji podaci:");
 
         btnCreateV.setText("Kreiraj");
         btnCreateV.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +115,86 @@ public class MainForm extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
+        btnDetailsV.setText("Detalji");
+        btnDetailsV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailsVActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+
+        btnOtpremnicaForm.setText("Prikaži sve otpremnice");
+        btnOtpremnicaForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOtpremnicaFormActionPerformed(evt);
+            }
+        });
+
+        btnRobaForm.setText("Prikaži svu raspoloživu robu");
+        btnRobaForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRobaFormActionPerformed(evt);
+            }
+        });
+
+        btnVrstaVozacaForm.setText("Prikaži sve vrste vozača");
+        btnVrstaVozacaForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVrstaVozacaFormActionPerformed(evt);
+            }
+        });
+
+        btnNarucilacUslugeForm.setText("Prikaži sve naručioce");
+        btnNarucilacUslugeForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNarucilacUslugeFormActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnVrstaVozacaForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRobaForm, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnOtpremnicaForm, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnNarucilacUslugeForm, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(btnOtpremnicaForm, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRobaForm, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNarucilacUslugeForm, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnVrstaVozacaForm, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        jLabel1.setText("Ime i Prezime :");
+
+        jLabel2.setText("Broj Telefona :");
+
+        jLabel4.setText("Email :");
+
+        jLabel5.setText("Vrsta vozača :");
+
+        lblNameLastName.setText("ime");
+
+        lblMail.setText("mail");
+
+        lblPhone.setText("br");
+
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -112,117 +208,134 @@ public class MainForm extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(jTable2);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setText("Otpremnica");
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
-        btnDetails.setText("Detalji");
-        btnDetails.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdateMyInfo.setText("Izmeni moje osnovne podatke");
+        btnUpdateMyInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDetailsActionPerformed(evt);
+                btnUpdateMyInfoActionPerformed(evt);
             }
         });
 
-        btnUpdateO.setText("Azuriraj");
-        btnUpdateO.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdateMyVrstaVozaca.setText("Upravljaj mojom vrstom vozača");
+        btnUpdateMyVrstaVozaca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateOActionPerformed(evt);
+                btnUpdateMyVrstaVozacaActionPerformed(evt);
             }
         });
 
-        btnDetailsV.setText("Detalji");
-        btnDetailsV.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDetailsVActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnUpdateMyVrstaVozaca, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdateMyInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(btnUpdateMyInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUpdateMyVrstaVozaca, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
 
-        btnCreateO.setText("Kreiraj");
-        btnCreateO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateOActionPerformed(evt);
-            }
-        });
-
-        btnDeleteO.setText("Obriši");
-        btnDeleteO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteOActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("treba dodati u azuriraj za vozaca vrstu vozaca da izabere");
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel6.setText("Osnovne informacije o kolegama");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(67, 67, 67)
-                        .addComponent(btnDetailsV)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCreateV)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnUpdateV)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDeleteV))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(32, 32, 32)
-                        .addComponent(btnDetails)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCreateO)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnUpdateO)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDeleteO))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3))
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel3)
-                        .addContainerGap(88, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblLoggedUser)
+                        .addGap(81, 1734, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel2))
+                                        .addGap(24, 24, 24)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblPhone)
+                                            .addComponent(lblNameLastName)
+                                            .addComponent(lblMail)))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(81, 81, 81)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblLoggedUser, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(btnDetailsV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnCreateV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnUpdateV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnDeleteV)
+                                    .addGap(179, 179, 179)))
+                            .addComponent(jLabel6))
+                        .addGap(142, 142, 142)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblLoggedUser)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
+                        .addGap(33, 33, 33)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(btnCreateV)
-                            .addComponent(btnUpdateV)
-                            .addComponent(btnDeleteV)
-                            .addComponent(btnDetailsV)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblLoggedUser, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jLabel3)))
-                .addGap(52, 52, 52)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(btnDetails)
-                    .addComponent(btnCreateO)
-                    .addComponent(btnUpdateO)
-                    .addComponent(btnDeleteO))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                            .addComponent(lblNameLastName))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(lblMail))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(lblPhone))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnCreateV)
+                                    .addComponent(btnUpdateV)
+                                    .addComponent(btnDeleteV)
+                                    .addComponent(btnDetailsV)))))))
         );
 
         pack();
@@ -271,38 +384,8 @@ public class MainForm extends javax.swing.JFrame {
         fillTableVozac();
     }//GEN-LAST:event_btnUpdateVActionPerformed
 
-    private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
-        int selectedRow = jTable2.getSelectedRow();
-
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
-        Otpremnica otpremnica = listOtpremnica.get(selectedRow);
-
-        DetailsOtpremnicaForm otpremnicaForm = new DetailsOtpremnicaForm(this, true, otpremnica);
-        otpremnicaForm.setLocationRelativeTo(null);
-        otpremnicaForm.setVisible(true);
-    }//GEN-LAST:event_btnDetailsActionPerformed
-
-    private void btnUpdateOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOActionPerformed
-        int selectedRow = jTable2.getSelectedRow();
-
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
-        Otpremnica otpremnica = listOtpremnica.get(selectedRow);
-
-        UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(this, true, otpremnica);
-        otpremnicaForm.setLocationRelativeTo(null);
-        otpremnicaForm.setVisible(true);
-    }//GEN-LAST:event_btnUpdateOActionPerformed
-
     private void btnDetailsVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsVActionPerformed
-      int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
@@ -316,62 +399,87 @@ public class MainForm extends javax.swing.JFrame {
         vozacForm.setVisible(true);
     }//GEN-LAST:event_btnDetailsVActionPerformed
 
-    private void btnCreateOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCreateOActionPerformed
+    private void btnOtpremnicaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtpremnicaFormActionPerformed
+        OtpremnicaForm form = new OtpremnicaForm();
+        form.setVisible(true);
+        form.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }//GEN-LAST:event_btnOtpremnicaFormActionPerformed
 
-    private void btnDeleteOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOActionPerformed
-       int selectedRow = jTable2.getSelectedRow();
+    private void btnUpdateMyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyInfoActionPerformed
+        UpdateVozacForm u = new UpdateVozacForm(this, true, vozac);
+        u.setLocationRelativeTo(null);
+        u.setVisible(true);
 
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
-        Otpremnica deleteOtpremnica = listOtpremnica.get(selectedRow);
-        boolean result = Controller.getInstance().deleteOtpremnica(deleteOtpremnica);
+        fillTableVozac();
+    }//GEN-LAST:event_btnUpdateMyInfoActionPerformed
 
-        if (result) {
-            JOptionPane.showMessageDialog(this, "uspesno izbrisana otpremnica");
+    private void btnUpdateMyVrstaVozacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyVrstaVozacaActionPerformed
+        MyVrstaVozacaForm u = new MyVrstaVozacaForm(this, true, vozac);
+        u.setLocationRelativeTo(null);
+        u.setVisible(true);
 
-        } else {
-            JOptionPane.showMessageDialog(this, "greska pri brisanju iz baze", "greska", JOptionPane.ERROR_MESSAGE);
-        }
-        fillTableOtpremnica();
-    }//GEN-LAST:event_btnDeleteOActionPerformed
+        fillTableVozac();
+    }//GEN-LAST:event_btnUpdateMyVrstaVozacaActionPerformed
+
+    private void btnVrstaVozacaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVrstaVozacaFormActionPerformed
+        VrstaVozacaForm u = new VrstaVozacaForm();
+        u.setLocationRelativeTo(null);
+        u.setVisible(true);
+        
+
+    }//GEN-LAST:event_btnVrstaVozacaFormActionPerformed
+
+    private void btnRobaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRobaFormActionPerformed
+       RobaForm r = new RobaForm();
+        r.setLocationRelativeTo(null);
+        r.setVisible(true);
+    }//GEN-LAST:event_btnRobaFormActionPerformed
+
+    private void btnNarucilacUslugeFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNarucilacUslugeFormActionPerformed
+        DetailsNarucilacUslugeForm nu = new DetailsNarucilacUslugeForm();
+        nu.setLocationRelativeTo(null);
+        nu.setVisible(true);
+    }//GEN-LAST:event_btnNarucilacUslugeFormActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCreateO;
     private javax.swing.JButton btnCreateV;
-    private javax.swing.JButton btnDeleteO;
     private javax.swing.JButton btnDeleteV;
-    private javax.swing.JButton btnDetails;
     private javax.swing.JButton btnDetailsV;
-    private javax.swing.JButton btnUpdateO;
+    private javax.swing.JButton btnNarucilacUslugeForm;
+    private javax.swing.JButton btnOtpremnicaForm;
+    private javax.swing.JButton btnRobaForm;
+    private javax.swing.JButton btnUpdateMyInfo;
+    private javax.swing.JButton btnUpdateMyVrstaVozaca;
     private javax.swing.JButton btnUpdateV;
+    private javax.swing.JButton btnVrstaVozacaForm;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JLabel lblLoggedUser;
+    private javax.swing.JLabel lblMail;
+    private javax.swing.JLabel lblNameLastName;
+    private javax.swing.JLabel lblPhone;
     // End of variables declaration//GEN-END:variables
 
     private void fillTableVozac() {
         List<Vozac> listVozac = Controller.getInstance().getListVozac();
         TableModelVozac tmv = new TableModelVozac(listVozac);
         jTable1.setModel(tmv);
+        
+        TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getVzVV(vozac.getIdVozac()));
+        jTable2.setModel(detailsVozac);
     }
 
-    private void fillTableOtpremnica() {
-        List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
-        TableModelOtpremnica tmo = new TableModelOtpremnica(listOtpremnica);
-        jTable2.setModel(tmo);
-    }
 }
