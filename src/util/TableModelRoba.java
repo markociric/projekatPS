@@ -20,7 +20,7 @@ public class TableModelRoba extends AbstractTableModel {
     public TableModelRoba(List<Roba> list) {
         this.list = list;
     }
-    String columns[] = {"Vrsta robe", "Količina(u tonama)"};
+    String columns[] = {"Vrsta robe", "Količina", " Merna jedinica", "Jedinična cena"};
 
     @Override
     public int getRowCount() {
@@ -35,13 +35,16 @@ public class TableModelRoba extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Roba r = list.get(rowIndex);
-       
+
         switch (columnIndex) {
             case 0:
                 return r.getNameRoba();
             case 1:
                 return r.getQty();
-          
+            case 2:
+                return r.getUnitOfMeasure();
+            case 3:
+                return r.getPrice();
             default:
                 return "n/a";
         }
@@ -51,5 +54,5 @@ public class TableModelRoba extends AbstractTableModel {
     public String getColumnName(int column) {
         return columns[column];
     }
-    
+
 }

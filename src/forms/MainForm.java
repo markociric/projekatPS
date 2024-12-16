@@ -35,8 +35,6 @@ public class MainForm extends javax.swing.JFrame {
         lblPhone.setText(user.getPhoneNumber());
         jTable1.setShowGrid(false);
 
-       
-
         fillTableVozac();
 
     }
@@ -274,7 +272,7 @@ public class MainForm extends javax.swing.JFrame {
                                             .addComponent(lblPhone)
                                             .addComponent(lblNameLastName)
                                             .addComponent(lblMail)))
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(81, 81, 81)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -292,7 +290,7 @@ public class MainForm extends javax.swing.JFrame {
                                     .addComponent(btnDeleteV)
                                     .addGap(179, 179, 179)))
                             .addComponent(jLabel6))
-                        .addGap(142, 142, 142)
+                        .addGap(61, 61, 61)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30))))
         );
@@ -402,7 +400,8 @@ public class MainForm extends javax.swing.JFrame {
     private void btnOtpremnicaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtpremnicaFormActionPerformed
         OtpremnicaForm form = new OtpremnicaForm();
         form.setVisible(true);
-        form.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        form.setLocationRelativeTo(null);
+        //form.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }//GEN-LAST:event_btnOtpremnicaFormActionPerformed
 
     private void btnUpdateMyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyInfoActionPerformed
@@ -425,12 +424,12 @@ public class MainForm extends javax.swing.JFrame {
         VrstaVozacaForm u = new VrstaVozacaForm();
         u.setLocationRelativeTo(null);
         u.setVisible(true);
-        
+
 
     }//GEN-LAST:event_btnVrstaVozacaFormActionPerformed
 
     private void btnRobaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRobaFormActionPerformed
-       RobaForm r = new RobaForm();
+        RobaForm r = new RobaForm();
         r.setLocationRelativeTo(null);
         r.setVisible(true);
     }//GEN-LAST:event_btnRobaFormActionPerformed
@@ -477,7 +476,7 @@ public class MainForm extends javax.swing.JFrame {
         List<Vozac> listVozac = Controller.getInstance().getListVozac();
         TableModelVozac tmv = new TableModelVozac(listVozac);
         jTable1.setModel(tmv);
-        
+
         TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getVzVV(vozac.getIdVozac()));
         jTable2.setModel(detailsVozac);
     }

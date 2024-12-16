@@ -5,6 +5,8 @@
 package forms;
 
 import controller.Controller;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -21,7 +23,7 @@ import util.VzVV;
  */
 public class MyVrstaVozacaForm extends javax.swing.JDialog {
 
-    private static Vozac vozac;
+    private Vozac vozac;
 
     /**
      * Creates new form UpdateVrstaVozacaForm
@@ -48,9 +50,6 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
-        txtDate = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         comboVehicles = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -58,6 +57,8 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
         lblCategory = new javax.swing.JLabel();
         txtDateLicence = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        txtStartDateLicence = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -91,15 +92,6 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
             }
         });
 
-        btnUpdate.setText("Izmeni datum trajanja");
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Unesi novi datum dozovle :");
-
         comboVehicles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboVehiclesActionPerformed(evt);
@@ -117,6 +109,8 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
 
         jLabel7.setText("Dozvola traje do :");
 
+        jLabel8.setText("Dozvola traje od :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,39 +124,37 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                         .addComponent(btnDelete))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(27, 27, 27)
-                                .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdate))
-                            .addComponent(jScrollPane1))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(176, 176, 176))
-                        .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(176, 176, 176))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(27, 27, 27)
+                        .addComponent(comboVehicles, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(109, 109, 109))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(66, 66, 66)
+                                .addComponent(lblCategory))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel7)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtDateLicence, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addGap(27, 27, 27)
-                                    .addComponent(comboVehicles, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGap(109, 109, 109)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnAdd)
-                        .addGap(222, 222, 222))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(66, 66, 66)
-                        .addComponent(lblCategory)
-                        .addContainerGap())))
+                                    .addComponent(jLabel8)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtStartDateLicence, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(112, 112, 112))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAdd)
+                .addGap(217, 217, 217))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,7 +165,7 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                     .addComponent(btnDelete)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
@@ -184,73 +176,85 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(lblCategory))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtStartDateLicence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtDateLicence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnUpdate)
-                            .addComponent(jLabel2))
-                        .addContainerGap(47, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAdd)
-                        .addGap(25, 25, 25))))
+                .addGap(29, 29, 29)
+                .addComponent(btnAdd)
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        int selectedRow = jTable1.getSelectedRow();
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        String datumPocetakString = txtStartDateLicence.getText();
+        String datumKrajString = txtDateLicence.getText();
 
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
-            return;
+        String d1[] = datumPocetakString.split("\\.");
+        String d[] = datumKrajString.split("\\.");
+        if (Controller.isValidDate(datumPocetakString, "dd.MM.yyyy") && Controller.isValidDate(datumKrajString, "dd.MM.yyyy")) {
+            String datumPocetak = d1[2] + "-" + d1[1] + "-" + d1[0];
+            String datumKraj = d[2] + "-" + d[1] + "-" + d[0];
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateKraj = new Date();
+            Date danas = new Date();
+
+            try {
+                dateKraj = dateFormat.parse(datumKraj);
+            } catch (ParseException e) {
+                System.out.println("Greška pri parsiranju datuma: " + e.getMessage());
+            }
+
+            VrstaVozaca selected = (VrstaVozaca) comboVehicles.getSelectedItem();
+            VzVV selectedDriver = Controller.getInstance().getVzVV(vozac.getIdVozac(), selected);
+            System.out.println(selectedDriver);
+
+            if (selectedDriver.getId() == 0) {
+                if (dateKraj.before(danas)) {
+                    JOptionPane.showMessageDialog(this, "Dozvola koju želite da unesete ne važi", "Greška", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    boolean result = Controller.getInstance().insertVzVV(vozac.getIdVozac(), selected.getIdVrstaVozaca(), datumPocetak, datumKraj);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
+                        fillTable();
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } else {
+                if (selectedDriver.getExpireDateLicence().after(danas)) {
+                    JOptionPane.showMessageDialog(this, "Ne možete dodati novu dozvolu jer postoji važeća\nDozvola Vam važi do : " + Controller.getInstance().convertDate(selectedDriver.getExpireDateLicence()) + "", "Greška", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    boolean result = Controller.getInstance().updateVzVV(selectedDriver.getId(), datumPocetak, datumKraj);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Uspešno promenjena dozvola");
+                        fillTable();
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Greška pri cuvanju izmena u bazi", "Greška", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Datum koji ste uneli nije validan", "Greška", JOptionPane.ERROR_MESSAGE);
         }
 
-        String datumString = txtDate.getText();
-        String d[] = datumString.split("\\.");
-        String datum = d[2] + "-" +  d[1] + "-" + d[0];
-        System.out.println(datum);
-        List<VzVV> listVzVV = Controller.getInstance().getVzVV(vozac.getIdVozac());
-        int update = listVzVV.get(selectedRow).getId();
-       
-        boolean result = Controller.getInstance().updateVzVV(update,datum.trim());
-         if (result) {
-                    JOptionPane.showMessageDialog(this, "uspesno sacuvane promene");
-                    fillTable();
-                   
-                } else {
-                    JOptionPane.showMessageDialog(this, "greska pri cuvanju izmena u bazi", "greska", JOptionPane.ERROR_MESSAGE);
-                }
-        
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        VrstaVozaca selected = (VrstaVozaca) comboVehicles.getSelectedItem();
-        String datumString = txtDateLicence.getText();
-        String d[] = datumString.split("\\.");
-        String datum = d[2] + "-" +  d[1] + "-" + d[0];
-        boolean result = Controller.getInstance().insertVzVV(vozac.getIdVozac(),selected.getIdVrstaVozaca(),datum);
-        if (result) {
-                    JOptionPane.showMessageDialog(this, "uspesno sacuvane promene");
-                    fillTable();
-                   
-                } else {
-                    JOptionPane.showMessageDialog(this, "greska pri cuvanju izmena u bazi", "greska", JOptionPane.ERROR_MESSAGE);
-                }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-    int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "morate da izaberete neko polje", "greska", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška", JOptionPane.ERROR_MESSAGE);
             return;
         }
         List<VzVV> listVzVV = Controller.getInstance().getVzVV(vozac.getIdVozac());
@@ -258,17 +262,17 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
         boolean result = Controller.getInstance().deleteVzVV(delete);
 
         if (result) {
-            JOptionPane.showMessageDialog(this, "uspesno izbrisana vrsta vozaca");
+            JOptionPane.showMessageDialog(this, "Uspešno izbrisana vrsta vozača");
 
         } else {
-            JOptionPane.showMessageDialog(this, "greska pri brisanju iz baze", "greska", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Greška pri brisanju iz baze", "Greška", JOptionPane.ERROR_MESSAGE);
         }
         fillTable();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void comboVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboVehiclesActionPerformed
-       VrstaVozaca selected = (VrstaVozaca) comboVehicles.getSelectedItem();
-       lblCategory.setText(selected.getDriverLicence());
+        VrstaVozaca selected = (VrstaVozaca) comboVehicles.getSelectedItem();
+        lblCategory.setText(selected.getDriverLicence());
     }//GEN-LAST:event_comboVehiclesActionPerformed
 
     /**
@@ -278,19 +282,18 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<VrstaVozaca> comboVehicles;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCategory;
-    private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtDateLicence;
+    private javax.swing.JTextField txtStartDateLicence;
     // End of variables declaration//GEN-END:variables
 
     private void fillTable() {

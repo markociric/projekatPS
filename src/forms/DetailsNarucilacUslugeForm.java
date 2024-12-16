@@ -24,6 +24,7 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         initComponents();
         fillTable(0,"");
         
+        
     }
 
     /**

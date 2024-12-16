@@ -12,9 +12,14 @@ import java.awt.event.ActionListener;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,9 +40,11 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import util.Mesto;
 import util.NarucilacUsluge;
 import util.Otpremnica;
 import util.Roba;
+import util.StavkaOtpremnice;
 import util.Vozac;
 import util.VrstaVozaca;
 import util.VzVV;
@@ -119,7 +126,7 @@ public class Controller {
     public void checkMail(JTextField txtMail, JLabel lblError) {
 
         txtMail.getDocument().addDocumentListener(new DocumentListener() {
-            private final String EMAIL_REGEX = "^[a-z0-9.]+@[a-z]{1,20}\\.[a-z]{2,6}$";
+            private final String EMAIL_REGEX = "^[a-z0-9.]+@[a-z.]+\\.[a-z]{2,6}$";
 
             public boolean isValidEmail(String email) {
                 Pattern pattern = Pattern.compile(EMAIL_REGEX);
@@ -367,16 +374,16 @@ public class Controller {
         return dbb.getListVrstaVozaca();
     }
 
-    public boolean updateVzVV(int updateVozac, String datum) {
-        return dbb.updateVzVV(updateVozac,datum);
+    public boolean updateVzVV(int updateVozac, String datumPocetak, String datumKraj) {
+        return dbb.updateVzVV(updateVozac, datumPocetak, datumKraj);
     }
 
     public boolean deleteVzVV(int delete) {
         return dbb.deleteVzVV(delete);
     }
 
-    public boolean insertVzVV(int idVozac, int idVrstaVozaca, String datum) {
-        return dbb.insertVzVV(idVozac,idVrstaVozaca,datum);
+    public boolean insertVzVV(int idVozac, int idVrstaVozaca, String datumPocetak, String datumKraj) {
+        return dbb.insertVzVV(idVozac, idVrstaVozaca, datumPocetak, datumKraj);
     }
 
     public boolean deleteVrstaVozaca(int delete) {
@@ -384,7 +391,7 @@ public class Controller {
     }
 
     public boolean insertVrstaVozaca(String vehicle, String driverLicence) {
-        return dbb.insertVrstaVozaca(vehicle,driverLicence);
+        return dbb.insertVrstaVozaca(vehicle, driverLicence);
     }
 
     public List<Roba> getListRoba() {
@@ -392,24 +399,86 @@ public class Controller {
     }
 
     public boolean deleteRoba(int delete) {
-      return dbb.deleteRoba(delete);  
+        return dbb.deleteRoba(delete);
     }
 
     public boolean updateRoba(int updateId, double qty) {
-        return dbb.updateRoba(updateId,qty);
+        return dbb.updateRoba(updateId, qty);
     }
 
     public boolean insertRoba(String name, double qty) {
-        return dbb.insertRoba(name,qty);
+        return dbb.insertRoba(name, qty);
     }
 
     public List<NarucilacUsluge> getListNarucilacUsluge(int needSort, String search) {
         return dbb.getListNarucilacUsluge(needSort, search);
     }
 
-    
+    public List<StavkaOtpremnice> getListStavkeOtpremnice(int idOtpremnica) {
+        return dbb.getListStavkeOtpremnice(idOtpremnica);
+    }
 
-   
+    public double sumPrices(int idOtpremnica) {
+        return dbb.sumPrices(idOtpremnica);
+    }
 
+    public String formatNumber(double total) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator(',');
+        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
 
+        String roundTotal = df.format(total);
+        return roundTotal;
+    }
+
+    public VzVV getVzVV(int idVozac, VrstaVozaca selected) {
+        return dbb.getVzVV(idVozac, selected);
+    }
+
+    public static boolean isValidDate(String date, String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setLenient(false);
+
+        try {
+            dateFormat.parse(date); 
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    public List<Mesto> getListMesto() {
+        return dbb.getListMesto();
+    }
+
+    public void updateQtySO(int id, int idRoba, double d) {
+         dbb.updateQtySO(id,idRoba,d);
+    }
+
+    public int insertStavkaOtpremnice(int idOtpremnica, Roba selected, double qty) {
+       return dbb.insertStavkaOtpremnice(idOtpremnica,selected,qty);
+    }
+
+    public boolean deleteStavkaOtpremnice(int delete) {
+        return dbb.deleteStavkaOtpremnice(delete);
+    }
+
+    public boolean updateOtpremnica(int idOtpremnica, NarucilacUsluge nu, Vozac selectedVozac) {
+       return dbb.updateOtpremnica( idOtpremnica,  nu,  selectedVozac);
+    }
+
+    public void updateNarucilacUsluge(int idNarucilacUsluge, String name, String lastName, String phone, String mail, Mesto selectedMesto) {
+        dbb.updateNarucilacUsluge( idNarucilacUsluge,  name,  lastName,  phone,  mail,  selectedMesto);
+    }
+
+    public int insertNarucilacUsluge(String name, String lastName, String phone, String mail, Mesto selectedMesto, String adress) {
+        return dbb.insertNarucilacUsluge( name,  lastName,  phone,  mail,  selectedMesto, adress);
+    }
+
+    public boolean insertOtpremnica(int id, Vozac selectedVozac, String date) {
+        return dbb.insertOtpremnica( id,  selectedVozac,  date);
+    }
+
+     
 }

@@ -16,8 +16,9 @@ public class Otpremnica {
     private Date datum;
     private Vozac vozac;
     private NarucilacUsluge narucilacUsluge;
-    private StavkaOtpremnice stavkaOtpremnice;
+    
     public Otpremnica() {
+        
     }
 
     public Otpremnica(int idOtpremnica, Date datum, Vozac vozac, NarucilacUsluge narucilacUsluge) {
@@ -25,7 +26,7 @@ public class Otpremnica {
         this.datum = datum;
         this.vozac = vozac;
         this.narucilacUsluge = narucilacUsluge;
-        //this.stavkaOtpremnice = stavkaOtpremnice;
+        
     }
 
 
@@ -59,14 +60,6 @@ public class Otpremnica {
 
     public void setNarucilacUsluge(NarucilacUsluge narucilacUsluge) {
         this.narucilacUsluge = narucilacUsluge;
-    }
-
-    public StavkaOtpremnice getStavkaOtpremnice() {
-        return stavkaOtpremnice;
-    }
-
-    public void setStavkaOtpremnice(StavkaOtpremnice stavkaOtpremnice) {
-        this.stavkaOtpremnice = stavkaOtpremnice;
     }
     
 }

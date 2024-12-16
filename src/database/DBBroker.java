@@ -17,6 +17,7 @@ import util.Mesto;
 import util.NarucilacUsluge;
 import util.Otpremnica;
 import util.Roba;
+import util.StavkaOtpremnice;
 import util.Vozac;
 import util.VrstaVozaca;
 import util.VzVV;
@@ -101,6 +102,7 @@ public class DBBroker {
     public List<Otpremnica> getListOtpremnica() {
         List<Otpremnica> list = new ArrayList<>();
         String query = "SELECT * FROM otpremnica o JOIN vozac v ON o.idVozac = v.idVozac JOIN narucilac_usluge nu ON o.idNarucilacUsluge = nu.idNarucilacUsluge JOIN mesto m ON m.idMesto = nu.idMesto";
+
         try {
             Statement s = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = s.executeQuery(query);
@@ -160,11 +162,13 @@ public class DBBroker {
     }
 
     public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
-        String query = "DELETE FROM otpremnica WHERE idOtpremnica=?";
+        String query = "DELETE FROM otpremnica WHERE idOtpremnica=? AND idVozac=? AND idNarucilacUsluge=?";
 
         try {
             PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
             ps.setInt(1, deleteOtpremnica.getIdOtpremnica());
+            ps.setInt(2, deleteOtpremnica.getVozac().getIdVozac());
+            ps.setInt(3, deleteOtpremnica.getNarucilacUsluge().getIdNarucilacUsluge());
             int result = ps.executeUpdate();
             if (result == 1) {
                 return true;
@@ -185,8 +189,9 @@ public class DBBroker {
 
                 int idVrstaVozaca = rs.getInt("idVrstaVozaca");
                 Date expireDateLicence = rs.getDate("expireDateLicence");
+                Date startDateLicence = rs.getDate("startDateLicence");
                 int id = rs.getInt("id");
-                VzVV vzVV = new VzVV(idVozac, idVrstaVozaca, expireDateLicence, id);
+                VzVV vzVV = new VzVV(idVozac, idVrstaVozaca, expireDateLicence, startDateLicence, id);
                 list.add(vzVV);
             }
         } catch (SQLException ex) {
@@ -258,12 +263,13 @@ public class DBBroker {
         return list;
     }
 
-    public boolean updateVzVV(int updateVozac, String datum) {
-        String query = "UPDATE vzvv SET expireDateLicence=? WHERE id=?";
+    public boolean updateVzVV(int updateVozac, String datumPocetak, String datumKraj) {
+        String query = "UPDATE vzvv SET startDateLicence=?, expireDateLicence=? WHERE id=?";
         try {
             PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
-            ps.setString(1, datum);
-            ps.setInt(2, updateVozac);
+            ps.setString(1, datumPocetak);
+            ps.setString(2, datumKraj);
+            ps.setInt(3, updateVozac);
             ps.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -289,15 +295,16 @@ public class DBBroker {
         return false;
     }
 
-    public boolean insertVzVV(int idVozac, int idVrstaVozaca, String datum) {
-        String query = "INSERT INTO vzvv(idVozac,idVrstaVozaca,expireDateLicence) VALUES(?,?,?)";
+    public boolean insertVzVV(int idVozac, int idVrstaVozaca, String datumPocetak, String datumKraj) {
+        String query = "INSERT INTO vzvv(idVozac,idVrstaVozaca,startDateLicence,expireDateLicence) VALUES(?,?,?,?)";
 
         try {
             PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
 
             ps.setInt(1, idVozac);
             ps.setInt(2, idVrstaVozaca);
-            ps.setString(3, datum);
+            ps.setString(3, datumPocetak);
+            ps.setString(4, datumKraj);
             ps.executeUpdate();
 
             return true;
@@ -350,7 +357,9 @@ public class DBBroker {
                 int id = rs.getInt("idRoba");
                 String name = rs.getString("nameRoba");
                 double qty = rs.getDouble("qty");
-                Roba r = new Roba(id, name, qty);
+                double price = rs.getDouble("price");
+                String unitOfMeasure = rs.getString("unitOfMeasure");
+                Roba r = new Roba(id, name, qty, unitOfMeasure, price);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -407,7 +416,7 @@ public class DBBroker {
         return false;
     }
 
-    public List<NarucilacUsluge> getListNarucilacUsluge(int needSort,String search) {
+    public List<NarucilacUsluge> getListNarucilacUsluge(int needSort, String search) {
         List<NarucilacUsluge> list = new ArrayList<>();
         String query = "SELECT * FROM narucilac_usluge nu JOIN mesto m ON nu.idMesto = m.idMesto";
         switch (needSort) {
@@ -433,7 +442,7 @@ public class DBBroker {
                 query += " ORDER BY m.location DESC";
                 break;
             case 7:
-                query += " WHERE nu.email LIKE \"" + search +"%\"";
+                query += " WHERE nu.email LIKE \"" + search + "%\"";
         }
         System.out.println(query);
         try {
@@ -462,5 +471,225 @@ public class DBBroker {
         return list;
     }
 
-    
+    public List<StavkaOtpremnice> getListStavkeOtpremnice(int idOtpremnica) {
+        List<StavkaOtpremnice> list = new ArrayList<>();
+        String query = "SELECT * FROM otpremnica o JOIN vozac v ON o.idVozac = v.idVozac JOIN narucilac_usluge nu ON o.idNarucilacUsluge = nu.idNarucilacUsluge JOIN mesto m ON m.idMesto = nu.idMesto JOIN stavka_otpremnice so ON o.idOtpremnica = so.idOtpremnica JOIN roba r ON r.idRoba = so.idRoba WHERE o.idOtpremnica =" + idOtpremnica;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+
+                int idRoba = rs.getInt("r.idRoba");
+                String nameRoba = rs.getString("r.nameRoba");
+                double qty = rs.getDouble("r.qty");
+                double price = rs.getDouble("r.price");
+                String unitOfMeasure = rs.getString("r.unitOfMeasure");
+                Roba r = new Roba(idRoba, nameRoba, qty, unitOfMeasure, price);
+
+                int rb = rs.getInt("so.rb");
+                double priceRoba = rs.getDouble("r.price");
+                double qtySO = rs.getDouble("so.qtySO");
+
+                StavkaOtpremnice so = new StavkaOtpremnice(idOtpremnica, rb, r, qtySO);
+                list.add(so);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public double sumPrices(int idOtpremnica) {
+        double total = 0;
+        String query = "SELECT so.qtySO, r.price FROM stavka_otpremnice so JOIN roba r ON r.idRoba = so.idRoba WHERE so.idOtpremnica =" + idOtpremnica;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                double qty = rs.getDouble("so.qtySO");
+                double priceRoba = rs.getDouble("r.price");
+                total += qty * priceRoba;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    }
+
+    public VzVV getVzVV(int idVozac, VrstaVozaca selected) {
+        VzVV v = new VzVV();
+        String query = "SELECT * FROM vzvv WHERE idVozac=" + idVozac + " AND idVrstaVozaca=" + selected.getIdVrstaVozaca();
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+
+                int idVrstaVozaca = selected.getIdVrstaVozaca();
+                Date expireDateLicence = rs.getDate("expireDateLicence");
+                Date startDateLicence = rs.getDate("startDateLicence");
+                int id = rs.getInt("id");
+                VzVV vzVV = new VzVV(idVozac, idVrstaVozaca, expireDateLicence, startDateLicence, id);
+                return vzVV;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v;
+    }
+
+    public List<Mesto> getListMesto() {
+        List<Mesto> list = new ArrayList<>();
+        String query = "SELECT * FROM mesto";
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("idMesto");
+                String location = rs.getString("location");
+                int zipcode = rs.getInt("zipcode");
+                Mesto m = new Mesto(id, location, zipcode);
+                list.add(m);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public void updateQtySO(int id, int idRoba, double d) {
+        String query = "UPDATE stavka_otpremnice SET qtySO=? WHERE idOtpremnica=? AND idRoba=?";
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setDouble(1, d);
+            ps.setInt(2, id);
+            ps.setInt(3, idRoba);
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int insertStavkaOtpremnice(int idOtpremnica, Roba selected, double qty) {
+        String query = "INSERT INTO stavka_otpremnice(idOtpremnica,idRoba,qtySO) VALUES(?,?,?)";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, idOtpremnica);
+            ps.setInt(2, selected.getIdRoba());
+            ps.setDouble(3, qty);
+            
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                return -1;
+            }
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newStavkaId = generatedKeys.getInt(1);
+                return newStavkaId;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public boolean deleteStavkaOtpremnice(int delete) {
+        String query = "DELETE FROM stavka_otpremnice WHERE rb=?";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, delete);
+            int result = ps.executeUpdate();
+            if (result == 1) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean updateOtpremnica(int idOtpremnica,NarucilacUsluge nu, Vozac selectedVozac) {
+         String query = "UPDATE otpremnica SET idVozac=?,idNarucilacUsluge=? WHERE idOtpremnica=?";
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, selectedVozac.getIdVozac());
+            ps.setInt(2, nu.getIdNarucilacUsluge());
+            ps.setInt(3, idOtpremnica);
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void updateNarucilacUsluge(int idNarucilacUsluge, String name, String lastName, String phone, String mail, Mesto selectedMesto) {
+        String query = "UPDATE narucilac_usluge SET name=?,lastName=?,phone=?,email=?,idMesto=? WHERE idNarucilacUsluge=?";
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, lastName);
+            ps.setString(3, phone);
+            ps.setString(4, mail);
+            ps.setInt(5, selectedMesto.getIdMesto());
+            ps.setInt(6, idNarucilacUsluge);
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int insertNarucilacUsluge(String name, String lastName, String phone, String mail, Mesto selectedMesto, String adress) {
+        String query = "INSERT INTO narucilac_usluge(name,lastName,phone,email,idMesto,adress) VALUES(?,?,?,?,?,?)";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, name);
+            ps.setString(2, lastName);
+            ps.setString(3, phone);
+            ps.setString(4, mail);
+            ps.setInt(5, selectedMesto.getIdMesto());
+            ps.setString(6, adress);
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                return -1;
+            }
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newNUId = generatedKeys.getInt(1);
+                return newNUId;
+            }
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      return -1;
+    }
+
+    public boolean insertOtpremnica(int id, Vozac selectedVozac, String date) {
+        String query = "INSERT INTO otpremnica(idVozac,idNarucilacUsluge,date) VALUES(?,?,?)";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+           
+            ps.setInt(1, selectedVozac.getIdVozac());
+            ps.setInt(2, id);
+            ps.setString(3, date);
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return true;
+    }
+   
 }

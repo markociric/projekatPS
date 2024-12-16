@@ -5,21 +5,29 @@
 package forms;
 
 import controller.Controller;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 import util.Otpremnica;
+import util.TableModelStavkeOtpremnice;
 
 /**
  *
  * @author Marko
  */
 public class DetailsOtpremnicaForm extends javax.swing.JDialog {
-
+  
+    Otpremnica o = new Otpremnica();
     /**
      * Creates new form DetailsOtpremnicaForm
      */
     public DetailsOtpremnicaForm(java.awt.Frame parent, boolean modal, Otpremnica otpremnica) {
         super(parent, modal);
         initComponents();
+        
+        o = otpremnica;
+        
         lblTitle.setText("Otpremnica broj: " + otpremnica.getIdOtpremnica());
         lblDateOtpremnica.setText("kreirana dana: " + Controller.getInstance().convertDate(otpremnica.getDatum()));
         txtAdressNU.setEditable(false);
@@ -56,6 +64,13 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
         }
         txtDriverType.setText(v);
         txtPhoneV.setText(otpremnica.getVozac().getPhoneNumber());
+        
+        fillTable();
+        double total = Controller.getInstance().sumPrices(o.getIdOtpremnica());
+        
+        String roundTotal = Controller.getInstance().formatNumber(total);
+        
+        lblTotal.setText(roundTotal + "din");
     }
 
     /**
@@ -89,6 +104,11 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
         txtPhoneV = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         lblDateOtpremnica = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -121,6 +141,28 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
 
         lblDateOtpremnica.setText("datum");
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel2.setText("Stavke Otpremnice");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        jLabel11.setText("Ukupno za uplatu :");
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTotal.setText("cifra");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,7 +194,7 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
                                     .addComponent(jLabel6)
                                     .addGap(18, 18, 18)
                                     .addComponent(txtMailNU, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -178,6 +220,21 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblDateOtpremnica, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(190, 190, 190)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTotal)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 977, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,7 +289,15 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(txtMestoNU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(lblTotal))
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -246,8 +311,10 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -255,8 +322,11 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblDateOtpremnica;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JTextField txtAdressNU;
     private javax.swing.JTextField txtDriverType;
     private javax.swing.JTextField txtMailNU;
@@ -267,4 +337,9 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtPhoneNU;
     private javax.swing.JTextField txtPhoneV;
     // End of variables declaration//GEN-END:variables
+
+    private void fillTable() {
+        TableModelStavkeOtpremnice modelStavkeOtpremnice = new TableModelStavkeOtpremnice(Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica()));
+        jTable1.setModel(modelStavkeOtpremnice);
+    }
 }

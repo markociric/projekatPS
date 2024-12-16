@@ -52,13 +52,15 @@ CREATE TABLE `narucilac_usluge` (
   PRIMARY KEY (`idNarucilacUsluge`,`idMesto`),
   KEY `idMesto` (`idMesto`),
   CONSTRAINT `narucilac_usluge_ibfk_1` FOREIGN KEY (`idMesto`) REFERENCES `mesto` (`idMesto`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `narucilac_usluge` */
 
 insert  into `narucilac_usluge`(`idNarucilacUsluge`,`idMesto`,`name`,`lastName`,`adress`,`phone`,`email`) values 
-(1,3,'Marko','Ciric','Klare Cetkin 3','0692697586','marko@gmail.com'),
-(2,2,'Ana','Anic','anaadresa','+381691234567','ana@gmail.com');
+(1,4,'Marko','Ciric','Klare Cetkin 3','0692697586','marko@gmail.com'),
+(2,2,'Ana','Stojanonic','anaadresa','+381651234567','ana@gmail.com'),
+(3,3,'Isidora','Vrhovac','Negde u Zemunu','+381696969699','isidora@gmail.com'),
+(5,2,'Katarina','Ciric','Klada','+381654849654','buca@gmail.com');
 
 /*Table structure for table `otpremnica` */
 
@@ -69,21 +71,19 @@ CREATE TABLE `otpremnica` (
   `idVozac` bigint(20) NOT NULL,
   `idNarucilacUsluge` bigint(20) NOT NULL,
   `date` date DEFAULT NULL,
-  `stavkaOtpremnice` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`idOtpremnica`,`idVozac`,`idNarucilacUsluge`),
   KEY `idVozac` (`idVozac`),
   KEY `idNarucilacUsluge` (`idNarucilacUsluge`),
-  KEY `stavkaOtpremnice` (`stavkaOtpremnice`),
   CONSTRAINT `otpremnica_ibfk_1` FOREIGN KEY (`idVozac`) REFERENCES `vozac` (`idVozac`),
-  CONSTRAINT `otpremnica_ibfk_2` FOREIGN KEY (`idNarucilacUsluge`) REFERENCES `narucilac_usluge` (`idNarucilacUsluge`),
-  CONSTRAINT `otpremnica_ibfk_3` FOREIGN KEY (`stavkaOtpremnice`) REFERENCES `stavka_otpremnice` (`idOtpremnica`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  CONSTRAINT `otpremnica_ibfk_2` FOREIGN KEY (`idNarucilacUsluge`) REFERENCES `narucilac_usluge` (`idNarucilacUsluge`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `otpremnica` */
 
-insert  into `otpremnica`(`idOtpremnica`,`idVozac`,`idNarucilacUsluge`,`date`,`stavkaOtpremnice`) values 
-(1,3,1,'2024-12-18',NULL),
-(2,12,2,'2024-12-24',NULL);
+insert  into `otpremnica`(`idOtpremnica`,`idVozac`,`idNarucilacUsluge`,`date`) values 
+(1,3,1,'2024-12-18'),
+(2,40,2,'2024-12-24'),
+(7,1,5,'2024-12-16');
 
 /*Table structure for table `roba` */
 
@@ -93,17 +93,19 @@ CREATE TABLE `roba` (
   `idRoba` bigint(20) NOT NULL AUTO_INCREMENT,
   `nameRoba` varchar(50) DEFAULT NULL,
   `qty` double DEFAULT NULL,
+  `unitOfMeasure` varchar(50) DEFAULT NULL,
+  `price` double DEFAULT NULL,
   PRIMARY KEY (`idRoba`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `roba` */
 
-insert  into `roba`(`idRoba`,`nameRoba`,`qty`) values 
-(1,'Troska',546400),
-(2,'Šljunak',94120),
-(3,'Gips',630000),
-(4,'Beton',122231.15),
-(5,'Armatura',45845.21);
+insert  into `roba`(`idRoba`,`nameRoba`,`qty`,`unitOfMeasure`,`price`) values 
+(1,'Troska',5388,'t',24.235),
+(2,'Šljunak',730.56,'t',45.264),
+(3,'Gips',6930,'t',38),
+(4,'Beton',1075.15,'t',77),
+(5,'Armatura',4507.21,'m^3',32.01);
 
 /*Table structure for table `stavka_otpremnice` */
 
@@ -113,17 +115,25 @@ CREATE TABLE `stavka_otpremnice` (
   `idOtpremnica` bigint(20) NOT NULL,
   `rb` bigint(20) NOT NULL AUTO_INCREMENT,
   `idRoba` bigint(20) NOT NULL,
-  `nameStavka` varchar(100) DEFAULT NULL,
-  `qtyStavka` double DEFAULT NULL,
-  `priceStavka` double DEFAULT NULL,
+  `qtySO` double DEFAULT NULL,
   PRIMARY KEY (`idOtpremnica`,`rb`,`idRoba`),
   KEY `rb` (`rb`),
   KEY `idRoba` (`idRoba`),
   CONSTRAINT `stavka_otpremnice_ibfk_1` FOREIGN KEY (`idOtpremnica`) REFERENCES `otpremnica` (`idOtpremnica`),
   CONSTRAINT `stavka_otpremnice_ibfk_2` FOREIGN KEY (`idRoba`) REFERENCES `roba` (`idRoba`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `stavka_otpremnice` */
+
+insert  into `stavka_otpremnice`(`idOtpremnica`,`rb`,`idRoba`,`qtySO`) values 
+(1,1,1,78),
+(1,2,3,54),
+(1,20,2,1325),
+(1,21,4,5),
+(1,23,5,12),
+(2,4,4,546.152),
+(2,8,1,-34),
+(2,24,3,300);
 
 /*Table structure for table `vozac` */
 
@@ -137,21 +147,20 @@ CREATE TABLE `vozac` (
   `mail` varchar(100) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`idVozac`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `vozac` */
 
 insert  into `vozac`(`idVozac`,`nameVozac`,`lastNameVozac`,`phoneNumber`,`mail`,`password`) values 
 (1,'Marko','Ciric','0691234567','marko@gmail.com','marko'),
-(2,'Ana','Stojanovic','069876543','ana@gmail.com','ana'),
 (3,'Dusan','Bjelogrlic','+38163333333','dusan@gmail.com','dusan'),
 (10,'Nikola','Nikolic','0696749303','nikola@nikola.com','nikola'),
 (12,'Marko','Markovic','+38162141232','mm@gmail.com','kerefeka'),
 (19,'Zika','Zikic','+38169254575','zika@gmail.com','zika'),
-(32,'Marko','Markobic','069123456','mdsad@dasd.vasd','sadsad'),
-(35,'Marko','Ciric','0677258369','ciric.m2002@gmail.com','markicparkic'),
+(32,'Marko','Mirkovic','069123456','mdsad@dasd.vasd','sadsad'),
 (40,'Ana','Stojanovic','+381605505058','ana.stojanovic003@gmail.com','ananana'),
-(41,'Katarina','Ciric','0652697586','cirickatarina004@gmail.com','buca2004');
+(41,'Katarina','Ciric','0652697586','cirickatarina004@gmail.com','buca2004'),
+(54,'Srećko','Tasić','+38164545665','sreckotasic@gmail.com','sreckosrecko');
 
 /*Table structure for table `vrsta_vozaca` */
 
@@ -178,29 +187,32 @@ insert  into `vrsta_vozaca`(`idVrstaVozaca`,`driverLicence`,`vehicle`) values
 DROP TABLE IF EXISTS `vzvv`;
 
 CREATE TABLE `vzvv` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `idVozac` bigint(20) NOT NULL,
   `idVrstaVozaca` bigint(20) NOT NULL,
+  `startDateLicence` date DEFAULT NULL,
   `expireDateLicence` date DEFAULT NULL,
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`idVozac`,`idVrstaVozaca`,`id`),
   KEY `idVrstaVozaca` (`idVrstaVozaca`),
   KEY `id` (`id`),
   CONSTRAINT `vzvv_ibfk_1` FOREIGN KEY (`idVozac`) REFERENCES `vozac` (`idVozac`),
   CONSTRAINT `vzvv_ibfk_2` FOREIGN KEY (`idVrstaVozaca`) REFERENCES `vrsta_vozaca` (`idVrstaVozaca`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `vzvv` */
 
-insert  into `vzvv`(`idVozac`,`idVrstaVozaca`,`expireDateLicence`,`id`) values 
-(1,1,'2025-07-10',1),
-(1,3,'2032-10-12',10),
-(1,4,'2024-12-12',11),
-(3,1,'2030-10-18',2),
-(3,2,'2028-05-02',3),
-(10,3,'2029-01-02',4),
-(12,4,'2028-05-18',5),
-(40,1,'2030-11-29',6),
-(40,4,'2030-07-10',7);
+insert  into `vzvv`(`id`,`idVozac`,`idVrstaVozaca`,`startDateLicence`,`expireDateLicence`) values 
+(22,1,1,'2021-12-12','2025-12-12'),
+(16,1,2,'2024-12-14','2030-12-14'),
+(10,1,3,'2024-05-23','2032-10-12'),
+(11,1,4,'2023-01-27','2024-12-12'),
+(17,1,6,'2031-12-12','2035-12-12'),
+(2,3,1,'2024-05-27','2030-10-18'),
+(3,3,2,'2022-12-15','2028-05-02'),
+(4,10,3,'2008-09-26','2029-01-02'),
+(5,12,4,'2023-10-28','2028-05-18'),
+(6,40,1,'2019-06-29','2030-11-29'),
+(7,40,4,'2015-11-20','2030-07-10');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

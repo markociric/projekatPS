@@ -77,5 +77,11 @@ public class Vozac {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return  nameVozac + " " + lastNameVozac;
+    }
+    
     
 }

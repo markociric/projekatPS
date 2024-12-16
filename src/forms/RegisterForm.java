@@ -208,7 +208,7 @@ public class RegisterForm extends javax.swing.JDialog {
                             this.dispose();
                             exist = true;
                             break;
-                        } 
+                        }
                     }
                     if (!exist) {
                         String randomPass = Controller.getInstance().generateRandomPassword();
@@ -216,6 +216,11 @@ public class RegisterForm extends javax.swing.JDialog {
                         int newVozacID = Controller.getInstance().insertVozac(mail, randomPass);
                         String pass = JOptionPane.showInputDialog(this, "Na mejl " + mail + "\nVam je poslata privremena šifra u ovom je nephodno da je unesete."
                                 + "\nUkoliko ne promenite privremenu šifru, nećete moći da pristupite portalu\ni dovršite registraciju", "Zahtev za promenu šifre", JOptionPane.INFORMATION_MESSAGE);
+                        if (pass == null) {
+                            Controller.getInstance().deleteVozac(newVozacID);
+                            this.dispose();
+                            break;
+                        }
                         if (pass.isEmpty()) {
                             Controller.getInstance().deleteVozac(newVozacID);
                             JOptionPane.showMessageDialog(this, "Niste popunili polje za nov unos", "Greška!", JOptionPane.ERROR_MESSAGE);
@@ -223,8 +228,14 @@ public class RegisterForm extends javax.swing.JDialog {
                         }
                         if (pass.equals(randomPass)) {
                             String newPass = JOptionPane.showInputDialog(this, "Unesite novu šifru:", "Promena šifre", JOptionPane.INFORMATION_MESSAGE);
-                            Controller.getInstance().updateVozac(newVozacID, txtName.getText(), txtLastName.getText(), txtPhone.getText(), mail, newPass);
-                            JOptionPane.showMessageDialog(this, "Uspešno ste se registrovali na sistem!!", "Registracija uspešna", JOptionPane.INFORMATION_MESSAGE);
+                            if (newPass == null) {
+                                Controller.getInstance().deleteVozac(newVozacID);
+                                JOptionPane.showMessageDialog(this, "Niste popunili polje za nov unos", "Greška!", JOptionPane.ERROR_MESSAGE);
+                                this.dispose();
+                            } else {
+                                Controller.getInstance().updateVozac(newVozacID, txtName.getText(), txtLastName.getText(), txtPhone.getText(), mail, newPass);
+                                JOptionPane.showMessageDialog(this, "Uspešno ste se registrovali na sistem!!", "Registracija uspešna", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         } else {
                             Controller.getInstance().deleteVozac(newVozacID);
                         }

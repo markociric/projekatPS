@@ -20,7 +20,7 @@ public class TableModelDetailsVozac extends AbstractTableModel {
     public TableModelDetailsVozac(List<VzVV> list) {
         this.list = list;
     }
-    String columns[] = {"Vrsta prevoznog sredstva", "Kategorija dozvole", "Dozvola važi do"};
+    String columns[] = {"Vrsta prevoznog sredstva", "Kategorija dozvole", "Dozvola važi od", "Dozvola važi do"};
 
     @Override
     public int getRowCount() {
@@ -36,13 +36,15 @@ public class TableModelDetailsVozac extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         VzVV v = list.get(rowIndex);
         VrstaVozaca vv = Controller.getInstance().findVrstaVozaca(v.getIdVrstaVozaca());
-       
+
         switch (columnIndex) {
             case 0:
                 return vv.getVehicle();
             case 1:
                 return vv.getDriverLicence();
             case 2:
+                return Controller.getInstance().convertDate(v.getStartDateLicence());
+            case 3:
                 return Controller.getInstance().convertDate(v.getExpireDateLicence());
             default:
                 return "n/a";
@@ -53,5 +55,5 @@ public class TableModelDetailsVozac extends AbstractTableModel {
     public String getColumnName(int column) {
         return columns[column];
     }
-    
+
 }

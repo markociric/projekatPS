@@ -5,6 +5,7 @@
 package main;
 
 import forms.LoginForm;
+import java.util.Date;
 
 /**
  *
@@ -13,6 +14,7 @@ import forms.LoginForm;
 public class StartClass {
     public static void main(String[] args) {
                new LoginForm().setVisible(true);
-
+               Date danas = new Date();
+               System.out.println(danas.toString());
     }
 }
