@@ -242,8 +242,8 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
 
                     } else {
                         VzVV param2 = new VzVV(vozac.getIdVozac(), selected.getIdVrstaVozaca(), dateKraj, datePocetak, 0);
-                        boolean result = Controller.getInstance().insertVzVV(param2);
-                        if (result) {
+                        int result = Controller.getInstance().insertVzVV(param2);
+                        if (result != -1) {
                             switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");

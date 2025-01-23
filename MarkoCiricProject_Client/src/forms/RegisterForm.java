@@ -292,7 +292,8 @@ public class RegisterForm extends javax.swing.JDialog {
                         String mail = txtMail.getText();
                         List<Vozac> listVozac = Controller.getInstance().getListVozac();
                         for (Vozac vozac : listVozac) {
-                            if (txtMail.getText().contains(vozac.getEmail())) {
+                            System.out.println(vozac.getEmail());
+                            if (txtMail.getText().equals(vozac.getEmail())) {
                                 switch (currentLocale.getLanguage()) {
                                     case "sr" ->
                                         JOptionPane.showMessageDialog(this, "Postoji nalog sa unetim mail-om", "Greška!", JOptionPane.ERROR_MESSAGE);
@@ -310,7 +311,7 @@ public class RegisterForm extends javax.swing.JDialog {
                             String randomPass = Controller.getInstance().generateRandomPassword();
                             Controller.getInstance().sendMail(mail, randomPass);
 
-                            int newVozacID = Controller.getInstance().insertVozac(new Vozac(-1, null, null, null, null, randomPass));
+                            int newVozacID = Controller.getInstance().insertVozac(new Vozac(-1, null, null, null, mail, randomPass));
                             String pass = switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showInputDialog(this, "Na mejl (" + mail + ")\nVam je poslata privremena šifra u ovom polju je nephodno da je unesete."

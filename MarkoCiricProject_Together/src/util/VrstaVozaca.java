@@ -5,12 +5,16 @@
 package util;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
  * @author Marko
  */
-public class VrstaVozaca implements Serializable{
+public class VrstaVozaca extends AbstractDomainObject {
+
     private int idVrstaVozaca;
     private String driverLicence;
     private String vehicle;
@@ -53,9 +57,60 @@ public class VrstaVozaca implements Serializable{
         return vehicle;
     }
 
-  
+    @Override
+    public String tableName() {
+        return "vrsta_vozaca";
+    }
 
-   
-    
-    
+    @Override
+    public String alijas() {
+        return "";
+    }
+
+    @Override
+    public String join() {
+        return "";
+    }
+
+    @Override
+    public ArrayList<AbstractDomainObject> getList(ResultSet rs) throws SQLException {
+        ArrayList<AbstractDomainObject> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            int id = rs.getInt("idVrstaVozaca");
+            String driverLicence = rs.getString("driverLicence");
+            String vehicle = rs.getString("vehicle");
+            VrstaVozaca u = new VrstaVozaca(id, driverLicence, vehicle);
+            lista.add(u);
+        }
+
+        rs.close();
+        return lista;
+    }
+
+    @Override
+    public String columnsForInsert() {
+        return "(vehicle,driverLicence)";
+    }
+
+    @Override
+    public String requirement() {
+        return "idVrstaVozaca =" + idVrstaVozaca;
+    }
+
+    @Override
+    public String valuesForInsert() {
+        return "'" + vehicle + "','" + driverLicence + "'";
+    }
+
+    @Override
+    public String valuesForUpdate() {
+        return "";
+    }
+
+    @Override
+    public String requirementForSelect(Object o) {
+        return "";
+    }
+
 }

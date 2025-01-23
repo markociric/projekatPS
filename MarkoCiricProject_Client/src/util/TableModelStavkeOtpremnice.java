@@ -43,15 +43,15 @@ public class TableModelStavkeOtpremnice extends AbstractTableModel {
                 case 0:
                     return rowIndex+1 + ".";
                 case 1:
-                    return so.getIdRoba().getNameRoba();
+                    return so.getRoba().getNameRoba();
                 case 2:
                     return so.getQty();
                 case 3:
-                    return so.getIdRoba().getUnitOfMeasure();
+                    return so.getRoba().getUnitOfMeasure();
                 case 4:
-                    return so.getIdRoba().getPrice();
+                    return so.getRoba().getPrice();
                 case 5:
-                    return  Controller.getInstance().formatNumber(so.getIdRoba().getPrice() * so.getQty());
+                    return  Controller.getInstance().formatNumber(so.getRoba().getPrice() * so.getQty());
                 default:
                     throw new AssertionError();
             }

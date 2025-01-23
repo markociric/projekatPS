@@ -90,11 +90,6 @@ public class Controller {
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public void createVozac() {
-        ClientRequest clientRequest = new ClientRequest(Operations.createVozac, null);
-        Communication.getInstance().sendRequest(clientRequest);
-        Communication.getInstance().getResponce().getResponse();
-    }
 
     public static boolean validateTextFields(List<JTextField> textFields) {
         Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
@@ -316,13 +311,6 @@ public class Controller {
 
     }
 
-    public VrstaVozaca findVrstaVozaca(int idVrstaVozaca) {
-        ClientRequest clientRequest = new ClientRequest(Operations.findVrstaVozaca, idVrstaVozaca);
-        Communication.getInstance().sendRequest(clientRequest);
-        return (VrstaVozaca) Communication.getInstance().getResponce().getResponse();
-
-    }
-
     public void sendMail(String mail, String randomPass) {
 
         final String username = "prevozrobedoo@gmail.com";
@@ -435,10 +423,10 @@ public class Controller {
 
     }
 
-    public boolean insertVzVV(VzVV vozac) {
+    public int insertVzVV(VzVV vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVzVV, vozac);
         Communication.getInstance().sendRequest(clientRequest);
-        return (boolean) Communication.getInstance().getResponce().getResponse();
+        return (int) Communication.getInstance().getResponce().getResponse();
     }
 
     public boolean deleteVrstaVozaca(int delete) {
@@ -448,10 +436,10 @@ public class Controller {
 
     }
 
-    public boolean insertVrstaVozaca(VrstaVozaca vrsta) {
+    public int insertVrstaVozaca(VrstaVozaca vrsta) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVrstaVozaca, vrsta);
         Communication.getInstance().sendRequest(clientRequest);
-        return (boolean) Communication.getInstance().getResponce().getResponse();
+        return (int) Communication.getInstance().getResponce().getResponse();
     }
 
     public List<Roba> getListRoba() {
@@ -475,10 +463,10 @@ public class Controller {
 
     }
 
-    public boolean insertRoba(Roba name) {
+    public int insertRoba(Roba name) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertRoba, name);
         Communication.getInstance().sendRequest(clientRequest);
-        return (boolean) Communication.getInstance().getResponce().getResponse();
+        return (int) Communication.getInstance().getResponce().getResponse();
 
     }
 
@@ -538,7 +526,7 @@ public class Controller {
 
     }
 
-    public void updateQtySO(StavkaOtpremnice stavka) {
+    public void updateStavkaOtpremnice(StavkaOtpremnice stavka) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateQtySO, stavka);
         Communication.getInstance().sendRequest(clientRequest);
         Communication.getInstance().getResponce().getResponse();
@@ -582,6 +570,12 @@ public class Controller {
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
 
+    }
+
+    public void insertNewVozac(Vozac vozac) {
+        ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
+        Communication.getInstance().sendRequest(clientRequest);
+        Communication.getInstance().getResponce().getResponse();
     }
 
 }

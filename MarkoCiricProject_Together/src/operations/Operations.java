@@ -12,7 +12,6 @@ public enum Operations {
     getListVozac,
     updateVozac,
     deleteVozac,
-    createVozac,
     validateTextFields,
     checkboxChecked,
     checkMail,

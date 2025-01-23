@@ -493,7 +493,8 @@ public class MainForm extends javax.swing.JFrame {
                 }
             }
             if (result) {
-                Controller.getInstance().createVozac();
+                Vozac empty = new Vozac(0, "", "", "", "", "");
+                Controller.getInstance().insertNewVozac(empty);
             }
             fillTableVozac();
         } catch (IOException ex) {

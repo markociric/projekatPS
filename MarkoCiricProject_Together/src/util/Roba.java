@@ -5,16 +5,19 @@
 package util;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
  * @author Marko
  */
-public class Roba implements Serializable{
+public class Roba extends AbstractDomainObject{
    
     private int idRoba;
     private String nameRoba;
-    private double Qty;
+    private double qty;
     private String unitOfMeasure;
     private double price;
     
@@ -24,7 +27,7 @@ public class Roba implements Serializable{
     public Roba(int idRoba, String nameRoba, double Qty, String unitOfMeasure, double price) {
         this.idRoba = idRoba;
         this.nameRoba = nameRoba;
-        this.Qty = Qty;
+        this.qty = Qty;
         this.unitOfMeasure = unitOfMeasure;
         this.price = price;
     }
@@ -36,8 +39,6 @@ public class Roba implements Serializable{
     public void setPrice(double price) {
         this.price = price;
     }
-
-    
 
     public String getUnitOfMeasure() {
         return unitOfMeasure;
@@ -65,11 +66,11 @@ public class Roba implements Serializable{
     }
 
     public double getQty() {
-        return Qty;
+        return qty;
     }
 
-    public void setQty(double Qty) {
-        this.Qty = Qty;
+    public void setQty(double qty) {
+        this.qty = qty;
     }
 
     @Override
@@ -77,5 +78,61 @@ public class Roba implements Serializable{
         return nameRoba;
     }
     
-    
+     @Override
+    public String tableName() {
+        return "roba";
+    }
+
+    @Override
+    public String alijas() {
+        return "";
+    }
+
+    @Override
+    public String join() {
+        return "";
+    }
+
+    @Override
+    public ArrayList<AbstractDomainObject> getList(ResultSet rs) throws SQLException {
+        ArrayList<AbstractDomainObject> lista = new ArrayList<>();
+
+       while (rs.next()) {
+                int id = rs.getInt("idRoba");
+                String name = rs.getString("nameRoba");
+                double qty = rs.getDouble("qty");
+                double price = rs.getDouble("price");
+                String unitOfMeasure = rs.getString("unitOfMeasure");
+                Roba r = new Roba(id, name, qty, unitOfMeasure, price);
+                lista.add(r);
+            }
+
+        rs.close();
+        return lista;
+    }
+
+    @Override
+    public String columnsForInsert() {
+        return "(nameRoba,qty,unitOfMeasure,price)";
+    }
+
+    @Override
+    public String requirement() {
+        return "idRoba =" + idRoba;
+    }
+
+    @Override
+    public String valuesForInsert() {
+        return "'" + nameRoba + "'," + qty + "," + "'" + unitOfMeasure + "'," + price;
+    }
+
+    @Override
+    public String valuesForUpdate() {
+        return "qty=" + qty;
+    }
+
+    @Override
+    public String requirementForSelect(Object o) {
+        return "";
+    }
 }

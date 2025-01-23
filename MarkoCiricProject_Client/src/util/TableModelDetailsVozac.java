@@ -39,7 +39,12 @@ public class TableModelDetailsVozac extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         try {
             VzVV v = list.get(rowIndex);
-            VrstaVozaca vv = Controller.getInstance().findVrstaVozaca(v.getIdVrstaVozaca());
+            VrstaVozaca vv = new VrstaVozaca();
+            List<VrstaVozaca> list = Controller.getInstance().getListVrstaVozaca();
+            for (VrstaVozaca vrstaVozaca : list) {
+                if(vrstaVozaca.getIdVrstaVozaca() == v.getIdVrstaVozaca())
+                    vv = vrstaVozaca;
+            }
             
             switch (columnIndex) {
                 case 0:

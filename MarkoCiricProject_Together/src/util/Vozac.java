@@ -5,12 +5,15 @@
 package util;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
  * @author Marko
  */
-public class Vozac implements Serializable{
+public class Vozac extends AbstractDomainObject implements Serializable{
     private int idVozac;
     private String nameVozac;
     private String lastNameVozac;
@@ -83,6 +86,65 @@ public class Vozac implements Serializable{
     @Override
     public String toString() {
         return  nameVozac + " " + lastNameVozac;
+    }
+
+    @Override
+    public String tableName() {
+        return "vozac";
+    }
+
+    @Override
+    public String alijas() {
+        return "v";
+    }
+
+    @Override
+    public String join() {
+        return "";
+    }
+
+    @Override
+    public ArrayList<AbstractDomainObject> getList(ResultSet rs) throws SQLException {
+        ArrayList<AbstractDomainObject> lista = new ArrayList<>();
+
+        while (rs.next()) {
+                int id = rs.getInt("idVozac");
+                String phone = rs.getString("phoneNumber");
+                String mail = rs.getString("mail");
+                String pass = rs.getString("password");
+                String name = rs.getString("nameVozac");
+                String lastname = rs.getString("lastNameVozac");
+                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
+                lista.add(u);
+        }
+
+        rs.close();
+        return lista;
+    }
+
+    @Override
+    public String columnsForInsert() {
+        return "(nameVozac,lastNameVozac,mail,password,phoneNumber)";
+    }
+
+    @Override
+    public String requirement() {
+        return "idVozac = " + idVozac;
+    }
+
+    @Override
+    public String valuesForInsert() {
+        return nameVozac + "'','" + lastNameVozac + "','" + email + "','" + password  + "','" + phoneNumber + "'";
+    }
+
+    @Override
+    public String valuesForUpdate() {
+        return "nameVozac='" + nameVozac +"',lastNameVozac='" + lastNameVozac + "',phoneNumber='" + phoneNumber + "',mail='" + email + "',password='" + password + "'";
+    }
+
+    @Override
+    public String requirementForSelect(Object o) {
+        return "";
     }
     
     

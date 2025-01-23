@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -41,6 +42,33 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import so.mesto.SOGetListMesto;
+import so.narucilacUsluge.SOAddNarucilacUsluge;
+import so.narucilacUsluge.SOGetListNarucilacUsluge;
+import so.narucilacUsluge.SOUpdateNarucilacUsluge;
+import so.otpremnica.SOAddOtpremnica;
+import so.otpremnica.SODeleteOtpremnica;
+import so.otpremnica.SOGetListOtpremnica;
+import so.otpremnica.SOUpdateOtpremnica;
+import so.roba.SOAddRoba;
+import so.roba.SODeleteRoba;
+import so.roba.SOGetListRoba;
+import so.roba.SOUpdateRoba;
+import so.stavkaOtpremnice.SOAddStavkaOtpremnice;
+import so.stavkaOtpremnice.SODeleteStavkaOtpremnice;
+import so.stavkaOtpremnice.SOGetListStavkaOtpremnice;
+import so.stavkaOtpremnice.SOUpdateStavkaOtpremnice;
+import so.vozac.SOAddVozac;
+import so.vozac.SODeleteVozac;
+import so.vozac.SOGetListVozac;
+import so.vozac.SOUpdateVozac;
+import so.vrstaVozaca.SOAddVrstaVozaca;
+import so.vrstaVozaca.SODeleteVrstaVozaca;
+import so.vrstaVozaca.SOGetListVrstaVozaca;
+import so.vzvv.SOAddVzVV;
+import so.vzvv.SODeleteVzVV;
+import so.vzvv.SOGetListVzVV;
+import so.vzvv.SOUpdateVzVV;
 import util.Mesto;
 import util.NarucilacUsluge;
 import util.Otpremnica;
@@ -59,32 +87,95 @@ public class Controller {
     private static Controller instance;
     private DBBroker dbb;
 
-    public static Controller getInstance() {
+    public static Controller getInstance() throws Exception {
         if (instance == null) {
             instance = new Controller();
         }
         return instance;
     }
 
-    public Controller() {
-        dbb = new DBBroker();
+    public Controller() throws Exception {
+        dbb = DBBroker.getInstance();
     }
 
-    public List<Vozac> getListVozac() {
-        return dbb.getListVozac();
+    public List<Vozac> getListVozac() throws Exception {
+        SOGetListVozac so = new SOGetListVozac();
+        so.templateExecute(new Vozac(), null);
+        return so.getList();
     }
 
-    public boolean updateVozac(Vozac v) {
-        return dbb.updateVozac(v);
+    public List<Otpremnica> getListOtpremnica() throws Exception {
+        SOGetListOtpremnica so = new SOGetListOtpremnica();
+        so.templateExecute(new Otpremnica(), null);
+        return so.getList();
     }
 
-    public boolean deleteVozac(int deleteVozac) {
-        return dbb.deleteVozac(deleteVozac);
+    public String convertDate(Date datum) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(datum);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int m = c.get(Calendar.MONTH) + 1;
+        int y = c.get(Calendar.YEAR);
+        return d + "." + m + "." + y + ".";
     }
 
-    public boolean createVozac() {
-       return dbb.createVozac();
+    public String convertDateForDB(Date datum) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(datum);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int m = c.get(Calendar.MONTH) + 1;
+        int y = c.get(Calendar.YEAR);
+        return y + "-" + m + "-" + d;
     }
+
+    public List<VzVV> getListVzVV(int idVozac) throws Exception {
+        SOGetListVzVV so = new SOGetListVzVV();
+        so.templateExecute(new VzVV(), idVozac);
+        return so.getList();
+    }
+
+    public List<VrstaVozaca> getListVrstaVozaca() throws Exception {
+        SOGetListVrstaVozaca so = new SOGetListVrstaVozaca();
+        so.templateExecute(new VrstaVozaca(), null);
+        return so.getList();
+    }
+
+    public List<Roba> getListRoba() throws Exception {
+        SOGetListRoba so = new SOGetListRoba();
+        so.templateExecute(new Roba(), null);
+        return so.getList();
+    }
+
+    public List<NarucilacUsluge> getListNarucilacUsluge(HashMap<Integer, String> needSort) throws Exception {
+        SOGetListNarucilacUsluge so = new SOGetListNarucilacUsluge();
+        so.templateExecute(new NarucilacUsluge(), needSort);
+        return so.getLista();
+    }
+
+    public List<StavkaOtpremnice> getListStavkeOtpremnice(int idOtpremnica) throws Exception {
+        SOGetListStavkaOtpremnice so = new SOGetListStavkaOtpremnice();
+        so.templateExecute(new StavkaOtpremnice(), idOtpremnica);
+        return so.getList();
+    }
+
+    public List<Mesto> getListMesto() throws Exception {
+        SOGetListMesto so = new SOGetListMesto();
+        so.templateExecute(new Mesto(), null);
+        return so.getList();
+    }
+
+    public boolean updateVozac(Vozac v) throws Exception {
+        SOUpdateVozac so = new SOUpdateVozac();
+        so.templateExecute(v, null);
+        return so.isUpdated();
+    }
+
+    public boolean deleteVozac(int deleteVozac) throws Exception {
+        SODeleteVozac so = new SODeleteVozac();
+        so.templateExecute(new Vozac(deleteVozac, "", "", "", "", ""), null);
+        return so.isDeleted();
+    }
+
 
     public static boolean validateTextFields(List<JTextField> textFields) {
         Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
@@ -255,41 +346,14 @@ public class Controller {
 
     }
 
-    public List<Otpremnica> getListOtpremnica() {
-        return dbb.getListOtpremnica();
-    }
-
-    public String convertDate(Date datum) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(datum);
-        int d = c.get(Calendar.DAY_OF_MONTH);
-        int m = c.get(Calendar.MONTH) + 1;
-        int y = c.get(Calendar.YEAR);
-        return d + "." + m + "." + y + ".";
-    }
-    
-    public String convertDateForDB(Date datum) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(datum);
-        int d = c.get(Calendar.DAY_OF_MONTH);
-        int m = c.get(Calendar.MONTH) + 1;
-        int y = c.get(Calendar.YEAR);
-        return y + "-" + m + "-" + d;
-    }
     public List<String> getVehicles(int idVozac) {
         return dbb.getVehicles(idVozac);
     }
 
-    public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
-        return dbb.deleteOtpremnica(deleteOtpremnica);
-    }
-
-    public List<VzVV> getListVzVV(int idVozac) {
-        return dbb.getVzVV(idVozac);
-    }
-
-    public VrstaVozaca findVrstaVozaca(int idVrstaVozaca) {
-        return dbb.findVrstaVozaca(idVrstaVozaca);
+    public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) throws Exception {
+        SODeleteOtpremnica so = new SODeleteOtpremnica();
+        so.templateExecute(new Otpremnica(deleteOtpremnica.getIdOtpremnica(), null, deleteOtpremnica.getVozac(), deleteOtpremnica.getNarucilacUsluge()), null);
+        return so.isDeleted();
     }
 
     public void sendMail(String mail, String randomPass) {
@@ -349,8 +413,10 @@ public class Controller {
         return password.toString();
     }
 
-    public int insertVozac(Vozac v) {
-        return dbb.insertNewVozac(v);
+    public int insertVozac(Vozac v) throws Exception {
+        SOAddVozac so = new SOAddVozac();
+        so.templateExecute(v, null);
+        return so.getId();
     }
 
     public String hashPassword(String password) {
@@ -379,52 +445,52 @@ public class Controller {
         return null;
     }
 
-    public List<VrstaVozaca> getListVrstaVozaca() {
-        return dbb.getListVrstaVozaca();
+    public boolean updateVzVV(VzVV v) throws Exception {
+        SOUpdateVzVV so = new SOUpdateVzVV();
+        so.templateExecute(v, null);
+        return so.isUpdated();
     }
 
-    public boolean updateVzVV(VzVV v) {
-        return dbb.updateVzVV(v);
+    public boolean deleteVzVV(int delete) throws Exception {
+        SODeleteVzVV so = new SODeleteVzVV();
+        so.templateExecute(new VzVV(0, 0, null, null, delete), null);
+        return so.isDeleted();
     }
 
-    public boolean deleteVzVV(int delete) {
-        return dbb.deleteVzVV(delete);
+    public int insertVzVV(VzVV v) throws Exception {
+        SOAddVzVV so = new SOAddVzVV();
+        so.templateExecute(v, null);
+        return so.getId();
     }
 
-    public boolean insertVzVV(VzVV v) {
-        return dbb.insertVzVV(v);
+    public boolean deleteVrstaVozaca(int delete) throws Exception {
+        SODeleteVrstaVozaca so = new SODeleteVrstaVozaca();
+        so.templateExecute(new VrstaVozaca(delete, "", ""), null);
+        return so.isDeleted();
     }
 
-    public boolean deleteVrstaVozaca(int delete) {
-        return dbb.deleteVrstaVozaca(delete);
+    public int insertVrstaVozaca(VrstaVozaca v) throws Exception {
+        SOAddVrstaVozaca so = new SOAddVrstaVozaca();
+        so.templateExecute(v, null);
+        return so.getId();
     }
 
-    public boolean insertVrstaVozaca(VrstaVozaca v) {
-        return dbb.insertVrstaVozaca(v);
+    public boolean deleteRoba(int delete) throws Exception {
+        SODeleteRoba so = new SODeleteRoba();
+        so.templateExecute(new Roba(delete, "", 0, "", 0), null);
+        return so.isDeleted();
     }
 
-    public List<Roba> getListRoba() {
-        return dbb.getListRoba();
+    public boolean updateRoba(Roba r) throws Exception {
+        SOUpdateRoba so = new SOUpdateRoba();
+        so.templateExecute(r, null);
+        return so.isUpdated();
     }
 
-    public boolean deleteRoba(int delete) {
-        return dbb.deleteRoba(delete);
-    }
-
-    public boolean updateRoba(Roba r) {
-        return dbb.updateRoba(r);
-    }
-
-    public boolean insertRoba(Roba r) {
-        return dbb.insertRoba(r);
-    }
-
-    public List<NarucilacUsluge> getListNarucilacUsluge(HashMap<Integer, String> needSort) {
-        return dbb.getListNarucilacUsluge(needSort);
-    }
-
-    public List<StavkaOtpremnice> getListStavkeOtpremnice(int idOtpremnica) {
-        return dbb.getListStavkeOtpremnice(idOtpremnica);
+    public int insertRoba(Roba r) throws Exception {
+        SOAddRoba so = new SOAddRoba();
+        so.templateExecute(r, null);
+        return so.getId();
     }
 
     public double sumPrices(int idOtpremnica) {
@@ -450,44 +516,53 @@ public class Controller {
         dateFormat.setLenient(false);
 
         try {
-            dateFormat.parse(date); 
+            dateFormat.parse(date);
             return true;
         } catch (ParseException e) {
             return false;
         }
     }
 
-    public List<Mesto> getListMesto() {
-        return dbb.getListMesto();
+    public boolean updateStavkaOtpremnice(StavkaOtpremnice so) throws Exception {
+        SOUpdateStavkaOtpremnice s = new SOUpdateStavkaOtpremnice();
+        s.templateExecute(so, null);
+        return s.isUpdated();
     }
 
-    public boolean updateQtySO(StavkaOtpremnice so) {
-         return dbb.updateQtySO(so);
+    public int insertStavkaOtpremnice(StavkaOtpremnice so) throws Exception {
+        SOAddStavkaOtpremnice sO = new SOAddStavkaOtpremnice();
+        sO.templateExecute(so, null);
+        return sO.getId();
     }
 
-    public int insertStavkaOtpremnice(StavkaOtpremnice so) {
-       return dbb.insertStavkaOtpremnice(so);
+    public boolean deleteStavkaOtpremnice(int delete) throws Exception {
+        SODeleteStavkaOtpremnice so = new SODeleteStavkaOtpremnice();
+        so.templateExecute(new StavkaOtpremnice(0, delete, null, 0), null);
+        return so.isDeleted();
     }
 
-    public boolean deleteStavkaOtpremnice(int delete) {
-        return dbb.deleteStavkaOtpremnice(delete);
+    public boolean updateOtpremnica(Otpremnica o) throws Exception {
+        SOUpdateOtpremnica so = new SOUpdateOtpremnica();
+        so.templateExecute(o, null);
+        return so.isUpdated();
     }
 
-    public boolean updateOtpremnica(Otpremnica o) {
-       return dbb.updateOtpremnica(o);
+    public boolean updateNarucilacUsluge(NarucilacUsluge nu) throws Exception {
+        SOUpdateNarucilacUsluge so = new SOUpdateNarucilacUsluge();
+        so.templateExecute(nu, null);
+        return so.isUpdated();
     }
 
-    public boolean updateNarucilacUsluge(NarucilacUsluge nu) {
-       return dbb.updateNarucilacUsluge(nu);
+    public int insertNarucilacUsluge(NarucilacUsluge nu) throws Exception {
+        SOAddNarucilacUsluge so = new SOAddNarucilacUsluge();
+        so.templateExecute(nu, null);
+        return so.getId();
     }
 
-    public int insertNarucilacUsluge(NarucilacUsluge nu) {
-        return dbb.insertNarucilacUsluge(nu);
+    public int insertOtpremnica(Otpremnica o) throws Exception {
+        SOAddOtpremnica so = new SOAddOtpremnica();
+        so.templateExecute(o, null);
+        return so.getId();
     }
 
-    public int insertOtpremnica(Otpremnica o) {
-        return dbb.insertOtpremnica(o);
-    }
-
-    
 }

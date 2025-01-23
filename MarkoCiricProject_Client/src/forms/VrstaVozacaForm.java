@@ -201,8 +201,8 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
             String vehicle = jTextField1.getText().trim();
             String driverLicence = jTextField2.getText().trim();
             VrstaVozaca param = new VrstaVozaca(-1, driverLicence, vehicle);
-            boolean result = Controller.getInstance().insertVrstaVozaca(param);
-            if (result) {
+            int result = Controller.getInstance().insertVrstaVozaca(param);
+            if (result != 1) {
                 switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");

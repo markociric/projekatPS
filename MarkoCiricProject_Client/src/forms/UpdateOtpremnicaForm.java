@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import operations.Status;
 import util.Mesto;
 import util.NarucilacUsluge;
 import util.Otpremnica;
@@ -34,6 +35,8 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
     List<JTextField> textFields = new ArrayList<>();
     private Locale currentLocale;
     private ResourceBundle messages;
+    List<StavkaOtpremnice> listStavkaOtpremnice;
+    List<StavkaOtpremnice> listStavkaOtpremniceEdited;
 
     /**
      * Creates new form DetailsOtpremnicaForm
@@ -46,6 +49,8 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         updateTexts();
         addListeners();
         o = otpremnica;
+        listStavkaOtpremnice = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
+        listStavkaOtpremniceEdited = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
         fillcombo();
         switch (currentLocale.getLanguage()) {
             case "sr":
@@ -70,7 +75,8 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         txtMailV.setEditable(false);
         txtPhoneV.setEditable(false);
         txtDriverType.setEditable(false);
-        fillTable();
+        fillTable(listStavkaOtpremnice);
+
     }
 
     /**
@@ -427,6 +433,23 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                             JOptionPane.showMessageDialog(this, "Changes saved successfully", "Notification", JOptionPane.INFORMATION_MESSAGE);
 
                     }
+                    for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremnice) {
+                        System.out.println(stavkaOtpremnice + " " + stavkaOtpremnice.getStatus());
+                        if (stavkaOtpremnice.getStatus() == Status.DELETED) {
+                            Controller.getInstance().deleteStavkaOtpremnice(stavkaOtpremnice.getRb());
+                        }
+                    }
+                    System.out.println("");
+                    for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremniceEdited) {
+                        System.out.println(stavkaOtpremnice + " " + stavkaOtpremnice.getStatus());
+                        if (stavkaOtpremnice.getStatus() == Status.ADDED) {
+                            Controller.getInstance().insertStavkaOtpremnice(stavkaOtpremnice);
+                        }
+                        if (stavkaOtpremnice.getStatus() == Status.UPDATED) {
+                            Controller.getInstance().updateStavkaOtpremnice(stavkaOtpremnice);
+                        } 
+                    }
+
                     this.dispose();
                 }
             } catch (IOException ex) {
@@ -441,7 +464,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                 default ->
                     JOptionPane.showMessageDialog(this, "You have not filled in all the information correctly", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -465,23 +488,26 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         Roba selected = (Roba) comboRoba.getSelectedItem();
         boolean result = true;
         try {
+            List<Roba> listRoba = Controller.getInstance().getListRoba();
             double qty = Double.parseDouble(txtQtyStavka.getText());
-            List<StavkaOtpremnice> list = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getIdRoba().getIdRoba() == selected.getIdRoba()) {
-                    if (list.get(i).getIdRoba().getQty() < qty) {
-                        switch (currentLocale.getLanguage()) {
-                            case "sr" ->
-                                JOptionPane.showMessageDialog(this, "Na stanju nema ta količina robe", "Greška", JOptionPane.ERROR_MESSAGE);
-                            case "sr_cir" ->
-                                JOptionPane.showMessageDialog(this, "На стању нема та количина робе", "Грешка", JOptionPane.ERROR_MESSAGE);
-                            default ->
-                                JOptionPane.showMessageDialog(this, "That quantity of goods is not available", "Error", JOptionPane.ERROR_MESSAGE);
+            for (int i = 0; i < listStavkaOtpremniceEdited.size(); i++) {
+                if (listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba() == selected.getIdRoba()) {
+                    for (Roba roba : listRoba) {
+                        if (roba.getQty() < qty) {
+                            switch (currentLocale.getLanguage()) {
+                                case "sr" ->
+                                    JOptionPane.showMessageDialog(this, "Na stanju nema ta količina robe", "Greška", JOptionPane.ERROR_MESSAGE);
+                                case "sr_cir" ->
+                                    JOptionPane.showMessageDialog(this, "На стању нема та количина робе", "Грешка", JOptionPane.ERROR_MESSAGE);
+                                default ->
+                                    JOptionPane.showMessageDialog(this, "That quantity of goods is not available", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            return;
                         }
-                        
-                        return;
                     }
-                    if (list.get(i).getQty() + qty <= 0) {
+
+                    if (listStavkaOtpremniceEdited.get(i).getQty() + qty <= 0) {
                         switch (currentLocale.getLanguage()) {
                             case "sr" ->
                                 JOptionPane.showMessageDialog(this, "Ne možete oduzeti više robe nego što je upisano. Ako želite, bolje obrišite tu stavku", "Greška", JOptionPane.ERROR_MESSAGE);
@@ -490,15 +516,21 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                             default ->
                                 JOptionPane.showMessageDialog(this, "You cannot take away more goods than is registered. If you want, you better delete that item", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                        
+
                         return;
                     } else {
-                        System.out.println(list.get(i).getQty());
-
-                        Roba param = new Roba(list.get(i).getIdRoba().getIdRoba(), null, (list.get(i).getIdRoba().getQty() - qty), null, -1);
+                        double stanje = 0;
+                        for (Roba roba : Controller.getInstance().getListRoba()) {
+                            if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba()) {
+                                stanje = roba.getQty();
+                            }
+                        }
+                        Roba param = new Roba(listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba(), null, (stanje - qty), null, -1);
                         Controller.getInstance().updateRoba(param);
-                        StavkaOtpremnice param2 = new StavkaOtpremnice(list.get(i).getIdOtpremnica(), -1, list.get(i).getIdRoba(), Double.sum(list.get(i).getQty(), qty));
-                        Controller.getInstance().updateQtySO(param2);
+                        StavkaOtpremnice param2 = new StavkaOtpremnice(0, listStavkaOtpremniceEdited.get(i).getRb(), null, Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
+                        listStavkaOtpremniceEdited.get(i).setQty(Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
+                        listStavkaOtpremniceEdited.get(i).setStatus(Status.UPDATED);
+                        //Controller.getInstance().updateQtySO(param2);
                         switch (currentLocale.getLanguage()) {
                             case "sr" ->
                                 JOptionPane.showMessageDialog(this, "Uspešno izmenjena količina robe", "Obaveštenje", JOptionPane.INFORMATION_MESSAGE);
@@ -507,22 +539,21 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                             default ->
                                 JOptionPane.showMessageDialog(this, "Successfully changed the quantity of goods", "Notification", JOptionPane.INFORMATION_MESSAGE);
                         }
-                        
+
                         result = false;
-                        fillTable();
+                        fillTable(listStavkaOtpremniceEdited);
 
                     }
                 }
             }
             if (result) {
-                if (qty >= 0) { //treba da dodam logiku ako dodajem neku robu koja nije na listi stavki, 
-//                    //da proverim da li u skladistu ima dovoljno te nove robe koje zelim da dodam kao stavku otpremnice
-                    List<Roba> listRoba = Controller.getInstance().getListRoba();
+                if (qty >= 0) {
                     for (int i = 0; i < listRoba.size(); i++) {
                         if (listRoba.get(i).getIdRoba() == selected.getIdRoba()) {
                             if (listRoba.get(i).getQty() >= qty) {
-                                StavkaOtpremnice param = new StavkaOtpremnice(o.getIdOtpremnica(), -1, selected, qty);
-                                int id = Controller.getInstance().insertStavkaOtpremnice(param);
+                                StavkaOtpremnice param = new StavkaOtpremnice(o.getIdOtpremnica(), -1, selected, qty, Status.ADDED);
+                                listStavkaOtpremniceEdited.add(param);
+                                //int id = Controller.getInstance().insertStavkaOtpremnice(param);
                                 Roba param2 = new Roba(selected.getIdRoba(), null, listRoba.get(i).getQty() - qty, null, -1);
                                 Controller.getInstance().updateRoba(param2);
                                 switch (currentLocale.getLanguage()) {
@@ -533,8 +564,8 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                                     default ->
                                         JOptionPane.showMessageDialog(this, "New item successfully added", "Notification", JOptionPane.INFORMATION_MESSAGE);
                                 }
-                                
-                                fillTable();
+
+                                fillTable(listStavkaOtpremniceEdited);
                             } else {
                                 switch (currentLocale.getLanguage()) {
                                     case "sr" ->
@@ -544,7 +575,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                                     default ->
                                         JOptionPane.showMessageDialog(this, "There are not enough requested goods in the warehouse", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
-                                
+
                             }
                         }
                     }
@@ -557,7 +588,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                         default ->
                             JOptionPane.showMessageDialog(this, "Incorrect entry of the quantity of goods", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    
+
                 }
             }
         } catch (Exception e) {
@@ -588,20 +619,37 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                 }
                 return;
             }
-            List<StavkaOtpremnice> list = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
-            int delete = list.get(selectedRow).getId();
-            boolean result = Controller.getInstance().deleteStavkaOtpremnice(delete);
+            double qty = listStavkaOtpremniceEdited.get(selectedRow).getQty();
+            double stanje = 0;
+            for (Roba roba : Controller.getInstance().getListRoba()) {
+                if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba()) {
+                    stanje = roba.getQty();
+                }
+            }
+            Roba param = new Roba(listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba(), null, (stanje + qty), null, -1);
 
-            if (result) {
+            Controller.getInstance().updateRoba(param);
+            boolean r = true;
+            if (r) {
+                for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremnice) {
+                    if (stavkaOtpremnice.getRb() == listStavkaOtpremniceEdited.get(selectedRow).getRb()) {
+                        stavkaOtpremnice.setStatus(Status.DELETED);
+                    }
+                }
+                listStavkaOtpremniceEdited.remove(selectedRow);
+
+            } else {
+                r = false;
+            }
+            if (r) {
                 switch (currentLocale.getLanguage()) {
                     case "sr" ->
-                        JOptionPane.showMessageDialog(this, "Uspešno izbrisana vrsta vozača");
+                        JOptionPane.showMessageDialog(this, "Uspešno izbrisana stavka otpremnice");
                     case "sr_cir" ->
-                        JOptionPane.showMessageDialog(this, "Успешно избрисана врста возача");
+                        JOptionPane.showMessageDialog(this, "Успешно избрисана ставка отпремнице");
                     default ->
-                        JOptionPane.showMessageDialog(this, "Successfully deleted driver type");
+                        JOptionPane.showMessageDialog(this, "Item successfully deleted");
                 }
-                
 
             } else {
                 switch (currentLocale.getLanguage()) {
@@ -613,7 +661,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(this, "Error deleting from database", "Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            fillTable();
+            fillTable(listStavkaOtpremniceEdited);
         } catch (IOException ex) {
             Logger.getLogger(UpdateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -665,8 +713,8 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtQtyStavka;
     // End of variables declaration//GEN-END:variables
 
-    private void fillTable() throws IOException {
-        TableModelStavkeOtpremnice modelStavkeOtpremnice = new TableModelStavkeOtpremnice(Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica()));
+    private void fillTable(List<StavkaOtpremnice> list) throws IOException {
+        TableModelStavkeOtpremnice modelStavkeOtpremnice = new TableModelStavkeOtpremnice(list);
         jTable1.setModel(modelStavkeOtpremnice);
     }
 

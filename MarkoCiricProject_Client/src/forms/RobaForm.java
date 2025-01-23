@@ -258,8 +258,8 @@ public class RobaForm extends javax.swing.JFrame {
             double price = Double.parseDouble(txtPrice.getText().trim());
             String unit = txtUnit.getText().trim();
             Roba param = new Roba(-1, name, qty, unit, price);
-            boolean result = Controller.getInstance().insertRoba(param);
-            if (result) {
+            int result = Controller.getInstance().insertRoba(param);
+            if (result != 1) {
                 switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
