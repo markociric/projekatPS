@@ -83,7 +83,7 @@ public class ServerForm extends javax.swing.JFrame {
             server.stopServer();
             server = null;
         }
-        this.dispose();
+        System.exit(0);
 
     }//GEN-LAST:event_btnStopActionPerformed
 

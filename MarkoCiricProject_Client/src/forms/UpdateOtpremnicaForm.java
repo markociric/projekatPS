@@ -7,6 +7,7 @@ package forms;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -420,7 +421,10 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                 NarucilacUsluge param2 = new NarucilacUsluge(o.getNarucilacUsluge().getIdNarucilacUsluge(), name, lastName, adress, phone, mail, selectedMesto);
                 Controller.getInstance().updateNarucilacUsluge(param2);
                 Otpremnica param = new Otpremnica(o.getIdOtpremnica(), null, selectedVozac, o.getNarucilacUsluge());
-                boolean result = Controller.getInstance().updateOtpremnica(param);
+                List<Object> liste = new ArrayList<>();
+                liste.add(listStavkaOtpremnice);
+                liste.add(listStavkaOtpremniceEdited);
+                boolean result = Controller.getInstance().updateOtpremnica(param,liste);
                 if (result) {
                     switch (currentLocale.getLanguage()) {
                         case "sr" ->
@@ -433,23 +437,6 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                             JOptionPane.showMessageDialog(this, "Changes saved successfully", "Notification", JOptionPane.INFORMATION_MESSAGE);
 
                     }
-                    for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremnice) {
-                        System.out.println(stavkaOtpremnice + " " + stavkaOtpremnice.getStatus());
-                        if (stavkaOtpremnice.getStatus() == Status.DELETED) {
-                            Controller.getInstance().deleteStavkaOtpremnice(stavkaOtpremnice.getRb());
-                        }
-                    }
-                    System.out.println("");
-                    for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremniceEdited) {
-                        System.out.println(stavkaOtpremnice + " " + stavkaOtpremnice.getStatus());
-                        if (stavkaOtpremnice.getStatus() == Status.ADDED) {
-                            Controller.getInstance().insertStavkaOtpremnice(stavkaOtpremnice);
-                        }
-                        if (stavkaOtpremnice.getStatus() == Status.UPDATED) {
-                            Controller.getInstance().updateStavkaOtpremnice(stavkaOtpremnice);
-                        } 
-                    }
-
                     this.dispose();
                 }
             } catch (IOException ex) {

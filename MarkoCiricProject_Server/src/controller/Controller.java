@@ -541,9 +541,11 @@ public class Controller {
         return so.isDeleted();
     }
 
-    public boolean updateOtpremnica(Otpremnica o) throws Exception {
+    public boolean updateOtpremnica(List<Object> list) throws Exception {
         SOUpdateOtpremnica so = new SOUpdateOtpremnica();
-        so.templateExecute(o, null);
+        Otpremnica o = (Otpremnica) list.get(1);
+        List<Object> lists = (List<Object>) list.get(0);
+        so.templateExecute(o, lists);
         return so.isUpdated();
     }
 

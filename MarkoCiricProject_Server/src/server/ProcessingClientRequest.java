@@ -146,8 +146,8 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().deleteStavkaOtpremnice(so3));
                         break;
                     case updateOtpremnica:
-                        Otpremnica o2 = (Otpremnica) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().updateOtpremnica(o2));
+                        List<Object> list2 = (List<Object>) clientRequest.getParam();
+                        serverResponse.setResponse(Controller.getInstance().updateOtpremnica(list2));
                         break;
                     case updateNarucilacUsluge:
                         NarucilacUsluge nu = (NarucilacUsluge) clientRequest.getParam();

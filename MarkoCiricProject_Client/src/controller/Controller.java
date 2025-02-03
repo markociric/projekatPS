@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -546,8 +547,11 @@ public class Controller {
 
     }
 
-    public boolean updateOtpremnica(Otpremnica otpremnica) {
-        ClientRequest clientRequest = new ClientRequest(Operations.updateOtpremnica, otpremnica);
+    public boolean updateOtpremnica(Otpremnica otpremnica, List<Object> liste) {
+        List<Object> params = new ArrayList<>();
+        params.add(liste);
+        params.add(otpremnica);
+        ClientRequest clientRequest = new ClientRequest(Operations.updateOtpremnica, params);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
