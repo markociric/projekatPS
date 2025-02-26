@@ -135,6 +135,11 @@ public class NarucilacUsluge extends AbstractDomainObject {
     }
 
     @Override
+    public String toString() {
+        return "NarucilacUsluge{" + "idNarucilacUsluge=" + idNarucilacUsluge + ", name=" + name + ", lastName=" + lastName + ", adress=" + adress + ", phone=" + phone + ", email=" + email + ", mesto=" + mesto + '}';
+    }
+
+    @Override
     public String columnsForInsert() {
         return "(name,lastName,phone,email,idMesto,adress)";
     }
@@ -177,6 +182,6 @@ public class NarucilacUsluge extends AbstractDomainObject {
                 return "WHERE nu.email LIKE \"" + needSort.get(key) + "%\"";
 
         }
-        return null;
+        return "";
     }
 }

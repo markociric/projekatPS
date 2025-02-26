@@ -5,7 +5,12 @@
 package forms;
 
 import controller.Controller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +63,10 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         lblSort = new javax.swing.JLabel();
         btnFind = new javax.swing.JButton();
+        btnCreateV = new javax.swing.JButton();
+        btnUpdateV = new javax.swing.JButton();
+        btnDeleteV = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -92,43 +101,91 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
             }
         });
 
+        btnCreateV.setText("Kreiraj");
+        btnCreateV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateVActionPerformed(evt);
+            }
+        });
+
+        btnUpdateV.setText("Azuriraj");
+        btnUpdateV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateVActionPerformed(evt);
+            }
+        });
+
+        btnDeleteV.setText("Obriši");
+        btnDeleteV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteVActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setText("Osveži");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 880, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(182, 182, 182)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblSort)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(183, 183, 183)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblSort)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCreateV)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnUpdateV)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnDeleteV))
+                                    .addComponent(btnRefresh))
+                                .addGap(83, 83, 83)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(29, 29, 29)
-                        .addComponent(btnFind)))
+                        .addComponent(btnFind))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 880, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFind)
                     .addComponent(lblSort))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFind))
-                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnFind)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCreateV)
+                            .addComponent(btnUpdateV)
+                            .addComponent(btnDeleteV))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRefresh)
+                .addGap(12, 12, 12)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -175,12 +232,132 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnFindActionPerformed
 
+    private void btnCreateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateVActionPerformed
+        try {
+            CreateNarucilacUslugeForm cnu = new CreateNarucilacUslugeForm(currentLocale);
+            cnu.setVisible(true);
+            cnu.setLocationRelativeTo(null);
+            btnCreateV.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        CreateNarucilacUslugeForm unosForma = new CreateNarucilacUslugeForm(currentLocale);
+
+                        unosForma.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                try {
+                                    fillTable(0, "");
+                                } catch (IOException ex) {
+                                    Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                            }
+                        });
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCreateVActionPerformed
+
+    private void btnUpdateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateVActionPerformed
+        try {
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow == -1) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Морате да изаберете неко поље", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "You must select a field", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                return;
+            }
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(map);
+            NarucilacUsluge nu = listNu.get(selectedRow);
+            UpdateNarucilacUslugeForm form = new UpdateNarucilacUslugeForm(nu, currentLocale);
+            form.setVisible(true);
+            form.setLocationRelativeTo(null);
+
+            fillTable(0, null);
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateVActionPerformed
+
+    private void btnDeleteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteVActionPerformed
+        try {
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow == -1) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Морате да изаберете неко поље", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "You must select a field", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                return;
+            }
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(map);
+            int delete = listNu.get(selectedRow).getIdNarucilacUsluge();
+            System.out.println(delete);
+            boolean result = Controller.getInstance().deleteNarucilacUsluge(delete);
+
+            if (result) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Uspešno izbrisan naručilac usluge");
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Успешно избрисан возач");
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Customer successfully deleted");
+                }
+
+            } else {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Greška pri brisanju iz baze", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Грешка при брисању из базе", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Error deleting from database", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            fillTable(0, "");
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteVActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        try {
+            fillTable(0, "");
+        } catch (IOException ex) {
+            Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreateV;
+    private javax.swing.JButton btnDeleteV;
     private javax.swing.JButton btnFind;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnUpdateV;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
@@ -194,6 +371,9 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         map.put(needSort, search);
 
         TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(map));
+        for (NarucilacUsluge narucilacUsluge : Controller.getInstance().getListNarucilacUsluge(map)) {
+            System.out.println(narucilacUsluge);
+        }
         jTable1.setModel(modelNarucilacUsluge);
     }
 
@@ -209,5 +389,9 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         lblFind.setText(messages.getString("lblFind.text"));
         btnFind.setText(messages.getString("btnFind.text"));
         lblSort.setText(messages.getString("lblSort.text"));
+        btnCreateV.setText(messages.getString("btnCreateV.text"));
+        btnUpdateV.setText(messages.getString("btnUpdateV.text"));
+        btnDeleteV.setText(messages.getString("btnDeleteV.text"));
+
     }
 }

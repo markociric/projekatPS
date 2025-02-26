@@ -44,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import so.mesto.SOGetListMesto;
 import so.narucilacUsluge.SOAddNarucilacUsluge;
+import so.narucilacUsluge.SODeleteNarucilacUsluge;
 import so.narucilacUsluge.SOGetListNarucilacUsluge;
 import so.narucilacUsluge.SOUpdateNarucilacUsluge;
 import so.otpremnica.SOAddOtpremnica;
@@ -175,7 +176,6 @@ public class Controller {
         so.templateExecute(new Vozac(deleteVozac, "", "", "", "", ""), null);
         return so.isDeleted();
     }
-
 
     public static boolean validateTextFields(List<JTextField> textFields) {
         Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
@@ -419,32 +419,6 @@ public class Controller {
         return so.getId();
     }
 
-    public String hashPassword(String password) {
-        String input = password;
-        try {
-            // Kreiranje instance MessageDigest za algoritam SHA-256
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            // Pretvaranje ulaznog stringa u bajte i hesiranje
-            byte[] hashBytes = digest.digest(input.getBytes());
-
-            // Konvertovanje hesiranog niza bajtova u heksadecimalni string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0'); // Dodaj nulu ako je potrebno
-                }
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algoritam nije pronađen: " + e.getMessage());
-        }
-        return null;
-    }
-
     public boolean updateVzVV(VzVV v) throws Exception {
         SOUpdateVzVV so = new SOUpdateVzVV();
         so.templateExecute(v, null);
@@ -567,4 +541,9 @@ public class Controller {
         return so.getId();
     }
 
+    public boolean deleteNarucilacUsluge(int delete) throws Exception {
+        SODeleteNarucilacUsluge so = new SODeleteNarucilacUsluge();
+        so.templateExecute(new NarucilacUsluge(delete, null, null, null, null, null, null), null);
+        return so.isDeleted();
+    }
 }

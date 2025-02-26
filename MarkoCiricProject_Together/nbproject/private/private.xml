@@ -10,10 +10,6 @@
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Together/src/util/StavkaOtpremnice.java</file>
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Together/src/util/VzVV.java</file>
         </group>
-        <group name="glavni">
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Together/src/operations/Status.java</file>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Together/src/util/Roba.java</file>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Together/src/util/StavkaOtpremnice.java</file>
-        </group>
+        <group name="glavni"/>
     </open-files>
 </project-private>

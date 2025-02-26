@@ -51,4 +51,5 @@ public enum Operations {
     updateNarucilacUsluge,
     insertNarucilacUsluge,
     insertOtpremnica,
+    deleteNarucilacUsluge
 }

@@ -161,14 +161,19 @@ public class ProcessingClientRequest extends Thread {
                         Otpremnica o3 = (Otpremnica) clientRequest.getParam();
                         serverResponse.setResponse(Controller.getInstance().insertOtpremnica(o3));
                         break;
+                    case deleteNarucilacUsluge:
+                        int so4 = (int) clientRequest.getParam();
+                        serverResponse.setResponse(Controller.getInstance().deleteNarucilacUsluge(so4));
+                        break;
                     default:
                         System.out.println("greska");
-                        //ovde izlistati operacije koje klijent moze da izvrsi
+                    //ovde izlistati operacije koje klijent moze da izvrsi
                 }
-                
+
                 sendResponse(serverResponse);
             } catch (Exception ex) {
-                Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Prekinuta veza sa klijentom.");
+                break;
             }
         }
     }
@@ -179,7 +184,7 @@ public class ProcessingClientRequest extends Thread {
             return (ClientRequest) inputStream.readObject();
 
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("Greska");
         }
         return null;
     }
@@ -190,7 +195,7 @@ public class ProcessingClientRequest extends Thread {
             outputStream.writeObject(response);
             outputStream.flush();
         } catch (IOException ex) {
-            Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Greska");
         }
     }
 

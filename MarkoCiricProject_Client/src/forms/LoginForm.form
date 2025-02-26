@@ -182,7 +182,7 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="checkBoxPassword">
       <Properties>
-        <Property name="text" type="java.lang.String" value="prikazi sifru"/>
+        <Property name="text" type="java.lang.String" value="prika&#x17e;i &#x161;ifru"/>
       </Properties>
     </Component>
   </SubComponents>

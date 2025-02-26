@@ -2,39 +2,33 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package so.vrstaVozaca;
+package so.narucilacUsluge;
 
 import database.DBBroker;
+import java.sql.SQLException;
 import util.AbstractDomainObject;
-import util.VrstaVozaca;
-import java.util.ArrayList;
 import so.AbstractSO;
+import util.NarucilacUsluge;
 
 /**
  *
  * @author Marko
  */
-public class SOAddVrstaVozaca extends AbstractSO{
-    int id;
+public class SODeleteNarucilacUsluge extends AbstractSO{
+    boolean result;
     @Override
     protected void validate(AbstractDomainObject ado) throws Exception {
-        if (!(ado instanceof VrstaVozaca)) {
-            throw new Exception("Prosledjeni objekat nije instanca klase VrstaVozaca!");
+        if (!(ado instanceof NarucilacUsluge)) {
+            throw new Exception("Prosledjeni objekat nije instanca klase NarucilacUsluge!");
         }
     }
 
     @Override
     protected void execute(AbstractDomainObject ado, Object o) throws Exception {
-        try {
-                    id = DBBroker.getInstance().insert(ado);
-
-        } catch (Exception e) {
-            id = -1;
-        }
-    }
-
-    public int getId() {
-        return id;
+       result =  DBBroker.getInstance().delete(ado);
     }
     
+    public boolean isDeleted() throws SQLException {
+        return result;
+    }
 }

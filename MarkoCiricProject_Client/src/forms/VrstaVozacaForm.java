@@ -13,6 +13,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import util.TableModelVrstaVozaca;
 import util.VrstaVozaca;
 
@@ -24,7 +27,7 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
 
     private Locale currentLocale;
     private ResourceBundle messages;
-
+    private List<JTextField> textFields = new ArrayList<>();
     /**
      * Creates new form VrstaVozacaForm
      */
@@ -33,6 +36,7 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
         this.currentLocale = currentLocale;
         loadLanguage();
         updateTexts();
+        addListeners();
         fillTable();
     }
 
@@ -201,8 +205,23 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
             String vehicle = jTextField1.getText().trim();
             String driverLicence = jTextField2.getText().trim();
             VrstaVozaca param = new VrstaVozaca(-1, driverLicence, vehicle);
+            List<VrstaVozaca> list = Controller.getInstance().getListVrstaVozaca();
+            for (VrstaVozaca vrstaVozaca : list) {
+                if(vrstaVozaca.getDriverLicence().equalsIgnoreCase(driverLicence) || vrstaVozaca.getVehicle().equalsIgnoreCase(vehicle)){
+                  switch (currentLocale.getLanguage()) {
+                                case "sr" ->
+                                    JOptionPane.showMessageDialog(this, "Greška, uneta vrsta vozača postoji u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                                case "sr_cir" ->
+                                    JOptionPane.showMessageDialog(this, "Грешка, унета врста возача постоји у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                                default ->
+                                    JOptionPane.showMessageDialog(this, "Error, driver type alreadz exist", "Error!", JOptionPane.ERROR_MESSAGE);
+                  }
+                  return; 
+                }
+            }
             int result = Controller.getInstance().insertVrstaVozaca(param);
-            if (result != 1) {
+            System.out.println(result);
+            if (result != -1) {
                 switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
@@ -248,7 +267,36 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
         TableModelVrstaVozaca modelVrstaVozaca = new TableModelVrstaVozaca(Controller.getInstance().getListVrstaVozaca());
         jTable1.setModel(modelVrstaVozaca);
     }
+    
+     private void checkFields() {
+        boolean allFilled = Controller.validateTextFields(textFields);
+        btnAdd.setEnabled(allFilled);
+    }
+    
+     private void addListeners() throws IOException {
+        textFields.add(jTextField1);
+        textFields.add(jTextField2);
 
+        for (JTextField textField : textFields) {
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+            });
+        }
+    }
+    
     public void loadLanguage() {
         try {
             messages = ResourceBundle.getBundle("translate.messages", currentLocale);

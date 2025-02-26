@@ -117,7 +117,10 @@ public class ServerForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ServerForm().setVisible(true);
+
+                ServerForm s = new ServerForm();
+                s.setVisible(true);
+                s.setLocationRelativeTo(null);
             }
         });
     }

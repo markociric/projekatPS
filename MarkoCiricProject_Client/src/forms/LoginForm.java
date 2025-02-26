@@ -102,7 +102,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         lblAccLF.setText("Nemate nalog?");
 
-        checkBoxPassword.setText("prikazi sifru");
+        checkBoxPassword.setText("prikaži šifru");
 
         jMenu1.setText("Jezik");
 
@@ -210,7 +210,7 @@ public class LoginForm extends javax.swing.JFrame {
             MainForm mf = null;
             List<Vozac> listVozac = Controller.getInstance().getListVozac();
             for (Vozac vozac : listVozac) {
-                if (txtMail.getText().contains(vozac.getEmail()) && String.valueOf(txtPassword.getPassword()).contains(vozac.getPassword())) {
+                if (txtMail.getText().equals(vozac.getEmail()) && String.valueOf(txtPassword.getPassword()).equals(vozac.getPassword())) {
                     mf = new MainForm(vozac,currentLocale);
                     mf.setVisible(true);
                     mf.setLocationRelativeTo(null);
@@ -220,9 +220,16 @@ public class LoginForm extends javax.swing.JFrame {
                 }
 
             }
+            
             if (mf == null) {
-                JOptionPane.showMessageDialog(this, "Loše uneti parametri", "Greška!", JOptionPane.ERROR_MESSAGE);
-
+                 switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Korisničko ime ili šifra nisu ispravni", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Корисничко име или шифра нису исправни", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "Username or password is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+            }
             }
         } catch (IOException ex) {
             Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);

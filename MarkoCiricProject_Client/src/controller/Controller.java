@@ -557,10 +557,10 @@ public class Controller {
 
     }
 
-    public void updateNarucilacUsluge(NarucilacUsluge nu) {
+    public boolean updateNarucilacUsluge(NarucilacUsluge nu) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateNarucilacUsluge, nu);
         Communication.getInstance().sendRequest(clientRequest);
-        Communication.getInstance().getResponce().getResponse();
+        return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
     public int insertNarucilacUsluge(NarucilacUsluge nu) {
@@ -580,6 +580,12 @@ public class Controller {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         Communication.getInstance().getResponce().getResponse();
+    }
+
+    public boolean deleteNarucilacUsluge(int delete) {
+        ClientRequest clientRequest = new ClientRequest(Operations.deleteNarucilacUsluge, delete);
+        Communication.getInstance().sendRequest(clientRequest);
+        return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
 }

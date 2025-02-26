@@ -33,6 +33,7 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
     List<JTextField> textFields = new ArrayList<>();
     private Locale currentLocale;
     private ResourceBundle messages;
+    int id = -1;
 
     /**
      * Creates new form DetailsOtpremnicaForm
@@ -341,12 +342,17 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
                 && !txtPhoneNU.getText().isEmpty()
                 && !txtMailNU.getText().isEmpty()
                 && !txtAdressNU.getText().isEmpty()) {
-            NarucilacUsluge param2 = new NarucilacUsluge(-1, name, lastName, adress, phone, mail, selectedMesto);
-            int id = 0;
-            try {
-                id = Controller.getInstance().insertNarucilacUsluge(param2);
-            } catch (IOException ex) {
-                Logger.getLogger(CreateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+            NarucilacUsluge param2 = new NarucilacUsluge(id, name, lastName, adress, phone, mail, selectedMesto);
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            if (id == -1) {
+                try {
+
+                    id = Controller.getInstance().insertNarucilacUsluge(param2);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(CreateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             Date danas = new Date();
             Calendar c = Calendar.getInstance();
@@ -444,7 +450,7 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
                         txtPhoneNU.setText(list.get(0).getPhone());
                         txtMailNU.setText(list.get(0).getEmail());
                         txtAdressNU.setText(list.get(0).getAdress());
-
+                        id = list.get(0).getIdNarucilacUsluge();
 //                        txtAdressNU.setEditable(false);
 //                        txtMailNU.setEditable(false);
 //                        txtPhoneNU.setEditable(false);

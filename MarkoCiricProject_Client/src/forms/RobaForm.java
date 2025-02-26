@@ -258,27 +258,44 @@ public class RobaForm extends javax.swing.JFrame {
             double price = Double.parseDouble(txtPrice.getText().trim());
             String unit = txtUnit.getText().trim();
             Roba param = new Roba(-1, name, qty, unit, price);
+            List<Roba> list = Controller.getInstance().getListRoba();
+            for (Roba roba : list) {
+                if (roba.getNameRoba().equalsIgnoreCase(param.getNameRoba())) {
+                    switch (currentLocale.getLanguage()) {
+                        case "sr" ->
+                            JOptionPane.showMessageDialog(this, "Greška, postoji vrsta robe u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                        case "sr_cir" ->
+                            JOptionPane.showMessageDialog(this, "Грешка, при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                        default ->
+                            JOptionPane.showMessageDialog(this, "Error, type of goods already exist in database", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
+                }
+            }
             int result = Controller.getInstance().insertRoba(param);
             if (result != 1) {
                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Changes saved successfully");
-                            }
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Changes saved successfully");
+                }
                 fillTable();
-
+                txtName.setText("");
+                txtPrice.setText("");
+                txtUnit.setText("");
+                txtQty.setText("");
             } else {
                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
-                            }
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (Exception e) {
             switch (currentLocale.getLanguage()) {
@@ -300,14 +317,14 @@ public class RobaForm extends javax.swing.JFrame {
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
-           switch (currentLocale.getLanguage()) {
-                    case "sr" ->
-                        JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška!", JOptionPane.ERROR_MESSAGE);
-                    case "sr_cir" ->
-                        JOptionPane.showMessageDialog(this, "Морате да изаберете неко поље", "Грешка!", JOptionPane.ERROR_MESSAGE);
-                    default ->
-                        JOptionPane.showMessageDialog(this, "You must select a field", "Error!", JOptionPane.ERROR_MESSAGE);
-                }
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška!", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Морате да изаберете неко поље", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "You must select a field", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
             return;
         }
         try {
@@ -316,25 +333,25 @@ public class RobaForm extends javax.swing.JFrame {
             Roba param = new Roba(updateId, null, qty, null, -1);
             boolean result = Controller.getInstance().updateRoba(param);
             if (result) {
-                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Changes saved successfully");
-                            }
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Changes saved successfully");
+                }
                 fillTable();
 
             } else {
                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
-                            }
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (Exception e) {
             switch (currentLocale.getLanguage()) {
@@ -380,6 +397,7 @@ public class RobaForm extends javax.swing.JFrame {
         TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba());
         jTable1.setModel(modelRoba);
     }
+
     public void loadLanguage() {
         try {
             messages = ResourceBundle.getBundle("translate.messages", currentLocale);
@@ -388,17 +406,16 @@ public class RobaForm extends javax.swing.JFrame {
         }
     }
 
-   
     public void updateTexts() {
-         lblAddRoba.setText(messages.getString("lblAddRoba.text"));
-         lblJC.setText(messages.getString("lblJC.text"));
-         lblMJ.setText(messages.getString("lblMJ.text"));
-         lblNameR.setText(messages.getString("lblNameR.text"));
-         lblNewQty.setText(messages.getString("lblNewQty.text"));
-         lblQtyR.setText(messages.getString("lblQtyR.text"));
-         btnAdd.setText(messages.getString("btnAdd.text"));
-         btnDelete.setText(messages.getString("btnDeleteV.text"));
-         btnUpdate.setText(messages.getString("btnUpdateV.text"));
-         
+        lblAddRoba.setText(messages.getString("lblAddRoba.text"));
+        lblJC.setText(messages.getString("lblJC.text"));
+        lblMJ.setText(messages.getString("lblMJ.text"));
+        lblNameR.setText(messages.getString("lblNameR.text"));
+        lblNewQty.setText(messages.getString("lblNewQty.text"));
+        lblQtyR.setText(messages.getString("lblQtyR.text"));
+        btnAdd.setText(messages.getString("btnAdd.text"));
+        btnDelete.setText(messages.getString("btnDeleteV.text"));
+        btnUpdate.setText(messages.getString("btnUpdateV.text"));
+
     }
 }
