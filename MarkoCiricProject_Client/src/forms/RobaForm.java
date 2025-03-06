@@ -4,9 +4,12 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -221,9 +224,14 @@ public class RobaForm extends javax.swing.JFrame {
                 }
                 return;
             }
-            List<Roba> list = Controller.getInstance().getListRoba();
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            List<Roba> list = Controller.getInstance().getListRoba(map);
             int delete = list.get(selectedRow).getIdRoba();
-            boolean result = Controller.getInstance().deleteRoba(delete);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(delete);
+            System.out.println("Roba: " + jsonString);
+            boolean result = Controller.getInstance().deleteRoba(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {
@@ -258,7 +266,12 @@ public class RobaForm extends javax.swing.JFrame {
             double price = Double.parseDouble(txtPrice.getText().trim());
             String unit = txtUnit.getText().trim();
             Roba param = new Roba(-1, name, qty, unit, price);
-            List<Roba> list = Controller.getInstance().getListRoba();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(param);
+            System.out.println("Roba: " + jsonString);
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            List<Roba> list = Controller.getInstance().getListRoba(map);
             for (Roba roba : list) {
                 if (roba.getNameRoba().equalsIgnoreCase(param.getNameRoba())) {
                     switch (currentLocale.getLanguage()) {
@@ -272,7 +285,7 @@ public class RobaForm extends javax.swing.JFrame {
                     return;
                 }
             }
-            int result = Controller.getInstance().insertRoba(param);
+            int result = Controller.getInstance().insertRoba(jsonString);
             if (result != 1) {
                 switch (currentLocale.getLanguage()) {
                     case "sr" ->
@@ -329,9 +342,14 @@ public class RobaForm extends javax.swing.JFrame {
         }
         try {
             double qty = Double.parseDouble(txtQtyRoba.getText().trim());
-            int updateId = Controller.getInstance().getListRoba().get(selectedRow).getIdRoba();
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            int updateId = Controller.getInstance().getListRoba(map).get(selectedRow).getIdRoba();
             Roba param = new Roba(updateId, null, qty, null, -1);
-            boolean result = Controller.getInstance().updateRoba(param);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(param);
+            System.out.println("Roba: " + jsonString);
+            boolean result = Controller.getInstance().updateRoba(jsonString);
             if (result) {
                 switch (currentLocale.getLanguage()) {
                     case "sr" ->
@@ -394,7 +412,9 @@ public class RobaForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void fillTable() throws IOException {
-        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba());
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "");
+        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(map));
         jTable1.setModel(modelRoba);
     }
 

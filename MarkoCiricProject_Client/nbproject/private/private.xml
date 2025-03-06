@@ -15,6 +15,16 @@
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/UpdateOtpremnicaForm.java</file>
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/MyVrstaVozacaForm.java</file>
         </group>
-        <group name="glavni"/>
+        <group name="glavni">
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/DetailsNarucilacUslugeForm.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/translate/messages_en.properties</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/UpdateOtpremnicaForm.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/controller/Controller.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/ChildDialogListener.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/translate/messages_sr.properties</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/SelectRobaOtpremnicaForm.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/translate/messages_sr_cir.properties</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/MainForm.java</file>
+        </group>
     </open-files>
 </project-private>

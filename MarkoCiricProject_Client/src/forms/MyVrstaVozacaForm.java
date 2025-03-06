@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.text.ParseException;
@@ -226,8 +227,11 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                 }
 
                 VrstaVozaca selected = (VrstaVozaca) comboVehicles.getSelectedItem();
-                VzVV param = new VzVV(vozac.getIdVozac(), selected.getIdVrstaVozaca(), null, null, WIDTH);
-                VzVV selectedDriver = Controller.getInstance().getVzVV(param);
+                VzVV param = new VzVV(vozac.getIdVozac(), selected.getIdVrstaVozaca(), null, null, -1);
+                ObjectMapper objectMapper1 = new ObjectMapper();
+                String jsonString1 = objectMapper1.writeValueAsString(param); // objekat u json
+                System.out.println(jsonString1);
+                VzVV selectedDriver = Controller.getInstance().getVzVV(jsonString1);
 
                 if (selectedDriver.getId() == 0) {
                     if (dateKraj.before(danas)) {
@@ -242,7 +246,10 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
 
                     } else {
                         VzVV param2 = new VzVV(vozac.getIdVozac(), selected.getIdVrstaVozaca(), dateKraj, datePocetak, 0);
-                        int result = Controller.getInstance().insertVzVV(param2);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String jsonString = objectMapper.writeValueAsString(param2); // objekat u json
+                        System.out.println(jsonString);
+                        int result = Controller.getInstance().insertVzVV(jsonString);
                         if (result != -1) {
                             switch (currentLocale.getLanguage()) {
                                 case "sr" ->
@@ -279,7 +286,10 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                     } else {
 
                         VzVV param3 = new VzVV(-1, -1, dateKraj, datePocetak, selectedDriver.getId());
-                        boolean result = Controller.getInstance().updateVzVV(param3);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String jsonString = objectMapper.writeValueAsString(param3); // objekat u json
+                        System.out.println(jsonString);
+                        boolean result = Controller.getInstance().updateVzVV(jsonString);
                         if (result) {
                             switch (currentLocale.getLanguage()) {
                                 case "sr" ->
@@ -340,9 +350,15 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                 }
                 return;
             }
-            List<VzVV> listVzVV = Controller.getInstance().getListVzVV(vozac.getIdVozac());
+            int param = vozac.getIdVozac();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+            System.out.println(jsonString);
+            List<VzVV> listVzVV = Controller.getInstance().getListVzVV(jsonString);
             int delete = listVzVV.get(selectedRow).getId();
-            boolean result = Controller.getInstance().deleteVzVV(delete);
+            jsonString = objectMapper.writeValueAsString(delete); // objekat u json
+            System.out.println(jsonString);
+            boolean result = Controller.getInstance().deleteVzVV(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {
@@ -353,7 +369,6 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
                     default ->
                         JOptionPane.showMessageDialog(this, "Driver type deleted successfully");
                 }
-                
 
             } else {
                 switch (currentLocale.getLanguage()) {
@@ -398,7 +413,11 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void fillTable() throws IOException {
-        TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getListVzVV(vozac.getIdVozac()));
+        int param = vozac.getIdVozac();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+        System.out.println(jsonString);
+        TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getListVzVV(jsonString));
         jTable1.setModel(detailsVozac);
     }
 

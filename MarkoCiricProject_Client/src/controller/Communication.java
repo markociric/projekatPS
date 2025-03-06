@@ -19,7 +19,7 @@ import transfer.ServerResponse;
  */
 public class Communication {
    private static Communication instance;
-    private Socket s;
+   private Socket s;
     
     public static Communication getInstance() {
         if (instance == null) {
@@ -55,4 +55,8 @@ public class Communication {
        }
         
     }
+    public boolean isAlive(){
+        return s.isConnected();
+    }
+    
 }

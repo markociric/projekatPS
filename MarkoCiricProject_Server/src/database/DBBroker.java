@@ -79,7 +79,7 @@ public class DBBroker {
     public int insert(AbstractDomainObject ado) throws SQLException {
         String upit = "INSERT INTO " + ado.tableName() + " "
                 + ado.columnsForInsert() + " VALUES (" + ado.valuesForInsert() + ")";
-        System.out.println(upit);
+        
         PreparedStatement ps = connection.prepareStatement(upit, Statement.RETURN_GENERATED_KEYS);
 
         int affectedRows = ps.executeUpdate();
@@ -97,7 +97,7 @@ public class DBBroker {
     public boolean update(AbstractDomainObject ado) throws SQLException {
         String upit = "UPDATE " + ado.tableName() + " SET "
                 + ado.valuesForUpdate() + " WHERE " + ado.requirement();
-        System.out.println(upit);
+        
         Statement s = connection.createStatement();
         int result = s.executeUpdate(upit);
         return result == 1;
@@ -105,7 +105,7 @@ public class DBBroker {
 
     public boolean delete(AbstractDomainObject ado) throws SQLException {
         String upit = "DELETE FROM " + ado.tableName() + " WHERE " + ado.requirement();
-        System.out.println(upit);
+        
         Statement s = connection.createStatement();
         int result = s.executeUpdate(upit);
         return result == 1;
@@ -128,7 +128,7 @@ public class DBBroker {
         return list;
     }
 
-    public double sumPrices(int idOtpremnica) {
+    public double sumPrices(int idOtpremnica)  {
         double total = 0;
         String query = "SELECT so.qtySO, r.price FROM stavka_otpremnice so JOIN roba r ON r.idRoba = so.idRoba WHERE so.idOtpremnica =" + idOtpremnica;
         try {
@@ -146,6 +146,7 @@ public class DBBroker {
     }
 
     public VzVV getVzVV(VzVV vozac) {
+        VzVV v = new VzVV();
         String query = "SELECT * FROM vzvv WHERE idVozac=" + vozac.getIdVozac() + " AND idVrstaVozaca=" + vozac.getIdVrstaVozaca();
         try {
             Statement s = DBConnection.getInstance().getConnection().createStatement();
@@ -162,7 +163,7 @@ public class DBBroker {
         } catch (SQLException ex) {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return v;
     }
 
     /*
@@ -774,4 +775,54 @@ public class DBBroker {
     }
 
      */
+
+    public void userLogged(Vozac v) throws Exception {
+         String query = "INSERT INTO logged(idVozac) VALUES(?)";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, v.getIdVozac());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<Vozac> getListLogged() throws Exception {
+        List<Vozac> list = new ArrayList<>();
+        String query = "SELECT * FROM logged JOIN vozac ON logged.idVozac=vozac.idVozac";
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                
+                int id = rs.getInt("idVozac");
+                String phone = rs.getString("phoneNumber");
+                String mail = rs.getString("mail");
+                String pass = rs.getString("password");
+                String name = rs.getString("nameVozac");
+                String lastname = rs.getString("lastNameVozac");
+                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
+                list.add(u);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+       
+    }
+
+    public void userLogout(Vozac v) throws Exception {
+        String query = "DELETE FROM logged WHERE idVozac=?";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, v.getIdVozac());
+            int result = ps.executeUpdate();
+            if (result == 1) {
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

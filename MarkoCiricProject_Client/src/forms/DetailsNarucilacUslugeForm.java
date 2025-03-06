@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.event.PrintJobEvent;
@@ -30,6 +32,7 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
 
     private Locale currentLocale;
     private ResourceBundle messages;
+    private HashMap<Integer, String> globalMap = new HashMap<>();
 
     /**
      * Creates new form VrstaVozacaForm
@@ -40,6 +43,7 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         loadLanguage();
         updateTexts();
         try {
+            globalMap.put(0, "");
             fillTable(0, "");
         } catch (IOException ex) {
             Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,7 +199,11 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
 
         int selectedSort = jComboBox1.getSelectedIndex();
         try {
-            fillTable(selectedSort + 1, "");
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(selectedSort + 1, "");
+            globalMap = map;
+            TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(map));
+            jTable1.setModel(modelNarucilacUsluge);
         } catch (IOException ex) {
             Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -207,9 +215,12 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         try {
             //SELECT * FROM narucilac_usluge WHERE email LIKE "a%"
             String search = jTextField1.getText().trim();
+            jTextField1.setText("");
             HashMap<Integer, String> map = new HashMap<>();
             map.put(7, search);
+            globalMap = map;
             List<NarucilacUsluge> list = Controller.getInstance().getListNarucilacUsluge(map);
+
             if (list.isEmpty()) {
                 switch (currentLocale.getLanguage()) {
                     case "sr" ->
@@ -247,7 +258,14 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                             @Override
                             public void windowClosed(WindowEvent e) {
                                 try {
-                                    fillTable(0, "");
+                                    Set keys = globalMap.keySet();
+                                    int vrednost = 0;
+                                    String pretraga = "";
+                                    for (Object key : keys) {
+                                        vrednost = (int) key;
+                                        pretraga = globalMap.get(key);
+                                    }
+                                    fillTable(vrednost, pretraga);
                                 } catch (IOException ex) {
                                     Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -281,13 +299,20 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
             }
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(map);
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(globalMap);
             NarucilacUsluge nu = listNu.get(selectedRow);
             UpdateNarucilacUslugeForm form = new UpdateNarucilacUslugeForm(nu, currentLocale);
             form.setVisible(true);
             form.setLocationRelativeTo(null);
 
-            fillTable(0, null);
+            Set keys = globalMap.keySet();
+            int vrednost = 0;
+            String pretraga = "";
+            for (Object key : keys) {
+                vrednost = (int) key;
+                pretraga = globalMap.get(key);
+            }
+            fillTable(vrednost, pretraga);
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -308,11 +333,13 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                 return;
             }
             HashMap<Integer, String> map = new HashMap<>();
-            map.put(0, "");
-            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(map);
+
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(globalMap);
             int delete = listNu.get(selectedRow).getIdNarucilacUsluge();
-            System.out.println(delete);
-            boolean result = Controller.getInstance().deleteNarucilacUsluge(delete);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(delete); // objekat u json
+            System.out.println(jsonString);
+            boolean result = Controller.getInstance().deleteNarucilacUsluge(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {
@@ -334,7 +361,14 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Error deleting from database", "Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            fillTable(0, "");
+            Set keys = globalMap.keySet();
+            int vrednost = 0;
+            String pretraga = "";
+            for (Object key : keys) {
+                vrednost = (int) key;
+                pretraga = globalMap.get(key);
+            }
+            fillTable(vrednost, pretraga);
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -342,7 +376,14 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         try {
-            fillTable(0, "");
+            Set keys = globalMap.keySet();
+            int vrednost = 0;
+            String pretraga = "";
+            for (Object key : keys) {
+                vrednost = (int) key;
+                pretraga = globalMap.get(key);
+            }
+            fillTable(vrednost, pretraga);
         } catch (IOException ex) {
             Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -369,12 +410,9 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
     private void fillTable(int needSort, String search) throws IOException {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(needSort, search);
-
         TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(map));
-        for (NarucilacUsluge narucilacUsluge : Controller.getInstance().getListNarucilacUsluge(map)) {
-            System.out.println(narucilacUsluge);
-        }
         jTable1.setModel(modelNarucilacUsluge);
+
     }
 
     public void loadLanguage() {

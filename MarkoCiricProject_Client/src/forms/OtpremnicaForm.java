@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.util.List;
@@ -227,7 +228,10 @@ public class OtpremnicaForm extends javax.swing.JFrame {
             }
             List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
             Otpremnica deleteOtpremnica = listOtpremnica.get(selectedRow);
-            boolean result = Controller.getInstance().deleteOtpremnica(deleteOtpremnica);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(deleteOtpremnica); // objekat u json
+            System.out.println(jsonString);
+            boolean result = Controller.getInstance().deleteOtpremnica(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {

@@ -4,8 +4,12 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -207,32 +211,63 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
+//            if (Controller.getInstance().isServerLive()) {
+//                System.out.println("Klijent je povezan sa serverom.");
+//            } else {
+//               
+//                this.dispose();
+//                return;
+//            }
             MainForm mf = null;
+            String jsonString = "";
             List<Vozac> listVozac = Controller.getInstance().getListVozac();
+            List<Vozac> listLogged = Controller.getInstance().getListLogged();
+            for (Vozac vozac1 : listLogged) {
+                if (txtMail.getText().equals(vozac1.getEmail())) {
+                    switch (currentLocale.getLanguage()) {
+                        case "sr" ->
+                            JOptionPane.showMessageDialog(this, "Korisnik je već ulogovan", "Greška", JOptionPane.ERROR_MESSAGE);
+                        case "sr_cir" ->
+                            JOptionPane.showMessageDialog(this, "Корисник је већ улогован", "Грешка", JOptionPane.ERROR_MESSAGE);
+                        default ->
+                            JOptionPane.showMessageDialog(this, "User is already logged", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
+                }
+            }
             for (Vozac vozac : listVozac) {
                 if (txtMail.getText().equals(vozac.getEmail()) && String.valueOf(txtPassword.getPassword()).equals(vozac.getPassword())) {
-                    mf = new MainForm(vozac,currentLocale);
+
+                    mf = new MainForm(vozac, currentLocale);
                     mf.setVisible(true);
                     mf.setLocationRelativeTo(null);
                     mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                    this.dispose();
-                    break;
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                    System.out.println(jsonString + " 1 loginform");
+                    if (!jsonString.isEmpty()) {
+                        System.out.println(jsonString + " 2 loginform");
+                        //Controller.getInstance().userLogged(jsonString);
+                        this.dispose();
+                        break;
+                    }
                 }
 
             }
-            
+
             if (mf == null) {
-                 switch (currentLocale.getLanguage()) {
-                case "sr" ->
-                    JOptionPane.showMessageDialog(this, "Korisničko ime ili šifra nisu ispravni", "Greška", JOptionPane.ERROR_MESSAGE);
-                case "sr_cir" ->
-                    JOptionPane.showMessageDialog(this, "Корисничко име или шифра нису исправни", "Грешка", JOptionPane.ERROR_MESSAGE);
-                default ->
-                    JOptionPane.showMessageDialog(this, "Username or password is not valid", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Korisničko ime ili šifra nisu ispravni", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Корисничко име или шифра нису исправни", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Username or password is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (IOException ex) {
-            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -315,7 +350,6 @@ public class LoginForm extends javax.swing.JFrame {
         }
     }
 
-
     public void updateTexts() {
         jMenu1.setText(messages.getString("jMenu1.text"));
         jMenuItem1.setText(messages.getString("jMenuItem1.text"));
@@ -327,5 +361,13 @@ public class LoginForm extends javax.swing.JFrame {
         btnLogin.setText(messages.getString("btnLogin.text"));
         lblAccLF.setText(messages.getString("lblAccLF.text"));
         btnRegister.setText(messages.getString("btnRegister.text"));
+    }
+
+    private void prijava(String jsonString) {
+        try {
+            Controller.getInstance().userLogged(jsonString);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

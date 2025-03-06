@@ -4,6 +4,7 @@
  */
 package server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,52 +45,71 @@ public class ProcessingClientRequest extends Thread {
             try {
                 ClientRequest clientRequest = getRequest();
                 ServerResponse serverResponse = new ServerResponse();
+                ObjectMapper objectMapper = new ObjectMapper();
+                String json;
+                Roba r;
+                NarucilacUsluge nu;
+                Vozac v;
+                VzVV vzvv;
+                Otpremnica o;
+                HashMap<Integer, String> map;
+                int delete;
+                int pom;
                 switch (clientRequest.getOperation()) {
                     case getListVozac:
                         List<Vozac> list = Controller.getInstance().getListVozac();
                         serverResponse.setResponse(list);
                         break;
                     case updateVozac:
-                        Vozac v = (Vozac) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        v = objectMapper.readValue(json, Vozac.class);
                         serverResponse.setResponse(Controller.getInstance().updateVozac(v));
                         break;
                     case deleteVozac:
-                        int v1 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteVozac(v1));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteVozac(delete));
                         break;
                     case getListOtpremnica:
                         serverResponse.setResponse(Controller.getInstance().getListOtpremnica());
                         break;
                     case getVehicles:
-                        int v2 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().getVehicles(v2));
+                        json = (String) clientRequest.getParam();
+                        pom = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().getVehicles(pom));
                         break;
                     case getListVzVV:
-                        int v3 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().getListVzVV(v3));
+                        json = (String) clientRequest.getParam();
+                        pom = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().getListVzVV(pom));
                         break;
                     case deleteOtpremnica:
-                        Otpremnica o = (Otpremnica) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        o = objectMapper.readValue(json, Otpremnica.class);
                         serverResponse.setResponse(Controller.getInstance().deleteOtpremnica(o));
                         break;
                     case insertVozac:
-                        Vozac v4 = (Vozac) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertVozac(v4));
+                        json = (String) clientRequest.getParam();
+                        v = objectMapper.readValue(json, Vozac.class);
+                        serverResponse.setResponse(Controller.getInstance().insertVozac(v));
                         break;
                     case getListVrstaVozaca:
                         serverResponse.setResponse(Controller.getInstance().getListVrstaVozaca());
                         break;
                     case updateVzVV:
-                        VzVV vzvv = (VzVV) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        vzvv = objectMapper.readValue(json, VzVV.class);
                         serverResponse.setResponse(Controller.getInstance().updateVzVV(vzvv));
                         break;
                     case deleteVzVV:
-                        int vzvv1 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteVzVV(vzvv1));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteVzVV(delete));
                         break;
                     case insertVzVV:
-                        VzVV vzvv3 = (VzVV) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertVzVV(vzvv3));
+                        json = (String) clientRequest.getParam();
+                        vzvv = objectMapper.readValue(json, VzVV.class);
+                        serverResponse.setResponse(Controller.getInstance().insertVzVV(vzvv));
                         break;
                     case deleteVrstaVozaca:
                         int vzvv2 = (int) clientRequest.getParam();
@@ -100,22 +120,26 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().insertVrstaVozaca(vv1));
                         break;
                     case getListRoba:
-                        serverResponse.setResponse(Controller.getInstance().getListRoba());
+                         map = (HashMap<Integer, String>) clientRequest.getParam();
+                        serverResponse.setResponse(Controller.getInstance().getListRoba(map));
                         break;
                     case deleteRoba:
-                        int r = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteRoba(r));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteRoba(delete));
                         break;
                     case updateRoba:
-                        Roba r1 = (Roba) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().updateRoba(r1));
+                        json = (String) clientRequest.getParam();
+                        r = objectMapper.readValue(json, Roba.class);
+                        serverResponse.setResponse(Controller.getInstance().updateRoba(r));
                         break;
                     case insertRoba:
-                        Roba r2 = (Roba) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertRoba(r2));
+                        json = (String) clientRequest.getParam();
+                        r = objectMapper.readValue(json, Roba.class);
+                        serverResponse.setResponse(Controller.getInstance().insertRoba(r));
                         break;
                     case getListNarucilacUsluge:
-                        HashMap<Integer, String> map = (HashMap<Integer, String>) clientRequest.getParam();
+                         map = (HashMap<Integer, String>) clientRequest.getParam();
                         serverResponse.setResponse(Controller.getInstance().getListNarucilacUsluge(map));
                         break;
                     case getListStavkeOtpremnice:
@@ -127,7 +151,8 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().sumPrices(o1));
                         break;
                     case getVzVV:
-                        VzVV vzvv5 = (VzVV) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        VzVV vzvv5 = objectMapper.readValue(json, VzVV.class);
                         serverResponse.setResponse(Controller.getInstance().getVzVV(vzvv5));
                         break;
                     case getListMesto:
@@ -150,20 +175,40 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().updateOtpremnica(list2));
                         break;
                     case updateNarucilacUsluge:
-                        NarucilacUsluge nu = (NarucilacUsluge) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        nu = objectMapper.readValue(json, NarucilacUsluge.class);
                         serverResponse.setResponse(Controller.getInstance().updateNarucilacUsluge(nu));
                         break;
                     case insertNarucilacUsluge:
-                        NarucilacUsluge nu2 = (NarucilacUsluge) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertNarucilacUsluge(nu2));
+                        json = (String) clientRequest.getParam();
+                        nu = objectMapper.readValue(json, NarucilacUsluge.class);
+                        serverResponse.setResponse(Controller.getInstance().insertNarucilacUsluge(nu));
                         break;
                     case insertOtpremnica:
                         Otpremnica o3 = (Otpremnica) clientRequest.getParam();
                         serverResponse.setResponse(Controller.getInstance().insertOtpremnica(o3));
                         break;
                     case deleteNarucilacUsluge:
-                        int so4 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteNarucilacUsluge(so4));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteNarucilacUsluge(delete));
+                        break;
+                    case userLogged:
+                        json = (String) clientRequest.getParam();
+                        v = objectMapper.readValue(json, Vozac.class);
+                        Controller.getInstance().userLogged(v);
+                        break;
+                    case getListLogged:
+                        serverResponse.setResponse(Controller.getInstance().getListLogged());
+                        break;
+                    case userLogout:
+                        json = (String) clientRequest.getParam();
+                        v = objectMapper.readValue(json, Vozac.class);
+                        Controller.getInstance().userLogout(v);
+                        break;
+                    case checkConnection:
+                        StartServer server = new StartServer();
+                        serverResponse.setResponse(server.isClosed());
                         break;
                     default:
                         System.out.println("greska");
@@ -172,7 +217,7 @@ public class ProcessingClientRequest extends Thread {
 
                 sendResponse(serverResponse);
             } catch (Exception ex) {
-                System.out.println("Prekinuta veza sa klijentom.");
+                Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
                 break;
             }
         }
@@ -184,7 +229,7 @@ public class ProcessingClientRequest extends Thread {
             return (ClientRequest) inputStream.readObject();
 
         } catch (IOException | ClassNotFoundException ex) {
-             System.out.println("Greska");
+            System.out.println("Greska");
         }
         return null;
     }

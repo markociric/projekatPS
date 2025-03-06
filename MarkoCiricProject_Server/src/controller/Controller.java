@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,7 +88,6 @@ public class Controller {
 
     private static Controller instance;
     private DBBroker dbb;
-
     public static Controller getInstance() throws Exception {
         if (instance == null) {
             instance = new Controller();
@@ -96,7 +96,7 @@ public class Controller {
     }
 
     public Controller() throws Exception {
-        dbb = DBBroker.getInstance();
+        dbb = DBBroker.getInstance();  
     }
 
     public List<Vozac> getListVozac() throws Exception {
@@ -141,9 +141,9 @@ public class Controller {
         return so.getList();
     }
 
-    public List<Roba> getListRoba() throws Exception {
+    public List<Roba> getListRoba(HashMap<Integer, String> map) throws Exception {
         SOGetListRoba so = new SOGetListRoba();
-        so.templateExecute(new Roba(), null);
+        so.templateExecute(new Roba(), map);
         return so.getList();
     }
 
@@ -546,4 +546,17 @@ public class Controller {
         so.templateExecute(new NarucilacUsluge(delete, null, null, null, null, null, null), null);
         return so.isDeleted();
     }
+
+    public void userLogged(Vozac v) throws Exception {
+        dbb.userLogged(v);
+    }
+
+    public List<Vozac> getListLogged() throws Exception {
+        return dbb.getListLogged();
+    }
+
+    public void userLogout(Vozac v) throws Exception {
+         dbb.userLogout(v);
+    }
+
 }

@@ -58,4 +58,8 @@ public class StartServer extends Thread {
             }
         }
     }
+    
+    public boolean isClosed(){
+        return serverSocket.isClosed();
+    }
 }

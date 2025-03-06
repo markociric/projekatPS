@@ -4,7 +4,10 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +41,8 @@ public class MainForm extends javax.swing.JFrame {
         vozac = user;
         this.currentLocale = currentLocale;
         initComponents();
+        addListeners();
+        fillTableVozac();
         loadLanguage();
         updateTexts();
         if (currentLocale.getLanguage().equals("sr")) {
@@ -55,9 +60,8 @@ public class MainForm extends javax.swing.JFrame {
         lblPhone.setText(user.getPhoneNumber());
         jTable1.setShowGrid(false);
 
-        fillTableVozac();
         Time time = new Time(lblTime, lblDate);
-        Thread nit=new Thread(time);
+        Thread nit = new Thread(time);
         nit.start();
     }
 
@@ -430,6 +434,20 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnDeleteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteVActionPerformed
         try {
+            if (Controller.getInstance().isServerLive()) {
+                System.out.println("Klijent je povezan sa serverom.");
+            } else {
+                switch (currentLocale.getLanguage()) {
+                        case "sr" ->
+                            JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                        case "sr_cir" ->
+                            JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                        default ->
+                            JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -445,7 +463,10 @@ public class MainForm extends javax.swing.JFrame {
             }
             List<Vozac> listVozac = Controller.getInstance().getListVozac();
             int deleteVozac = listVozac.get(selectedRow).getIdVozac();
-            boolean result = Controller.getInstance().deleteVozac(deleteVozac);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(deleteVozac); // objekat u json
+            System.out.println(jsonString);
+            boolean result = Controller.getInstance().deleteVozac(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {
@@ -494,7 +515,10 @@ public class MainForm extends javax.swing.JFrame {
             }
             if (result) {
                 Vozac empty = new Vozac(0, "", "", "", "", "");
-                Controller.getInstance().insertNewVozac(empty);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(empty); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().insertNewVozac(jsonString);
             }
             fillTableVozac();
         } catch (IOException ex) {
@@ -569,7 +593,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnUpdateMyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyInfoActionPerformed
         try {
-            System.out.println(currentLocale.toString());
+
             UpdateVozacForm u = new UpdateVozacForm(this, true, vozac, currentLocale);
             u.setLocationRelativeTo(null);
             u.setVisible(true);
@@ -683,8 +707,11 @@ public class MainForm extends javax.swing.JFrame {
         List<Vozac> listVozac = Controller.getInstance().getListVozac();
         TableModelVozac tmv = new TableModelVozac(listVozac);
         jTable1.setModel(tmv);
-
-        TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getListVzVV(vozac.getIdVozac()));
+        int param = vozac.getIdVozac();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+        System.out.println(jsonString);
+        TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getListVzVV(jsonString));
         jTable2.setModel(detailsVozac);
     }
 
@@ -720,7 +747,36 @@ public class MainForm extends javax.swing.JFrame {
         btnUpdateMyVrstaVozaca.setText(messages.getString("btnUpdateMyVrstaVozaca.text"));
         lblDate1.setText(messages.getString("lblDate1.text"));
         lblTime1.setText(messages.getString("lblTime1.text"));
-        
 
+    }
+
+    private void addListeners() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int odgovor = switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showConfirmDialog(MainForm.this,"Da li ste sigurni da želite da zatvorite?", "Potvrda zatvaranja",JOptionPane.YES_NO_OPTION);
+                    case "sr_cir" ->
+                        JOptionPane.showConfirmDialog(MainForm.this,"Да ли сте сигурни да желите да затворите?","Потврда затварања",JOptionPane.YES_NO_OPTION);
+                    default ->
+                        JOptionPane.showConfirmDialog(MainForm.this,"Are you sure you want to close??","Exit",JOptionPane.YES_NO_OPTION);
+                };
+                
+                if (odgovor == JOptionPane.YES_OPTION) {
+                    try {
+                        // Ovde možeš dodati kod koji treba da se izvrši pre zatvaranja
+                        System.out.println("Prozor se zatvara...");
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                        Controller.getInstance().userLogout(jsonString);
+                        dispose(); // Zatvara prozor
+                        System.exit(0); // Gasi aplikaciju ako je ovo glavni prozor
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
     }
 }

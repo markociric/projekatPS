@@ -132,10 +132,13 @@
                                   <Component id="txtQtyStavka" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnAdd" min="-2" pref="113" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btnAdd" pref="113" max="32767" attributes="0"/>
+                                  <Component id="btnChooseRoba" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="95" max="32767" attributes="0"/>
+                      <EmptySpace pref="89" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -210,23 +213,33 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtMailNU" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblMail" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblErrorMail" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblPlace" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboMesto" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="comboRoba" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblChangeItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtMailNU" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblErrorMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblPlace" min="-2" max="-2" attributes="0"/>
+                          <Component id="comboMesto" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="78" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnDeleteItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblOtpremnicaItems" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="comboRoba" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblChangeItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="btnChooseRoba" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -235,13 +248,6 @@
                           <Component id="btnAdd" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnDeleteItem" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblOtpremnicaItems" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <Component id="jScrollPane1" min="-2" pref="259" max="-2" attributes="0"/>
@@ -468,7 +474,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblChangeItem">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Izaberi stavku"/>
+        <Property name="text" type="java.lang.String" value="Izabrana stavka"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblQty">
@@ -477,6 +483,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtQtyStavka">
+    </Component>
+    <Component class="javax.swing.JButton" name="btnChooseRoba">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Izaberi "/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnChooseRobaActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

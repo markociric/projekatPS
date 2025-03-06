@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -201,7 +202,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
 
             };
             if (answer == JOptionPane.YES_OPTION) {
-                
+
                 try {
                     //int id = Integer.parseInt(txtId.getText());
                     String name = txtName.getText();
@@ -211,7 +212,10 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
                     String adress = txtAdress.getText();
                     Mesto mesto = (Mesto) comboMesto.getSelectedItem();
                     NarucilacUsluge param = new NarucilacUsluge(-1, name, lastname, adress, phone, mail, mesto);
-                    int responce = Controller.getInstance().insertNarucilacUsluge(param);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                    System.out.println(jsonString);
+                    int responce = Controller.getInstance().insertNarucilacUsluge(jsonString);
 
                     if (responce != -1) {
                         switch (current.getLanguage()) {
@@ -238,7 +242,6 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     java.util.logging.Logger.getLogger(CreateNarucilacUslugeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
-                
 
             } else {
                 this.dispose();
@@ -260,7 +263,6 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSaveChanges;
@@ -312,7 +314,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
     }
 
     public void updateTexts() {
-       lblLastName.setText(messages.getString("lblLastName.text"));
+        lblLastName.setText(messages.getString("lblLastName.text"));
         lblMail.setText(messages.getString("lblMail.text"));
         lblName.setText(messages.getString("lblName.text"));
         lblPhone.setText(messages.getString("lblPhone.text"));
@@ -320,6 +322,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
         btnSaveChanges.setText(messages.getString("btnSaveChanges.text"));
         lblPlace.setText(messages.getString("lblPlace.text"));
     }
+
     private void fillcombo() throws IOException {
         List<Mesto> list = Controller.getInstance().getListMesto();
         for (Mesto mesto : list) {

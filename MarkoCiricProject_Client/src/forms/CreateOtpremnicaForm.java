@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -347,8 +348,10 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
             map.put(0, "");
             if (id == -1) {
                 try {
-
-                    id = Controller.getInstance().insertNarucilacUsluge(param2);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(param2);
+                    System.out.println("Narucilac usluge: " + jsonString);
+                    id = Controller.getInstance().insertNarucilacUsluge(jsonString);
 
                 } catch (IOException ex) {
                     Logger.getLogger(CreateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -365,7 +368,10 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
             Otpremnica param = new Otpremnica(-1, danas, selectedVozac, nu);
             int idOtpremnica = 0;
             try {
-                idOtpremnica = Controller.getInstance().insertOtpremnica(param);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(param);
+                System.out.println("Otpremnica: " + jsonString);
+                idOtpremnica = Controller.getInstance().insertOtpremnica(jsonString);
             } catch (IOException ex) {
                 Logger.getLogger(CreateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -402,10 +408,14 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
 
     private void comboVozacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboVozacActionPerformed
         Vozac selected = (Vozac) comboVozac.getSelectedItem();
+        int selectedDriver = selected.getIdVozac();
         txtMailV.setText(selected.getEmail());
         List<String> vehicles = null;
         try {
-            vehicles = Controller.getInstance().getVehicles(selected.getIdVozac());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(selectedDriver);
+            System.out.println("Selected driver: " + jsonString);
+            vehicles = Controller.getInstance().getVehicles(jsonString);
         } catch (IOException ex) {
             Logger.getLogger(CreateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
         }

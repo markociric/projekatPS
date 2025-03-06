@@ -4,7 +4,9 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
+import java.awt.Frame;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +15,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import operations.Status;
@@ -30,7 +34,7 @@ import util.Vozac;
  *
  * @author Marko
  */
-public class UpdateOtpremnicaForm extends javax.swing.JDialog {
+public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDialogListener {
 
     Otpremnica o;
     List<JTextField> textFields = new ArrayList<>();
@@ -127,6 +131,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         lblChangeItem = new javax.swing.JLabel();
         lblQty = new javax.swing.JLabel();
         txtQtyStavka = new javax.swing.JTextField();
+        btnChooseRoba = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -216,9 +221,16 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
             }
         });
 
-        lblChangeItem.setText("Izaberi stavku");
+        lblChangeItem.setText("Izabrana stavka");
 
         lblQty.setText("Unesi količinu");
+
+        btnChooseRoba.setText("Izaberi ");
+        btnChooseRoba.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChooseRobaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -309,8 +321,10 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                                     .addComponent(comboRoba, 0, 179, Short.MAX_VALUE)
                                     .addComponent(txtQtyStavka))
                                 .addGap(18, 18, 18)
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(95, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                    .addComponent(btnChooseRoba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(89, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(490, 490, 490)
                 .addComponent(btnSave)
@@ -369,31 +383,33 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                             .addComponent(txtDriverType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblErrorPhone))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMailNU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMail)
-                    .addComponent(lblErrorMail))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPlace)
-                    .addComponent(comboMesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboRoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblChangeItem))
+                            .addComponent(txtMailNU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblMail)
+                            .addComponent(lblErrorMail))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPlace)
+                            .addComponent(comboMesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDeleteItem)
+                            .addComponent(lblOtpremnicaItems))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(comboRoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblChangeItem))
+                            .addComponent(btnChooseRoba))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblQty)
                             .addComponent(txtQtyStavka, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAdd))
-                        .addGap(2, 2, 2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDeleteItem)
-                            .addComponent(lblOtpremnicaItems))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addGap(2, 2, 2)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(btnSave)
@@ -419,12 +435,15 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                 && lblErrorPhone.getText().equals("")) {
             try {
                 NarucilacUsluge param2 = new NarucilacUsluge(o.getNarucilacUsluge().getIdNarucilacUsluge(), name, lastName, adress, phone, mail, selectedMesto);
-                Controller.getInstance().updateNarucilacUsluge(param2);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(param2); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().updateNarucilacUsluge(jsonString);
                 Otpremnica param = new Otpremnica(o.getIdOtpremnica(), null, selectedVozac, o.getNarucilacUsluge());
                 List<Object> liste = new ArrayList<>();
                 liste.add(listStavkaOtpremnice);
                 liste.add(listStavkaOtpremniceEdited);
-                boolean result = Controller.getInstance().updateOtpremnica(param,liste);
+                boolean result = Controller.getInstance().updateOtpremnica(param, liste);
                 if (result) {
                     switch (currentLocale.getLanguage()) {
                         case "sr" ->
@@ -458,8 +477,12 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
     private void comboVozacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboVozacActionPerformed
         try {
             Vozac selected = (Vozac) comboVozac.getSelectedItem();
+            int selectedDriver = selected.getIdVozac();
             txtMailV.setText(selected.getEmail());
-            List<String> vehicles = Controller.getInstance().getVehicles(selected.getIdVozac());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(selectedDriver); // objekat u json
+            System.out.println("Selected driver: " + jsonString);
+            List<String> vehicles = Controller.getInstance().getVehicles(jsonString);
             String v = "";
             for (String vehicle : vehicles) {
                 v = v + " " + vehicle;
@@ -475,7 +498,9 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         Roba selected = (Roba) comboRoba.getSelectedItem();
         boolean result = true;
         try {
-            List<Roba> listRoba = Controller.getInstance().getListRoba();
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            List<Roba> listRoba = Controller.getInstance().getListRoba(map);
             double qty = Double.parseDouble(txtQtyStavka.getText());
             for (int i = 0; i < listStavkaOtpremniceEdited.size(); i++) {
                 if (listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba() == selected.getIdRoba()) {
@@ -507,13 +532,18 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                         return;
                     } else {
                         double stanje = 0;
-                        for (Roba roba : Controller.getInstance().getListRoba()) {
+                        map.put(0, "");
+                        for (Roba roba : Controller.getInstance().getListRoba(map)) {
                             if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba()) {
                                 stanje = roba.getQty();
                             }
                         }
                         Roba param = new Roba(listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba(), null, (stanje - qty), null, -1);
-                        Controller.getInstance().updateRoba(param);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                        System.out.println(jsonString);
+
+                        Controller.getInstance().updateRoba(jsonString);
                         StavkaOtpremnice param2 = new StavkaOtpremnice(0, listStavkaOtpremniceEdited.get(i).getRb(), null, Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
                         listStavkaOtpremniceEdited.get(i).setQty(Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
                         listStavkaOtpremniceEdited.get(i).setStatus(Status.UPDATED);
@@ -542,7 +572,10 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
                                 listStavkaOtpremniceEdited.add(param);
                                 //int id = Controller.getInstance().insertStavkaOtpremnice(param);
                                 Roba param2 = new Roba(selected.getIdRoba(), null, listRoba.get(i).getQty() - qty, null, -1);
-                                Controller.getInstance().updateRoba(param2);
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                String jsonString = objectMapper.writeValueAsString(param2); // objekat u json
+                                System.out.println(jsonString);
+                                Controller.getInstance().updateRoba(jsonString);
                                 switch (currentLocale.getLanguage()) {
                                     case "sr" ->
                                         JOptionPane.showMessageDialog(this, "Uspešno dodata nova stavka", "Obaveštenje", JOptionPane.INFORMATION_MESSAGE);
@@ -608,14 +641,18 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
             }
             double qty = listStavkaOtpremniceEdited.get(selectedRow).getQty();
             double stanje = 0;
-            for (Roba roba : Controller.getInstance().getListRoba()) {
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(0, "");
+            for (Roba roba : Controller.getInstance().getListRoba(map)) {
                 if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba()) {
                     stanje = roba.getQty();
                 }
             }
             Roba param = new Roba(listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba(), null, (stanje + qty), null, -1);
-
-            Controller.getInstance().updateRoba(param);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+            System.out.println(jsonString);
+            Controller.getInstance().updateRoba(jsonString);
             boolean r = true;
             if (r) {
                 for (StavkaOtpremnice stavkaOtpremnice : listStavkaOtpremnice) {
@@ -655,12 +692,26 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnDeleteItemActionPerformed
 
+    private void btnChooseRobaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseRobaActionPerformed
+        SwingUtilities.invokeLater(() -> {
+            try {
+
+                // Otvaranje child JDialog-a
+                openChildDialog();
+
+            } catch (IOException ex) {
+                Logger.getLogger(UpdateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }//GEN-LAST:event_btnChooseRobaActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnChooseRoba;
     private javax.swing.JButton btnDeleteItem;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<Mesto> comboMesto;
@@ -723,8 +774,9 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
             }
 
         }
-
-        List<Roba> listaR = Controller.getInstance().getListRoba();
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "");
+        List<Roba> listaR = Controller.getInstance().getListRoba(map);
         for (Roba roba : listaR) {
             comboRoba.addItem(roba);
 
@@ -810,6 +862,25 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog {
         lblQty.setText(messages.getString("lblQty.text"));
         lblNU.setText(messages.getString("lblNU.text"));
         lblNameLastName.setText(messages.getString("lblNameLastNameF.text"));
+        btnChooseRoba.setText(messages.getString("btnChoose.text"));
 
+    }
+
+    private void openChildDialog() throws IOException {
+        SelectRobaOtpremnicaForm childDialog = new SelectRobaOtpremnicaForm(null, true, currentLocale, this);
+        childDialog.setSize(670, 480);
+        childDialog.setLocationRelativeTo(null);
+        childDialog.setVisible(true);
+    }
+
+    @Override
+    public void onDataSent(Object data) {
+        Roba r = (Roba) data;
+        for (int i = 0; i < comboRoba.getItemCount(); i++) {
+            if (comboRoba.getItemAt(i).getIdRoba() == r.getIdRoba()) {
+                comboRoba.setSelectedItem(comboRoba.getItemAt(i));
+                break;
+            }
+        }
     }
 }

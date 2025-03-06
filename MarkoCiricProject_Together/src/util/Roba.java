@@ -8,19 +8,20 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author Marko
  */
-public class Roba extends AbstractDomainObject{
-   
+public class Roba extends AbstractDomainObject {
+
     private int idRoba;
     private String nameRoba;
     private double qty;
     private String unitOfMeasure;
     private double price;
-    
+
     public Roba() {
     }
 
@@ -47,7 +48,6 @@ public class Roba extends AbstractDomainObject{
     public void setUnitOfMeasure(String unitOfMeasure) {
         this.unitOfMeasure = unitOfMeasure;
     }
-
 
     public int getIdRoba() {
         return idRoba;
@@ -77,8 +77,8 @@ public class Roba extends AbstractDomainObject{
     public String toString() {
         return nameRoba;
     }
-    
-     @Override
+
+    @Override
     public String tableName() {
         return "roba";
     }
@@ -97,15 +97,15 @@ public class Roba extends AbstractDomainObject{
     public ArrayList<AbstractDomainObject> getList(ResultSet rs) throws SQLException {
         ArrayList<AbstractDomainObject> lista = new ArrayList<>();
 
-       while (rs.next()) {
-                int id = rs.getInt("idRoba");
-                String name = rs.getString("nameRoba");
-                double qty = rs.getDouble("qty");
-                double price = rs.getDouble("price");
-                String unitOfMeasure = rs.getString("unitOfMeasure");
-                Roba r = new Roba(id, name, qty, unitOfMeasure, price);
-                lista.add(r);
-            }
+        while (rs.next()) {
+            int id = rs.getInt("idRoba");
+            String name = rs.getString("nameRoba");
+            double qty = rs.getDouble("qty");
+            double price = rs.getDouble("price");
+            String unitOfMeasure = rs.getString("unitOfMeasure");
+            Roba r = new Roba(id, name, qty, unitOfMeasure, price);
+            lista.add(r);
+        }
 
         rs.close();
         return lista;
@@ -133,6 +133,18 @@ public class Roba extends AbstractDomainObject{
 
     @Override
     public String requirementForSelect(Object o) {
+        HashMap<Integer, String> needSort = (HashMap<Integer, String>) o;
+        int key = needSort.keySet().iterator().next();
+        switch (key) {
+            case 0:
+                return "";
+            case 1:
+                return "ORDER BY nameRoba ASC";
+            case 2:
+                return "ORDER BY nameRoba DESC";
+            case 3:
+                return "WHERE nameRoba LIKE \"" + needSort.get(key) + "%\"";
+        }
         return "";
     }
 }

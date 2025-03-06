@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -24,6 +25,7 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
     private Locale current;
     private ResourceBundle messages;
     NarucilacUsluge nu;
+
     /**
      * Creates new form CreateNarucilacUsluge
      */
@@ -33,14 +35,14 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
         addListeners();
         this.nu = nu;
         fillcombo();
-        txtId.setText(nu.getIdNarucilacUsluge()+ "");
+        txtId.setText(nu.getIdNarucilacUsluge() + "");
         txtId.setEnabled(false);
         txtName.setText(nu.getName());
         txtLastName.setText(nu.getLastName());
         txtPhoneNumber.setText(nu.getPhone());
         txtMail.setText(nu.getEmail());
         txtAdress.setText(nu.getAdress());
-        
+
         loadLanguage();
         updateTexts();
     }
@@ -223,9 +225,9 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
 
             };
             if (answer == JOptionPane.YES_OPTION) {
-                
+
                 try {
-                   
+
                     String name = txtName.getText();
                     String lastname = txtLastName.getText();
                     String phone = txtPhoneNumber.getText();
@@ -233,7 +235,10 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
                     String adress = txtAdress.getText();
                     Mesto mesto = (Mesto) comboMesto.getSelectedItem();
                     NarucilacUsluge param = new NarucilacUsluge(nu.getIdNarucilacUsluge(), name, lastname, adress, phone, mail, mesto);
-                  boolean  responce = Controller.getInstance().updateNarucilacUsluge(param);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                    System.out.println(jsonString);
+                    boolean responce = Controller.getInstance().updateNarucilacUsluge(jsonString);
 
                     if (responce) {
                         switch (current.getLanguage()) {
@@ -244,7 +249,7 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
                             default ->
                                 JOptionPane.showMessageDialog(this, "Successfully saved changes");
                         }
-                        
+
                         this.dispose();
                     } else {
                         switch (current.getLanguage()) {
@@ -260,7 +265,6 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     java.util.logging.Logger.getLogger(UpdateNarucilacUslugeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
-                
 
             } else {
                 this.dispose();
@@ -282,7 +286,6 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSaveChanges;
@@ -344,6 +347,7 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
         btnSaveChanges.setText(messages.getString("btnSaveChanges.text"));
         lblPlace.setText(messages.getString("lblPlace.text"));
     }
+
     private void fillcombo() throws IOException {
         List<Mesto> lista = Controller.getInstance().getListMesto();
         for (Mesto mesto : lista) {

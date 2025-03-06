@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -310,8 +311,12 @@ public class RegisterForm extends javax.swing.JDialog {
                         if (!exist) {
                             String randomPass = Controller.getInstance().generateRandomPassword();
                             Controller.getInstance().sendMail(mail, randomPass);
+                            Vozac param = new Vozac(-1, null, null, null, mail, randomPass);
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                            System.out.println(jsonString);
+                            int newVozacID = Controller.getInstance().insertVozac(jsonString);
 
-                            int newVozacID = Controller.getInstance().insertVozac(new Vozac(-1, null, null, null, mail, randomPass));
                             String pass = switch (currentLocale.getLanguage()) {
                                 case "sr" ->
                                     JOptionPane.showInputDialog(this, "Na mejl (" + mail + ")\nVam je poslata privremena šifra u ovom polju je nephodno da je unesete."
@@ -328,12 +333,18 @@ public class RegisterForm extends javax.swing.JDialog {
                             };
 
                             if (pass == null) {
-                                Controller.getInstance().deleteVozac(newVozacID);
+                                ObjectMapper objectMapper1 = new ObjectMapper();
+                                String jsonString1 = objectMapper1.writeValueAsString(newVozacID); // objekat u json
+                                System.out.println(jsonString1);
+                                Controller.getInstance().deleteVozac(jsonString1);
                                 this.dispose();
                                 break;
                             }
                             if (pass.isEmpty()) {
-                                Controller.getInstance().deleteVozac(newVozacID);
+                                ObjectMapper objectMapper2 = new ObjectMapper();
+                                String jsonString2 = objectMapper2.writeValueAsString(newVozacID); // objekat u json
+                                System.out.println(jsonString2);
+                                Controller.getInstance().deleteVozac(jsonString2);
                                 switch (currentLocale.getLanguage()) {
                                     case "sr" ->
                                         JOptionPane.showMessageDialog(this, "Niste popunili polje za nov unos", "Greška!", JOptionPane.ERROR_MESSAGE);
@@ -348,7 +359,10 @@ public class RegisterForm extends javax.swing.JDialog {
                             if (pass.equals(randomPass)) {
                                 String newPass = JOptionPane.showInputDialog(this, "Unesite novu šifru:", "Promena šifre", JOptionPane.INFORMATION_MESSAGE);
                                 if (newPass == null) {
-                                    Controller.getInstance().deleteVozac(newVozacID);
+                                    ObjectMapper objectMapper3 = new ObjectMapper();
+                                    String jsonString3 = objectMapper3.writeValueAsString(newVozacID); // objekat u json
+                                    System.out.println(jsonString3);
+                                    Controller.getInstance().deleteVozac(jsonString3);
                                     switch (currentLocale.getLanguage()) {
                                         case "sr" ->
                                             JOptionPane.showMessageDialog(this, "Niste popunili polje za nov unos", "Greška!", JOptionPane.ERROR_MESSAGE);
@@ -359,8 +373,11 @@ public class RegisterForm extends javax.swing.JDialog {
                                     }
                                     this.dispose();
                                 } else {
-                                    Vozac param = new Vozac(newVozacID, txtName.getText(), txtLastName.getText(), txtPhone.getText(), mail, newPass);
-                                    Controller.getInstance().updateVozac(param);
+                                    Vozac param1 = new Vozac(newVozacID, txtName.getText(), txtLastName.getText(), txtPhone.getText(), mail, newPass);
+                                    ObjectMapper objectMapper4 = new ObjectMapper();
+                                    String jsonString4 = objectMapper4.writeValueAsString(param1); // objekat u json
+                                    System.out.println(jsonString4);
+                                    Controller.getInstance().updateVozac(jsonString4);
                                     switch (currentLocale.getLanguage()) {
                                         case "sr" ->
                                             JOptionPane.showMessageDialog(this, "Uspešno ste se registrovali na sistem!!", "Registracija uspešna", JOptionPane.INFORMATION_MESSAGE);
@@ -374,7 +391,10 @@ public class RegisterForm extends javax.swing.JDialog {
                                     }
                                 }
                             } else {
-                                Controller.getInstance().deleteVozac(newVozacID);
+                                ObjectMapper objectMapper5 = new ObjectMapper();
+                                String jsonString5 = objectMapper5.writeValueAsString(newVozacID); // objekat u json
+                                System.out.println(jsonString5);
+                                Controller.getInstance().deleteVozac(jsonString5);
                             }
                             break;
                         }

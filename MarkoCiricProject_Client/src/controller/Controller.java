@@ -8,7 +8,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -36,6 +38,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -79,18 +82,17 @@ public class Controller {
         return (List<Vozac>) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean updateVozac(Vozac vozac) {
+    public boolean updateVozac(String vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteVozac(int deleteVozac) {
+    public boolean deleteVozac(String deleteVozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteVozac, deleteVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
-
 
     public static boolean validateTextFields(List<JTextField> textFields) {
         Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
@@ -206,7 +208,7 @@ public class Controller {
                         } else {
                             lblErrorPhone.setText("Bad phone format(use +381 ili 06 on begin)");
                         }
-                        
+
                     }
                 } catch (BadLocationException ex) {
 
@@ -291,21 +293,21 @@ public class Controller {
         return d + "." + m + "." + y + ".";
     }
 
-    public List<String> getVehicles(int idVozac) {
+    public List<String> getVehicles(String idVozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.getVehicles, idVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<String>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) {
+    public boolean deleteOtpremnica(String deleteOtpremnica) {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteOtpremnica, deleteOtpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public List<VzVV> getListVzVV(int idVozac) {
+    public List<VzVV> getListVzVV(String idVozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.getListVzVV, idVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<VzVV>) Communication.getInstance().getResponce().getResponse();
@@ -370,7 +372,7 @@ public class Controller {
 
     }
 
-    public int insertVozac(Vozac vozac) {
+    public int insertVozac(String vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
@@ -411,20 +413,20 @@ public class Controller {
 
     }
 
-    public boolean updateVzVV(VzVV update) {
+    public boolean updateVzVV(String update) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateVzVV, update);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteVzVV(int delete) {
+    public boolean deleteVzVV(String delete) {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteVzVV, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public int insertVzVV(VzVV vozac) {
+    public int insertVzVV(String vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVzVV, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
@@ -443,28 +445,28 @@ public class Controller {
         return (int) Communication.getInstance().getResponce().getResponse();
     }
 
-    public List<Roba> getListRoba() {
-        ClientRequest clientRequest = new ClientRequest(Operations.getListRoba, null);
+    public List<Roba> getListRoba(HashMap<Integer, String> map) {
+        ClientRequest clientRequest = new ClientRequest(Operations.getListRoba, map);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<Roba>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean deleteRoba(int delete) {
+    public boolean deleteRoba(String delete) {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteRoba, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean updateRoba(Roba update) {
+    public boolean updateRoba(String update) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateRoba, update);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public int insertRoba(Roba name) {
+    public int insertRoba(String name) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertRoba, name);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
@@ -513,7 +515,7 @@ public class Controller {
         }
     }
 
-    public VzVV getVzVV(VzVV vozac) {
+    public VzVV getVzVV(String vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.getVzVV, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (VzVV) Communication.getInstance().getResponce().getResponse();
@@ -527,26 +529,6 @@ public class Controller {
 
     }
 
-    public void updateStavkaOtpremnice(StavkaOtpremnice stavka) {
-        ClientRequest clientRequest = new ClientRequest(Operations.updateQtySO, stavka);
-        Communication.getInstance().sendRequest(clientRequest);
-        Communication.getInstance().getResponce().getResponse();
-
-    }
-
-    public int insertStavkaOtpremnice(StavkaOtpremnice stavka) {
-        ClientRequest clientRequest = new ClientRequest(Operations.insertStavkaOtpremnice, stavka);
-        Communication.getInstance().sendRequest(clientRequest);
-        return (int) Communication.getInstance().getResponce().getResponse();
-    }
-
-    public boolean deleteStavkaOtpremnice(int delete) {
-        ClientRequest clientRequest = new ClientRequest(Operations.deleteStavkaOtpremnice, delete);
-        Communication.getInstance().sendRequest(clientRequest);
-        return (boolean) Communication.getInstance().getResponce().getResponse();
-
-    }
-
     public boolean updateOtpremnica(Otpremnica otpremnica, List<Object> liste) {
         List<Object> params = new ArrayList<>();
         params.add(liste);
@@ -557,33 +539,55 @@ public class Controller {
 
     }
 
-    public boolean updateNarucilacUsluge(NarucilacUsluge nu) {
+    public boolean updateNarucilacUsluge(String nu) {
         ClientRequest clientRequest = new ClientRequest(Operations.updateNarucilacUsluge, nu);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public int insertNarucilacUsluge(NarucilacUsluge nu) {
+    public int insertNarucilacUsluge(String nu) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertNarucilacUsluge, nu);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
     }
 
-    public int insertOtpremnica(Otpremnica otpremnica) {
+    public int insertOtpremnica(String otpremnica) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertOtpremnica, otpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public void insertNewVozac(Vozac vozac) {
+    public void insertNewVozac(String vozac) {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteNarucilacUsluge(int delete) {
+    public boolean deleteNarucilacUsluge(String delete) {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteNarucilacUsluge, delete);
+        Communication.getInstance().sendRequest(clientRequest);
+        return (boolean) Communication.getInstance().getResponce().getResponse();
+    }
+
+    public void userLogged(String vozac) {
+        ClientRequest clientRequest = new ClientRequest(Operations.userLogged, vozac);
+        Communication.getInstance().sendRequest(clientRequest);
+    }
+
+    public List<Vozac> getListLogged() {
+        ClientRequest clientRequest = new ClientRequest(Operations.getListLogged, null);
+        Communication.getInstance().sendRequest(clientRequest);
+        return (List<Vozac>) Communication.getInstance().getResponce().getResponse();
+    }
+
+    public void userLogout(String vozac) {
+        ClientRequest clientRequest = new ClientRequest(Operations.userLogout, vozac);
+        Communication.getInstance().sendRequest(clientRequest);
+    }
+
+    public boolean isServerLive() throws IOException {
+        ClientRequest clientRequest = new ClientRequest(Operations.checkConnection, null);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }

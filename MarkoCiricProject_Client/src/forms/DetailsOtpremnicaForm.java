@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -79,7 +80,10 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
             txtPhoneNU.setText(otpremnica.getNarucilacUsluge().getPhone());
             txtNameLastNameV.setText(otpremnica.getVozac().getNameVozac() + " " + otpremnica.getVozac().getLastNameVozac());
             txtMailV.setText(otpremnica.getVozac().getEmail());
-            List<String> vehicles = Controller.getInstance().getVehicles(otpremnica.getVozac().getIdVozac());
+            int selectedDriver = otpremnica.getVozac().getIdVozac();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(selectedDriver);
+            List<String> vehicles = Controller.getInstance().getVehicles(jsonString);
             String v = "";
             for (String vehicle : vehicles) {
                 v = v + " " + vehicle;

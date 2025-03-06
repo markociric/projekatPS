@@ -40,8 +40,8 @@ public class TableModelDetailsVozac extends AbstractTableModel {
         try {
             VzVV v = list.get(rowIndex);
             VrstaVozaca vv = new VrstaVozaca();
-            List<VrstaVozaca> list = Controller.getInstance().getListVrstaVozaca();
-            for (VrstaVozaca vrstaVozaca : list) {
+            List<VrstaVozaca> lista = Controller.getInstance().getListVrstaVozaca();
+            for (VrstaVozaca vrstaVozaca : lista) {
                 if(vrstaVozaca.getIdVrstaVozaca() == v.getIdVrstaVozaca())
                     vv = vrstaVozaca;
             }

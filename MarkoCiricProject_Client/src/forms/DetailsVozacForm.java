@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +21,7 @@ public class DetailsVozacForm extends javax.swing.JDialog {
 
     /**
      * Creates new form DetailsOtpremnicaForm
+     *
      * @param parent
      * @param modal
      * @param vozac
@@ -28,21 +30,25 @@ public class DetailsVozacForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         lblTitle.setText("Vozač broj: " + vozac.getIdVozac());
-      
+
         txtNameLastNameV.setEditable(false);
         txtMailV.setEditable(false);
-       
+
         txtPhoneV.setEditable(false);
-       
+
         txtNameLastNameV.setBorder(null);
         txtMailV.setBorder(null);
-      
+
         txtPhoneV.setBorder(null);
-        
+
         txtNameLastNameV.setText(vozac.getNameVozac() + " " + vozac.getLastNameVozac());
         txtMailV.setText(vozac.getEmail());
-        List<String> vehicles= Controller.getInstance().getVehicles(vozac.getIdVozac());
-        
+        int selectedDriver = vozac.getIdVozac();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(selectedDriver);
+        System.out.println("Selected driver: " + jsonString);
+        List<String> vehicles = Controller.getInstance().getVehicles(jsonString);
+
         txtPhoneV.setText(vozac.getPhoneNumber());
         fillTableVzVV(vozac.getIdVozac());
     }
@@ -161,7 +167,6 @@ public class DetailsVozacForm extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel10;
@@ -178,10 +183,12 @@ public class DetailsVozacForm extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void fillTableVzVV(int idVozac) throws IOException {
-       
-        List<VzVV> listVzVV = Controller.getInstance().getListVzVV(idVozac);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(idVozac); // objekat u json
+        System.out.println(jsonString);
+        List<VzVV> listVzVV = Controller.getInstance().getListVzVV(jsonString);
         TableModelDetailsVozac tmv = new TableModelDetailsVozac(listVzVV);
         tbl.setModel(tmv);
-    
+
     }
 }

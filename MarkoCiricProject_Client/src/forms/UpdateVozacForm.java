@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
 import java.util.Locale;
@@ -227,7 +228,10 @@ public class UpdateVozacForm extends javax.swing.JDialog {
                     String mail = txtMail.getText();
                     String pass = String.valueOf(txtPassword.getPassword());
                     Vozac param = new Vozac(id, name, lastname, phone, mail, pass);
-                    boolean responce = Controller.getInstance().updateVozac(param);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                    System.out.println(jsonString);
+                    boolean responce = Controller.getInstance().updateVozac(jsonString);
 
                     if (responce) {
                         switch (current.getLanguage()) {
@@ -238,7 +242,7 @@ public class UpdateVozacForm extends javax.swing.JDialog {
                             default ->
                                 JOptionPane.showMessageDialog(this, "Successfully saved changes");
                         }
-                        
+
                         this.dispose();
                     } else {
                         switch (current.getLanguage()) {
@@ -249,7 +253,7 @@ public class UpdateVozacForm extends javax.swing.JDialog {
                             default ->
                                 JOptionPane.showMessageDialog(this, "Error when saving changes in the database", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                            
+
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(UpdateVozacForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,7 +271,6 @@ public class UpdateVozacForm extends javax.swing.JDialog {
                 default ->
                     JOptionPane.showMessageDialog(this, "Error, not all data was entered correctly", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
 
         }
 
