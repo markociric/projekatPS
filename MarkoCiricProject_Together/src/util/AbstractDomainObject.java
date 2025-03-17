@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Lenovo
+ * @author Marko
  */
 public abstract class AbstractDomainObject implements Serializable{
     public abstract String tableName();

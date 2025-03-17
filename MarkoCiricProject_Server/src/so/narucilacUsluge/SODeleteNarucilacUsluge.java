@@ -25,7 +25,11 @@ public class SODeleteNarucilacUsluge extends AbstractSO{
 
     @Override
     protected void execute(AbstractDomainObject ado, Object o) throws Exception {
-       result =  DBBroker.getInstance().delete(ado);
+        try {    
+        result =  DBBroker.getInstance().delete(ado);
+        } catch (SQLException e) {
+        
+        }
     }
     
     public boolean isDeleted() throws SQLException {

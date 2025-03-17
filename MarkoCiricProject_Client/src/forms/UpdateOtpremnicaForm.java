@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.awt.Frame;
 import java.io.IOException;
@@ -40,22 +41,27 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
     List<JTextField> textFields = new ArrayList<>();
     private Locale currentLocale;
     private ResourceBundle messages;
-    List<StavkaOtpremnice> listStavkaOtpremnice;
-    List<StavkaOtpremnice> listStavkaOtpremniceEdited;
+    private List<StavkaOtpremnice> listStavkaOtpremnice;
+    private List<StavkaOtpremnice> listStavkaOtpremniceEdited;
+    private ChildDialogListener listener;
 
     /**
      * Creates new form DetailsOtpremnicaForm
      */
-    public UpdateOtpremnicaForm(java.awt.Frame parent, boolean modal, Otpremnica otpremnica, Locale currentLocale) throws IOException {
+    public UpdateOtpremnicaForm(java.awt.Frame parent, boolean modal, Otpremnica otpremnica, Locale currentLocale, ChildDialogListener listener) throws IOException {
         super(parent, modal);
         initComponents();
         this.currentLocale = currentLocale;
+        this.listener = listener;
         loadLanguage();
         updateTexts();
         addListeners();
         o = otpremnica;
-        listStavkaOtpremnice = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
-        listStavkaOtpremniceEdited = Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(o.getIdOtpremnica()); // objekat u json
+        System.out.println(jsonString);
+        listStavkaOtpremnice = Controller.getInstance().getListStavkeOtpremnice(jsonString);
+        listStavkaOtpremniceEdited = Controller.getInstance().getListStavkeOtpremnice(jsonString);
         fillcombo();
         switch (currentLocale.getLanguage()) {
             case "sr":
@@ -164,7 +170,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
 
         lblDateOtpremnica.setText("datum");
 
-        btnSave.setText("Sacuvaj");
+        btnSave.setText("Sačuvaj");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -420,6 +426,19 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         Vozac selectedVozac = (Vozac) comboVozac.getSelectedItem();
         Mesto selectedMesto = (Mesto) comboMesto.getSelectedItem();
 
@@ -455,6 +474,9 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
                         default ->
                             JOptionPane.showMessageDialog(this, "Changes saved successfully", "Notification", JOptionPane.INFORMATION_MESSAGE);
 
+                    }
+                    if (listener != null) {
+                        listener.onDataSent(true);
                     }
                     this.dispose();
                 }
@@ -495,12 +517,28 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
     }//GEN-LAST:event_comboVozacActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         Roba selected = (Roba) comboRoba.getSelectedItem();
         boolean result = true;
         try {
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            List<Roba> listRoba = Controller.getInstance().getListRoba(map);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            List<Roba> listRoba = Controller.getInstance().getListRoba(jsonString);
             double qty = Double.parseDouble(txtQtyStavka.getText());
             for (int i = 0; i < listStavkaOtpremniceEdited.size(); i++) {
                 if (listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba() == selected.getIdRoba()) {
@@ -533,14 +571,15 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
                     } else {
                         double stanje = 0;
                         map.put(0, "");
-                        for (Roba roba : Controller.getInstance().getListRoba(map)) {
+                        jsonString = objectMapper.writeValueAsString(map); // objekat u json
+                        System.out.println(jsonString);
+                        for (Roba roba : Controller.getInstance().getListRoba(jsonString)) {
                             if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba()) {
                                 stanje = roba.getQty();
                             }
                         }
                         Roba param = new Roba(listStavkaOtpremniceEdited.get(i).getRoba().getIdRoba(), null, (stanje - qty), null, -1);
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+                        jsonString = objectMapper.writeValueAsString(param); // objekat u json
                         System.out.println(jsonString);
 
                         Controller.getInstance().updateRoba(jsonString);
@@ -572,8 +611,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
                                 listStavkaOtpremniceEdited.add(param);
                                 //int id = Controller.getInstance().insertStavkaOtpremnice(param);
                                 Roba param2 = new Roba(selected.getIdRoba(), null, listRoba.get(i).getQty() - qty, null, -1);
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(param2); // objekat u json
+                                jsonString = objectMapper.writeValueAsString(param2); // objekat u json
                                 System.out.println(jsonString);
                                 Controller.getInstance().updateRoba(jsonString);
                                 switch (currentLocale.getLanguage()) {
@@ -626,6 +664,19 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
 
     private void btnDeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteItemActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -643,14 +694,16 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
             double stanje = 0;
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            for (Roba roba : Controller.getInstance().getListRoba(map)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            for (Roba roba : Controller.getInstance().getListRoba(jsonString)) {
                 if (roba.getIdRoba() == listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba()) {
                     stanje = roba.getQty();
                 }
             }
             Roba param = new Roba(listStavkaOtpremniceEdited.get(selectedRow).getRoba().getIdRoba(), null, (stanje + qty), null, -1);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+            jsonString = objectMapper.writeValueAsString(param); // objekat u json
             System.out.println(jsonString);
             Controller.getInstance().updateRoba(jsonString);
             boolean r = true;
@@ -693,6 +746,19 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
     }//GEN-LAST:event_btnDeleteItemActionPerformed
 
     private void btnChooseRobaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseRobaActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         SwingUtilities.invokeLater(() -> {
             try {
 
@@ -776,7 +842,10 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
         }
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "");
-        List<Roba> listaR = Controller.getInstance().getListRoba(map);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+        System.out.println(jsonString);
+        List<Roba> listaR = Controller.getInstance().getListRoba(jsonString);
         for (Roba roba : listaR) {
             comboRoba.addItem(roba);
 

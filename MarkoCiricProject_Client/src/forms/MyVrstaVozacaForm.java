@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.text.ParseException;
@@ -204,6 +205,18 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+         if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+            }
         String datumPocetakString = txtStartDateLicence.getText();
         String datumKrajString = txtDateLicence.getText();
 
@@ -337,6 +350,19 @@ public class MyVrstaVozacaForm extends javax.swing.JDialog {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
+             if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {

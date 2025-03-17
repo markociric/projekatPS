@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public class UpdateVozacForm extends javax.swing.JDialog {
 
         lblMail.setText("Mail:");
 
-        btnSaveChanges.setText("Sacuvaj izmene");
+        btnSaveChanges.setText("Sačuvaj izmene");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveChangesActionPerformed(evt);
@@ -99,7 +100,7 @@ public class UpdateVozacForm extends javax.swing.JDialog {
 
         jLabel6.setText("Password:");
 
-        checkBoxPassword.setText("prikazi sifru");
+        checkBoxPassword.setText("prikaži šifru");
 
         lblErrorLastName.setForeground(new java.awt.Color(255, 0, 0));
 
@@ -206,6 +207,19 @@ public class UpdateVozacForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (current.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         if (lblErrorName.getText().trim().equals("") && lblErrorLastName.getText().trim().equals("")
                 && lblErrorPhone.getText().trim().equals("") && lblErrorMail.getText().trim().equals("")) {
             int answer = switch (current.getLanguage()) {

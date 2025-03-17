@@ -92,7 +92,9 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
             txtPhoneV.setText(otpremnica.getVozac().getPhoneNumber());
 
             fillTable();
-            double total = Controller.getInstance().sumPrices(o.getIdOtpremnica());
+            jsonString = objectMapper.writeValueAsString(o.getIdOtpremnica()); // objekat u json
+            System.out.println(jsonString);
+            double total = Controller.getInstance().sumPrices(jsonString);
 
             String roundTotal = Controller.getInstance().formatNumber(total);
 
@@ -367,7 +369,10 @@ public class DetailsOtpremnicaForm extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void fillTable() throws IOException {
-        TableModelStavkeOtpremnice modelStavkeOtpremnice = new TableModelStavkeOtpremnice(Controller.getInstance().getListStavkeOtpremnice(o.getIdOtpremnica()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(o.getIdOtpremnica()); // objekat u json
+        System.out.println(jsonString);
+        TableModelStavkeOtpremnice modelStavkeOtpremnice = new TableModelStavkeOtpremnice(Controller.getInstance().getListStavkeOtpremnice(jsonString));
         jTable1.setModel(modelStavkeOtpremnice);
     }
 

@@ -4,6 +4,7 @@
  */
 package server;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Controller;
 import java.io.IOException;
@@ -34,15 +35,17 @@ import util.VzVV;
 public class ProcessingClientRequest extends Thread {
 
     private Socket s;
+    private StartServer server;
 
-    public ProcessingClientRequest(Socket s) {
+    public ProcessingClientRequest(Socket s, StartServer server) {
         this.s = s;
+        this.server = server;
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 ClientRequest clientRequest = getRequest();
                 ServerResponse serverResponse = new ServerResponse();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -51,14 +54,15 @@ public class ProcessingClientRequest extends Thread {
                 NarucilacUsluge nu;
                 Vozac v;
                 VzVV vzvv;
+                VrstaVozaca vv;
                 Otpremnica o;
+                StavkaOtpremnice so;
                 HashMap<Integer, String> map;
                 int delete;
                 int pom;
                 switch (clientRequest.getOperation()) {
                     case getListVozac:
-                        List<Vozac> list = Controller.getInstance().getListVozac();
-                        serverResponse.setResponse(list);
+                        serverResponse.setResponse(Controller.getInstance().getListVozac());
                         break;
                     case updateVozac:
                         json = (String) clientRequest.getParam();
@@ -112,15 +116,19 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().insertVzVV(vzvv));
                         break;
                     case deleteVrstaVozaca:
-                        int vzvv2 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteVrstaVozaca(vzvv2));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteVrstaVozaca(delete));
                         break;
                     case insertVrstaVozaca:
-                        VrstaVozaca vv1 = (VrstaVozaca) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertVrstaVozaca(vv1));
+                        json = (String) clientRequest.getParam();
+                        vv = objectMapper.readValue(json, VrstaVozaca.class);
+                        serverResponse.setResponse(Controller.getInstance().insertVrstaVozaca(vv));
                         break;
                     case getListRoba:
-                         map = (HashMap<Integer, String>) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        map = objectMapper.readValue(json, new TypeReference<HashMap<Integer, String>>() {
+                        });
                         serverResponse.setResponse(Controller.getInstance().getListRoba(map));
                         break;
                     case deleteRoba:
@@ -139,36 +147,38 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().insertRoba(r));
                         break;
                     case getListNarucilacUsluge:
-                         map = (HashMap<Integer, String>) clientRequest.getParam();
+                        json = (String) clientRequest.getParam();
+                        map = objectMapper.readValue(json, new TypeReference<HashMap<Integer, String>>() {
+                        });
                         serverResponse.setResponse(Controller.getInstance().getListNarucilacUsluge(map));
                         break;
                     case getListStavkeOtpremnice:
-                        int so = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().getListStavkeOtpremnice(so));
+                        json = (String) clientRequest.getParam();
+                        pom = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().getListStavkeOtpremnice(pom));
                         break;
                     case sumPrices:
-                        int o1 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().sumPrices(o1));
+                        json = (String) clientRequest.getParam();
+                        pom = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().sumPrices(pom));
                         break;
                     case getVzVV:
                         json = (String) clientRequest.getParam();
-                        VzVV vzvv5 = objectMapper.readValue(json, VzVV.class);
-                        serverResponse.setResponse(Controller.getInstance().getVzVV(vzvv5));
+                        vzvv = objectMapper.readValue(json, VzVV.class);
+                        serverResponse.setResponse(Controller.getInstance().getVzVV(vzvv));
                         break;
                     case getListMesto:
                         serverResponse.setResponse(Controller.getInstance().getListMesto());
                         break;
-                    case updateQtySO:
-                        StavkaOtpremnice so1 = (StavkaOtpremnice) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().updateStavkaOtpremnice(so1));
-                        break;
                     case insertStavkaOtpremnice:
-                        StavkaOtpremnice so2 = (StavkaOtpremnice) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertStavkaOtpremnice(so2));
+                        json = (String) clientRequest.getParam();
+                        so = objectMapper.readValue(json, StavkaOtpremnice.class);
+                        serverResponse.setResponse(Controller.getInstance().insertStavkaOtpremnice(so));
                         break;
                     case deleteStavkaOtpremnice:
-                        int so3 = (int) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().deleteStavkaOtpremnice(so3));
+                        json = (String) clientRequest.getParam();
+                        delete = objectMapper.readValue(json, Integer.class);
+                        serverResponse.setResponse(Controller.getInstance().deleteStavkaOtpremnice(delete));
                         break;
                     case updateOtpremnica:
                         List<Object> list2 = (List<Object>) clientRequest.getParam();
@@ -185,18 +195,14 @@ public class ProcessingClientRequest extends Thread {
                         serverResponse.setResponse(Controller.getInstance().insertNarucilacUsluge(nu));
                         break;
                     case insertOtpremnica:
-                        Otpremnica o3 = (Otpremnica) clientRequest.getParam();
-                        serverResponse.setResponse(Controller.getInstance().insertOtpremnica(o3));
+                        json = (String) clientRequest.getParam();
+                        o = objectMapper.readValue(json, Otpremnica.class);
+                        serverResponse.setResponse(Controller.getInstance().insertOtpremnica(o));
                         break;
                     case deleteNarucilacUsluge:
                         json = (String) clientRequest.getParam();
                         delete = objectMapper.readValue(json, Integer.class);
                         serverResponse.setResponse(Controller.getInstance().deleteNarucilacUsluge(delete));
-                        break;
-                    case userLogged:
-                        json = (String) clientRequest.getParam();
-                        v = objectMapper.readValue(json, Vozac.class);
-                        Controller.getInstance().userLogged(v);
                         break;
                     case getListLogged:
                         serverResponse.setResponse(Controller.getInstance().getListLogged());
@@ -206,9 +212,12 @@ public class ProcessingClientRequest extends Thread {
                         v = objectMapper.readValue(json, Vozac.class);
                         Controller.getInstance().userLogout(v);
                         break;
-                    case checkConnection:
-                        StartServer server = new StartServer();
-                        serverResponse.setResponse(server.isClosed());
+                    case login:
+                        json = (String) clientRequest.getParam();
+                        List<String> params = objectMapper.readValue(json, List.class);
+                        String email = params.get(0);
+                        String password = params.get(1);
+                        serverResponse.setResponse(Controller.getInstance().login(email, password));
                         break;
                     default:
                         System.out.println("greska");
@@ -216,9 +225,23 @@ public class ProcessingClientRequest extends Thread {
                 }
 
                 sendResponse(serverResponse);
-            } catch (Exception ex) {
-                Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
-                break;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Klijent je prekinuo konekciju: " + s);
+        } catch (Exception ex) {
+            Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (s != null && !s.isClosed()) {
+                    s.close();
+                }
+            } catch (IOException e) {
+                Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, e);
+            }
+
+            // Ukloni klijenta iz liste aktivnih klijenata
+            synchronized (server.getActiveClients()) {
+                server.getActiveClients().remove(s);
             }
         }
     }

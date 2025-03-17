@@ -9,19 +9,12 @@
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/controller/Controller.java</file>
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/ProcessingClientRequest.java</file>
         </group>
-        <group>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/database/DBBroker.java</file>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/controller/Controller.java</file>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/ProcessingClientRequest.java</file>
-        </group>
         <group name="Group 20250120-02:05:24">
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/database/DBBroker.java</file>
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/ProcessingClientRequest.java</file>
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/controller/Controller.java</file>
         </group>
-        <group name="glavni">
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/form/ServerForm.java</file>
-            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/ProcessingClientRequest.java</file>
-        </group>
+        <group/>
+        <group name="glavni"/>
     </open-files>
 </project-private>

@@ -7,9 +7,15 @@ package form;
 import controller.Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.StartServer;
+import util.Vozac;
 
 /**
  *
@@ -25,8 +31,8 @@ public class ServerForm extends javax.swing.JFrame {
     public ServerForm() throws Exception {
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
-        initComponents();
         addListeners();
+        initComponents();
         fillTable();
         btnStop.setEnabled(false);
     }
@@ -152,22 +158,33 @@ public class ServerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        if (server != null && server.isAlive()) {
-            server.stopServer();
-            server = null;
-        }
-        System.exit(0);
-
+        removeAllLoggedUsers();  // Prvo brišemo prijavljene korisnike
+        System.exit(0);          // Zatim gasimo aplikaciju
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        try {
+            StartServer server = new StartServer();
+            List<Socket> list = server.getActiveClients();
+            for (Socket client : list) {
+                client.getOutputStream().write(1);
+                client.getOutputStream().flush();
+            }
+        } catch (IOException e) {
+            System.out.println("Klijenti će sada detektovati prekid veze.");
+        }
+
         if (server != null && server.isAlive()) {
-            server.stopServer();
-            server = null;
+            server.stopServer();  // Pozivanje metode za zaustavljanje servera
+            try {
+                server.join();  // Čekanje da se nit završi
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            server = null;  // Resetovanje reference na server
         }
         btnStop.setEnabled(false);
         btnStart.setEnabled(true);
-
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -196,6 +213,27 @@ public class ServerForm extends javax.swing.JFrame {
         jTable1.setModel(logged);
 
     }
+
+    private void removeAllLoggedUsers() {
+        try {
+            List<Vozac> loggedUsers = Controller.getInstance().getListLogged();
+            for (Vozac v : loggedUsers) {
+                Controller.getInstance().userLogout(v); // Odjava svakog korisnika
+            }
+            System.out.println("Svi prijavljeni vozaci su odjavljeni.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void addListeners() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                removeAllLoggedUsers();
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JMenu btnConfigure;
@@ -207,9 +245,5 @@ public class ServerForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
-    private void addListeners() throws Exception {
-
-    }
 
 }

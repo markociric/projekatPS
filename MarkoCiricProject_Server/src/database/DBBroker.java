@@ -41,12 +41,12 @@ public class DBBroker {
     private static DBBroker instance;
     private Connection connection;
 
-    private DBBroker() throws Exception{
-        Properties properties=new Properties();
-            properties.load(new FileInputStream("dbconfig.properties"));
-            String url=properties.getProperty("url");
-            String user=properties.getProperty("username");
-            String pass=properties.getProperty("password");
+    private DBBroker() throws Exception {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("dbconfig.properties"));
+        String url = properties.getProperty("url");
+        String user = properties.getProperty("username");
+        String pass = properties.getProperty("password");
         try {
             connection = DriverManager.getConnection(url, user, pass);
             connection.setAutoCommit(false);
@@ -70,7 +70,7 @@ public class DBBroker {
     public ArrayList<AbstractDomainObject> select(AbstractDomainObject ado, Object o) throws SQLException {
         String upit = "SELECT * FROM " + ado.tableName() + " " + ado.alijas()
                 + " " + ado.join() + " " + ado.requirementForSelect(o);
-        System.out.println(upit);
+
         Statement s = connection.createStatement();
         ResultSet rs = s.executeQuery(upit);
         return ado.getList(rs);
@@ -79,7 +79,7 @@ public class DBBroker {
     public int insert(AbstractDomainObject ado) throws SQLException {
         String upit = "INSERT INTO " + ado.tableName() + " "
                 + ado.columnsForInsert() + " VALUES (" + ado.valuesForInsert() + ")";
-        
+
         PreparedStatement ps = connection.prepareStatement(upit, Statement.RETURN_GENERATED_KEYS);
 
         int affectedRows = ps.executeUpdate();
@@ -97,7 +97,7 @@ public class DBBroker {
     public boolean update(AbstractDomainObject ado) throws SQLException {
         String upit = "UPDATE " + ado.tableName() + " SET "
                 + ado.valuesForUpdate() + " WHERE " + ado.requirement();
-        
+
         Statement s = connection.createStatement();
         int result = s.executeUpdate(upit);
         return result == 1;
@@ -105,7 +105,7 @@ public class DBBroker {
 
     public boolean delete(AbstractDomainObject ado) throws SQLException {
         String upit = "DELETE FROM " + ado.tableName() + " WHERE " + ado.requirement();
-        
+
         Statement s = connection.createStatement();
         int result = s.executeUpdate(upit);
         return result == 1;
@@ -128,7 +128,7 @@ public class DBBroker {
         return list;
     }
 
-    public double sumPrices(int idOtpremnica)  {
+    public double sumPrices(int idOtpremnica) {
         double total = 0;
         String query = "SELECT so.qtySO, r.price FROM stavka_otpremnice so JOIN roba r ON r.idRoba = so.idRoba WHERE so.idOtpremnica =" + idOtpremnica;
         try {
@@ -164,6 +164,96 @@ public class DBBroker {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return v;
+    }
+
+    public List<Vozac> getListLogged() throws Exception {
+        List<Vozac> list = new ArrayList<>();
+        String query = "SELECT * FROM logged JOIN vozac ON logged.idVozac=vozac.idVozac";
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+
+                int id = rs.getInt("idVozac");
+                String phone = rs.getString("phoneNumber");
+                String mail = rs.getString("mail");
+                String pass = rs.getString("password");
+                String name = rs.getString("nameVozac");
+                String lastname = rs.getString("lastNameVozac");
+                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
+                list.add(u);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+
+    }
+
+    public void userLogout(Vozac v) throws Exception {
+        String query = "DELETE FROM logged WHERE idVozac=?";
+
+        try {
+            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, v.getIdVozac());
+            int result = ps.executeUpdate();
+            if (result == 1) {
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public HashMap<Integer, Vozac> login(String email, String password) {
+        HashMap<Integer, Vozac> map = new HashMap<>();
+        List<Vozac> listVozac = new ArrayList<>();
+        String query = "SELECT * FROM vozac";
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("idVozac");
+                String phone = rs.getString("phoneNumber");
+                String mail = rs.getString("mail");
+                String pass = rs.getString("password");
+                String name = rs.getString("nameVozac");
+                String lastname = rs.getString("lastNameVozac");
+                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
+                listVozac.add(u);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        List<Vozac> listLogged = new ArrayList<>();
+        try {
+            listLogged = getListLogged();
+        } catch (Exception ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (Vozac vozac : listVozac) {
+            if (vozac.getEmail().equals(email) && vozac.getPassword().equals(password)) {
+                for (Vozac vozac1 : listLogged) {
+                    if (vozac1.getEmail().equals(email)) {
+                        map.put(0, null);
+                        return map; //0 znaci da je vozac vec ulogovan na sistem
+                    }
+                }
+                String query2 = "INSERT INTO logged(idVozac) VALUES(?)";
+                try {
+                    PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query2);
+                    ps.setInt(1, vozac.getIdVozac());
+                    ps.executeUpdate();
+                    map.put(1, vozac);
+                    return map; //1 znaci vozac ulogovan
+                } catch (SQLException ex) {
+                    Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        map.put(-1, null);
+        return map;//-1 znaci nema takvog vozaca u bazi
     }
 
     /*
@@ -466,7 +556,24 @@ public class DBBroker {
             ResultSet rs = s.executeQuery(query);
             while (rs.next()) {
                 int id = rs.getInt("idVrstaVozaca");
-                String driverLicence = rs.getString("driverLicence");
+                String driverLicence = rs.getString("driverLicence"); List<Vozac> list = new ArrayList<>();
+        String query = "SELECT * FROM vozac";
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("idVozac");
+                String phone = rs.getString("phoneNumber");
+                String mail = rs.getString("mail");
+                String pass = rs.getString("password");
+                String name = rs.getString("nameVozac");
+                String lastname = rs.getString("lastNameVozac");
+                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
+                list.add(u);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 String vehicle = rs.getString("vehicle");
                 VrstaVozaca u = new VrstaVozaca(id, driverLicence, vehicle);
                 list.add(u);
@@ -776,53 +883,4 @@ public class DBBroker {
 
      */
 
-    public void userLogged(Vozac v) throws Exception {
-         String query = "INSERT INTO logged(idVozac) VALUES(?)";
-
-        try {
-            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
-            ps.setInt(1, v.getIdVozac());
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public List<Vozac> getListLogged() throws Exception {
-        List<Vozac> list = new ArrayList<>();
-        String query = "SELECT * FROM logged JOIN vozac ON logged.idVozac=vozac.idVozac";
-        try {
-            Statement s = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rs = s.executeQuery(query);
-            while (rs.next()) {
-                
-                int id = rs.getInt("idVozac");
-                String phone = rs.getString("phoneNumber");
-                String mail = rs.getString("mail");
-                String pass = rs.getString("password");
-                String name = rs.getString("nameVozac");
-                String lastname = rs.getString("lastNameVozac");
-                Vozac u = new Vozac(id, name, lastname, phone, mail, pass);
-                list.add(u);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-       
-    }
-
-    public void userLogout(Vozac v) throws Exception {
-        String query = "DELETE FROM logged WHERE idVozac=?";
-
-        try {
-            PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
-            ps.setInt(1, v.getIdVozac());
-            int result = ps.executeUpdate();
-            if (result == 1) {
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 }

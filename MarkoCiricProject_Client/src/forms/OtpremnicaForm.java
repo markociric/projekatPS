@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import util.Otpremnica;
 import util.TableModelOtpremnica;
 
@@ -20,7 +22,7 @@ import util.TableModelOtpremnica;
  *
  * @author Marko
  */
-public class OtpremnicaForm extends javax.swing.JFrame {
+public class OtpremnicaForm extends javax.swing.JFrame implements ChildDialogListener {
 
     private Locale currentLocale;
     private ResourceBundle messages;
@@ -67,7 +69,7 @@ public class OtpremnicaForm extends javax.swing.JFrame {
             }
         });
 
-        btnUpdate.setText("Azuriraj");
+        btnUpdate.setText("Ažuriraj");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
@@ -151,6 +153,19 @@ public class OtpremnicaForm extends javax.swing.JFrame {
 
     private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable2.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -167,7 +182,7 @@ public class OtpremnicaForm extends javax.swing.JFrame {
             List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
             Otpremnica otpremnica = listOtpremnica.get(selectedRow);
 
-            DetailsOtpremnicaForm otpremnicaForm = new DetailsOtpremnicaForm(this, true, otpremnica,currentLocale);
+            DetailsOtpremnicaForm otpremnicaForm = new DetailsOtpremnicaForm(this, true, otpremnica, currentLocale);
             otpremnicaForm.setLocationRelativeTo(null);
             otpremnicaForm.setVisible(true);
         } catch (IOException ex) {
@@ -177,6 +192,19 @@ public class OtpremnicaForm extends javax.swing.JFrame {
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable2.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -192,27 +220,67 @@ public class OtpremnicaForm extends javax.swing.JFrame {
             }
             List<Otpremnica> listOtpremnica = Controller.getInstance().getListOtpremnica();
             Otpremnica otpremnica = listOtpremnica.get(selectedRow);
+            SwingUtilities.invokeLater(() -> {
+                try {
 
-            UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(this, true, otpremnica, currentLocale);
-            otpremnicaForm.setLocationRelativeTo(null);
-            otpremnicaForm.setVisible(true);
+                    // Otvaranje child JDialog-a
+                    UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(this, true, otpremnica, currentLocale, this);
+                    otpremnicaForm.setLocationRelativeTo(null);
+                    otpremnicaForm.setVisible(true);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(UpdateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+
         } catch (IOException ex) {
             Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        try {
-            CreateOtpremnicaForm otpremnicaForm = new CreateOtpremnicaForm(this, true, currentLocale);
-            otpremnicaForm.setLocationRelativeTo(null);
-            otpremnicaForm.setVisible(true);
-        } catch (IOException ex) {
-            Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+                    
+            }
+            this.dispose();
+            return;
         }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                
+                // Otvaranje child JDialog-a
+                CreateOtpremnicaForm otpremnicaForm = new CreateOtpremnicaForm(this, true, currentLocale,this);
+                otpremnicaForm.setLocationRelativeTo(null);
+                otpremnicaForm.setVisible(true);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(UpdateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable2.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -261,6 +329,19 @@ public class OtpremnicaForm extends javax.swing.JFrame {
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             fillTableOtpremnica();
         } catch (IOException ex) {
             Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -287,6 +368,7 @@ public class OtpremnicaForm extends javax.swing.JFrame {
         TableModelOtpremnica tmo = new TableModelOtpremnica(listOtpremnica);
         jTable2.setModel(tmo);
     }
+
     public void loadLanguage() {
         try {
             messages = ResourceBundle.getBundle("translate.messages", currentLocale);
@@ -295,7 +377,6 @@ public class OtpremnicaForm extends javax.swing.JFrame {
         }
     }
 
-   
     public void updateTexts() {
         btnCreate.setText(messages.getString("btnCreateV.text"));
         btnUpdate.setText(messages.getString("btnUpdateV.text"));
@@ -303,5 +384,17 @@ public class OtpremnicaForm extends javax.swing.JFrame {
         btnDetails.setText(messages.getString("btnDetailsV.text"));
         btnRefresh.setText(messages.getString("btnRefresh.text"));
         lblDN.setText(messages.getString("lblDN.text"));
+    }
+
+    @Override
+    public void onDataSent(Object data) {
+        try {
+            boolean result = (boolean) data;
+            if (result) {
+                fillTableOtpremnica();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

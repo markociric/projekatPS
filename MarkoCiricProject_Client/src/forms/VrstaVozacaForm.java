@@ -4,6 +4,8 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
     private Locale currentLocale;
     private ResourceBundle messages;
     private List<JTextField> textFields = new ArrayList<>();
+
     /**
      * Creates new form VrstaVozacaForm
      */
@@ -156,11 +159,24 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         try {
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
-               switch (currentLocale.getLanguage()) {
+                switch (currentLocale.getLanguage()) {
                     case "sr" ->
                         JOptionPane.showMessageDialog(this, "Morate da izaberete neko polje", "Greška!", JOptionPane.ERROR_MESSAGE);
                     case "sr_cir" ->
@@ -172,7 +188,10 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
             }
             List<VrstaVozaca> list = Controller.getInstance().getListVrstaVozaca();
             int delete = list.get(selectedRow).getIdVrstaVozaca();
-            boolean result = Controller.getInstance().deleteVrstaVozaca(delete);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(delete); // objekat u json
+            System.out.println(jsonString);
+            boolean result = Controller.getInstance().deleteVrstaVozaca(jsonString);
 
             if (result) {
                 switch (currentLocale.getLanguage()) {
@@ -201,46 +220,62 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         try {
             String vehicle = jTextField1.getText().trim();
             String driverLicence = jTextField2.getText().trim();
             VrstaVozaca param = new VrstaVozaca(-1, driverLicence, vehicle);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(param); // objekat u json
+            System.out.println(jsonString);
             List<VrstaVozaca> list = Controller.getInstance().getListVrstaVozaca();
             for (VrstaVozaca vrstaVozaca : list) {
-                if(vrstaVozaca.getDriverLicence().equalsIgnoreCase(driverLicence) || vrstaVozaca.getVehicle().equalsIgnoreCase(vehicle)){
-                  switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Greška, uneta vrsta vozača postoji u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Грешка, унета врста возача постоји у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Error, driver type alreadz exist", "Error!", JOptionPane.ERROR_MESSAGE);
-                  }
-                  return; 
+                if (vrstaVozaca.getDriverLicence().equalsIgnoreCase(driverLicence) || vrstaVozaca.getVehicle().equalsIgnoreCase(vehicle)) {
+                    switch (currentLocale.getLanguage()) {
+                        case "sr" ->
+                            JOptionPane.showMessageDialog(this, "Greška, uneta vrsta vozača postoji u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                        case "sr_cir" ->
+                            JOptionPane.showMessageDialog(this, "Грешка, унета врста возача постоји у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                        default ->
+                            JOptionPane.showMessageDialog(this, "Error, driver type alreadz exist", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
                 }
             }
-            int result = Controller.getInstance().insertVrstaVozaca(param);
+            int result = Controller.getInstance().insertVrstaVozaca(jsonString);
             System.out.println(result);
             if (result != -1) {
                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Changes saved successfully");
-                            }
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Успешно сачуване промене");
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Changes saved successfully");
+                }
                 fillTable();
 
             } else {
                 switch (currentLocale.getLanguage()) {
-                                case "sr" ->
-                                    JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
-                                case "sr_cir" ->
-                                    JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
-                                default ->
-                                    JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
-                            }
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Greška pri čuvanju izmena u bazi", "Greška!", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Грешка при чувању измена у бази", "Грешка!", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "Error saving in database", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(VrstaVozacaForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,13 +302,13 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
         TableModelVrstaVozaca modelVrstaVozaca = new TableModelVrstaVozaca(Controller.getInstance().getListVrstaVozaca());
         jTable1.setModel(modelVrstaVozaca);
     }
-    
-     private void checkFields() {
+
+    private void checkFields() {
         boolean allFilled = Controller.validateTextFields(textFields);
         btnAdd.setEnabled(allFilled);
     }
-    
-     private void addListeners() throws IOException {
+
+    private void addListeners() throws IOException {
         textFields.add(jTextField1);
         textFields.add(jTextField2);
 
@@ -296,7 +331,7 @@ public class VrstaVozacaForm extends javax.swing.JFrame {
             });
         }
     }
-    
+
     public void loadLanguage() {
         try {
             messages = ResourceBundle.getBundle("translate.messages", currentLocale);

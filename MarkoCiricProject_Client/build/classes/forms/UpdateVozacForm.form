@@ -181,7 +181,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnSaveChanges">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sacuvaj izmene"/>
+        <Property name="text" type="java.lang.String" value="Sa&#x10d;uvaj izmene"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveChangesActionPerformed"/>
@@ -196,7 +196,7 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="checkBoxPassword">
       <Properties>
-        <Property name="text" type="java.lang.String" value="prikazi sifru"/>
+        <Property name="text" type="java.lang.String" value="prika&#x17e;i &#x161;ifru"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblErrorLastName">

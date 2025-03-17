@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.event.PrintJobEvent;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import util.NarucilacUsluge;
 import util.TableModelNarucilacUsluge;
 
@@ -28,7 +30,7 @@ import util.TableModelNarucilacUsluge;
  *
  * @author Marko
  */
-public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
+public class DetailsNarucilacUslugeForm extends javax.swing.JFrame implements ChildDialogListener {
 
     private Locale currentLocale;
     private ResourceBundle messages;
@@ -62,15 +64,14 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboSort = new javax.swing.JComboBox<>();
         lblFind = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         lblSort = new javax.swing.JLabel();
         btnFind = new javax.swing.JButton();
-        btnCreateV = new javax.swing.JButton();
-        btnUpdateV = new javax.swing.JButton();
-        btnDeleteV = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
+        btnCreate = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,10 +88,10 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Imenu rastuće", "Imenu opadajuće", "Prezimenu rastuće", "Prezimenu opadajuće", "Mestu rastuće", "Mestu opadajuće" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        comboSort.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Imenu rastuće", "Imenu opadajuće", "Prezimenu rastuće", "Prezimenu opadajuće", "Mestu rastuće", "Mestu opadajuće" }));
+        comboSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                comboSortActionPerformed(evt);
             }
         });
 
@@ -105,31 +106,24 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
             }
         });
 
-        btnCreateV.setText("Kreiraj");
-        btnCreateV.addActionListener(new java.awt.event.ActionListener() {
+        btnCreate.setText("Kreiraj");
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateVActionPerformed(evt);
+                btnCreateActionPerformed(evt);
             }
         });
 
-        btnUpdateV.setText("Azuriraj");
-        btnUpdateV.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.setText("Ažuriraj");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateVActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
-        btnDeleteV.setText("Obriši");
-        btnDeleteV.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setText("Obriši");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteVActionPerformed(evt);
-            }
-        });
-
-        btnRefresh.setText("Osveži");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -146,16 +140,13 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                                 .addComponent(lblSort)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnCreateV)
+                                .addComponent(btnCreate)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnUpdateV)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnDeleteV))
-                                    .addComponent(btnRefresh))
+                                .addComponent(btnUpdate)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDelete)
                                 .addGap(83, 83, 83)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -177,17 +168,15 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnFind)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnCreateV)
-                            .addComponent(btnUpdateV)
-                            .addComponent(btnDeleteV))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnRefresh)
-                .addGap(12, 12, 12)
+                            .addComponent(btnCreate)
+                            .addComponent(btnUpdate)
+                            .addComponent(btnDelete))))
+                .addGap(47, 47, 47)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
         );
@@ -195,31 +184,50 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void comboSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSortActionPerformed
 
-        int selectedSort = jComboBox1.getSelectedIndex();
+        int selectedSort = comboSort.getSelectedIndex();
         try {
             HashMap<Integer, String> map = new HashMap<>();
             map.put(selectedSort + 1, "");
             globalMap = map;
-            TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(map));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(jsonString));
             jTable1.setModel(modelNarucilacUsluge);
         } catch (IOException ex) {
             Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_comboSortActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             //SELECT * FROM narucilac_usluge WHERE email LIKE "a%"
             String search = jTextField1.getText().trim();
             jTextField1.setText("");
             HashMap<Integer, String> map = new HashMap<>();
             map.put(7, search);
             globalMap = map;
-            List<NarucilacUsluge> list = Controller.getInstance().getListNarucilacUsluge(map);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            List<NarucilacUsluge> list = Controller.getInstance().getListNarucilacUsluge(jsonString);
 
             if (list.isEmpty()) {
                 switch (currentLocale.getLanguage()) {
@@ -243,12 +251,25 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnFindActionPerformed
 
-    private void btnCreateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateVActionPerformed
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             CreateNarucilacUslugeForm cnu = new CreateNarucilacUslugeForm(currentLocale);
             cnu.setVisible(true);
             cnu.setLocationRelativeTo(null);
-            btnCreateV.addActionListener(new ActionListener() {
+            btnCreate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
@@ -281,10 +302,23 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnCreateVActionPerformed
+    }//GEN-LAST:event_btnCreateActionPerformed
 
-    private void btnUpdateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateVActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
             if (selectedRow == -1) {
                 switch (currentLocale.getLanguage()) {
@@ -299,11 +333,24 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
             }
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(globalMap);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(globalMap); // objekat u json
+            System.out.println(jsonString);
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(jsonString);
             NarucilacUsluge nu = listNu.get(selectedRow);
-            UpdateNarucilacUslugeForm form = new UpdateNarucilacUslugeForm(nu, currentLocale);
-            form.setVisible(true);
-            form.setLocationRelativeTo(null);
+
+            SwingUtilities.invokeLater(() -> {
+                try {
+
+                    // Otvaranje child JDialog-a
+                    UpdateNarucilacUslugeForm form = new UpdateNarucilacUslugeForm(nu, currentLocale, this);
+                    form.setVisible(true);
+                    form.setLocationRelativeTo(null);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(UpdateOtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
 
             Set keys = globalMap.keySet();
             int vrednost = 0;
@@ -316,10 +363,23 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnUpdateVActionPerformed
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnDeleteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteVActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
             if (selectedRow == -1) {
                 switch (currentLocale.getLanguage()) {
@@ -333,11 +393,12 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
                 return;
             }
             HashMap<Integer, String> map = new HashMap<>();
-
-            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(globalMap);
-            int delete = listNu.get(selectedRow).getIdNarucilacUsluge();
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(delete); // objekat u json
+            String jsonString = objectMapper.writeValueAsString(globalMap); // objekat u json
+            System.out.println(jsonString);
+            List<NarucilacUsluge> listNu = Controller.getInstance().getListNarucilacUsluge(jsonString);
+            int delete = listNu.get(selectedRow).getIdNarucilacUsluge();
+            jsonString = objectMapper.writeValueAsString(delete); // objekat u json
             System.out.println(jsonString);
             boolean result = Controller.getInstance().deleteNarucilacUsluge(jsonString);
 
@@ -372,34 +433,18 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnDeleteVActionPerformed
-
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        try {
-            Set keys = globalMap.keySet();
-            int vrednost = 0;
-            String pretraga = "";
-            for (Object key : keys) {
-                vrednost = (int) key;
-                pretraga = globalMap.get(key);
-            }
-            fillTable(vrednost, pretraga);
-        } catch (IOException ex) {
-            Logger.getLogger(OtpremnicaForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnRefreshActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCreateV;
-    private javax.swing.JButton btnDeleteV;
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnFind;
-    private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnUpdateV;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> comboSort;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
@@ -410,7 +455,10 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
     private void fillTable(int needSort, String search) throws IOException {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(needSort, search);
-        TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(map));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+        System.out.println(jsonString);
+        TableModelNarucilacUsluge modelNarucilacUsluge = new TableModelNarucilacUsluge(Controller.getInstance().getListNarucilacUsluge(jsonString));
         jTable1.setModel(modelNarucilacUsluge);
 
     }
@@ -427,9 +475,29 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame {
         lblFind.setText(messages.getString("lblFind.text"));
         btnFind.setText(messages.getString("btnFind.text"));
         lblSort.setText(messages.getString("lblSort.text"));
-        btnCreateV.setText(messages.getString("btnCreateV.text"));
-        btnUpdateV.setText(messages.getString("btnUpdateV.text"));
-        btnDeleteV.setText(messages.getString("btnDeleteV.text"));
+        btnCreate.setText(messages.getString("btnCreateV.text"));
+        btnUpdate.setText(messages.getString("btnUpdateV.text"));
+        btnDelete.setText(messages.getString("btnDeleteV.text"));
 
     }
+
+    @Override
+    public void onDataSent(Object data) {
+        boolean result = (boolean) data;
+        if (result) {
+            try {
+                Set keys = globalMap.keySet();
+                int vrednost = 0;
+                String pretraga = "";
+                for (Object key : keys) {
+                    vrednost = (int) key;
+                    pretraga = globalMap.get(key);
+                }
+                fillTable(vrednost, pretraga);
+            } catch (IOException ex) {
+                Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
 }

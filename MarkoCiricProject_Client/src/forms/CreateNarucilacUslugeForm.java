@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -22,14 +23,14 @@ import util.NarucilacUsluge;
  */
 public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
 
-    private Locale current;
+    private Locale currentLocale;
     private ResourceBundle messages;
 
     /**
      * Creates new form CreateNarucilacUsluge
      */
     public CreateNarucilacUslugeForm(Locale currentLocale) throws IOException {
-        current = currentLocale;
+        this.currentLocale = currentLocale;
         initComponents();
         addListeners();
         fillcombo();
@@ -78,7 +79,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
 
         lblMail.setText("Mail:");
 
-        btnSaveChanges.setText("Sacuvaj izmene");
+        btnSaveChanges.setText("Sačuvaj izmene");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveChangesActionPerformed(evt);
@@ -188,9 +189,22 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
         if (lblErrorName.getText().trim().equals("") && lblErrorLastName.getText().trim().equals("")
                 && lblErrorPhone.getText().trim().equals("") && lblErrorMail.getText().trim().equals("")) {
-            int answer = switch (current.getLanguage()) {
+            int answer = switch (currentLocale.getLanguage()) {
                 case "sr" ->
                     JOptionPane.showConfirmDialog(rootPane, "Da li ste sigurni da želite da sačuvate novounete podatke?", "Potvrda", JOptionPane.YES_NO_OPTION);
 
@@ -218,7 +232,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
                     int responce = Controller.getInstance().insertNarucilacUsluge(jsonString);
 
                     if (responce != -1) {
-                        switch (current.getLanguage()) {
+                        switch (currentLocale.getLanguage()) {
                             case "sr" ->
                                 JOptionPane.showMessageDialog(this, "Uspešno sačuvane promene");
                             case "sr_cir" ->
@@ -229,7 +243,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
 
                         this.dispose();
                     } else {
-                        switch (current.getLanguage()) {
+                        switch (currentLocale.getLanguage()) {
                             case "sr" ->
                                 JOptionPane.showMessageDialog(this, "Greska pri čuvanju izmena u bazi", "Greška", JOptionPane.ERROR_MESSAGE);
                             case "sr_cir" ->
@@ -247,7 +261,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
                 this.dispose();
             }
         } else {
-            switch (current.getLanguage()) {
+            switch (currentLocale.getLanguage()) {
                 case "sr" ->
                     JOptionPane.showMessageDialog(this, "Greška, nisu uneti pravilno svi podaci", "Greška", JOptionPane.ERROR_MESSAGE);
                 case "sr_cir" ->
@@ -285,9 +299,9 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void addListeners() throws IOException {
-        Controller.getInstance().checkMail(txtMail, lblErrorMail, current);
-        Controller.getInstance().checkPhone(txtPhoneNumber, lblErrorPhone, current);
-        switch (current.getLanguage()) {
+        Controller.getInstance().checkMail(txtMail, lblErrorMail, currentLocale);
+        Controller.getInstance().checkPhone(txtPhoneNumber, lblErrorPhone, currentLocale);
+        switch (currentLocale.getLanguage()) {
             case "sr":
                 Controller.getInstance().checkName(txtName, lblErrorName, "Loš unos imena.");
                 Controller.getInstance().checkName(txtLastName, lblErrorLastName, "Loš unos prezimena.");
@@ -307,7 +321,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
 
     public void loadLanguage() {
         try {
-            messages = ResourceBundle.getBundle("translate.messages", current);
+            messages = ResourceBundle.getBundle("translate.messages", currentLocale);
         } catch (Exception e) {
             System.err.println("Greška pri učitavanju jezika: " + e.getMessage());
         }

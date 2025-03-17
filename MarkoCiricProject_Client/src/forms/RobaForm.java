@@ -6,6 +6,7 @@ package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -211,6 +212,19 @@ public class RobaForm extends javax.swing.JFrame {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -226,10 +240,12 @@ public class RobaForm extends javax.swing.JFrame {
             }
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            List<Roba> list = Controller.getInstance().getListRoba(map);
-            int delete = list.get(selectedRow).getIdRoba();
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(delete);
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            List<Roba> list = Controller.getInstance().getListRoba(jsonString);
+            int delete = list.get(selectedRow).getIdRoba();
+            jsonString = objectMapper.writeValueAsString(delete);
             System.out.println("Roba: " + jsonString);
             boolean result = Controller.getInstance().deleteRoba(jsonString);
 
@@ -260,6 +276,19 @@ public class RobaForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         String name = txtName.getText().trim();
         try {
             double qty = Double.parseDouble(txtQty.getText().trim());
@@ -271,7 +300,8 @@ public class RobaForm extends javax.swing.JFrame {
             System.out.println("Roba: " + jsonString);
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            List<Roba> list = Controller.getInstance().getListRoba(map);
+            jsonString = objectMapper.writeValueAsString(map);
+            List<Roba> list = Controller.getInstance().getListRoba(jsonString);
             for (Roba roba : list) {
                 if (roba.getNameRoba().equalsIgnoreCase(param.getNameRoba())) {
                     switch (currentLocale.getLanguage()) {
@@ -327,6 +357,19 @@ public class RobaForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -344,10 +387,12 @@ public class RobaForm extends javax.swing.JFrame {
             double qty = Double.parseDouble(txtQtyRoba.getText().trim());
             HashMap<Integer, String> map = new HashMap<>();
             map.put(0, "");
-            int updateId = Controller.getInstance().getListRoba(map).get(selectedRow).getIdRoba();
-            Roba param = new Roba(updateId, null, qty, null, -1);
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(param);
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            int updateId = Controller.getInstance().getListRoba(jsonString).get(selectedRow).getIdRoba();
+            Roba param = new Roba(updateId, null, qty, null, -1);
+            jsonString = objectMapper.writeValueAsString(param);
             System.out.println("Roba: " + jsonString);
             boolean result = Controller.getInstance().updateRoba(jsonString);
             if (result) {
@@ -414,7 +459,10 @@ public class RobaForm extends javax.swing.JFrame {
     private void fillTable() throws IOException {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "");
-        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(map));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+        System.out.println(jsonString);
+        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(jsonString));
         jTable1.setModel(modelRoba);
     }
 

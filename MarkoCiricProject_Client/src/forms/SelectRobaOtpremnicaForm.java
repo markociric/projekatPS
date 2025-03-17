@@ -4,6 +4,8 @@
  */
 package forms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +29,6 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
     private Locale currentLocale;
     private ChildDialogListener listener;
     private HashMap<Integer, String> globalMap = new HashMap<>();
-
 
     /**
      * Creates new form SelectRobaOtpremnicaForm
@@ -157,6 +158,19 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
 
     private void btnChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -170,7 +184,10 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
                 }
                 return;
             }
-            List<Roba> listRoba = Controller.getInstance().getListRoba(globalMap);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(globalMap); // objekat u json
+            System.out.println(jsonString);
+            List<Roba> listRoba = Controller.getInstance().getListRoba(jsonString);
             Roba r = listRoba.get(selectedRow);
             if (listener != null) {
                 listener.onDataSent(r);
@@ -188,7 +205,10 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
             HashMap<Integer, String> map = new HashMap<>();
             map.put(selectedSort + 1, "");
             globalMap = map;
-            TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(map));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(jsonString));
             jTable1.setModel(modelRoba);
         } catch (IOException ex) {
             Logger.getLogger(DetailsNarucilacUslugeForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,13 +218,29 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             //SELECT * FROM narucilac_usluge WHERE email LIKE "a%"
             String search = jTextField1.getText().trim();
             jTextField1.setText("");
             HashMap<Integer, String> map = new HashMap<>();
             map.put(3, search);
             globalMap = map;
-            List<Roba> list = Controller.getInstance().getListRoba(map);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            List<Roba> list = Controller.getInstance().getListRoba(jsonString);
 
             if (list.isEmpty()) {
                 switch (currentLocale.getLanguage()) {
@@ -232,7 +268,10 @@ public class SelectRobaOtpremnicaForm extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     private void fillTable(int par, String string) throws IOException {
-        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(globalMap));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(globalMap); // objekat u json
+        System.out.println(jsonString);
+        TableModelRoba modelRoba = new TableModelRoba(Controller.getInstance().getListRoba(jsonString));
         jTable1.setModel(modelRoba);
     }
 

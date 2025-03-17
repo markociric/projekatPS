@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,19 +77,19 @@ public class Controller {
 
     }
 
-    public List<Vozac> getListVozac() {
+    public List<Vozac> getListVozac() throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListVozac, null);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<Vozac>) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean updateVozac(String vozac) {
+    public boolean updateVozac(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.updateVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteVozac(String deleteVozac) {
+    public boolean deleteVozac(String deleteVozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteVozac, deleteVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
@@ -278,7 +279,7 @@ public class Controller {
 
     }
 
-    public List<Otpremnica> getListOtpremnica() {
+    public List<Otpremnica> getListOtpremnica() throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListOtpremnica, null);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<Otpremnica>) Communication.getInstance().getResponce().getResponse();
@@ -293,21 +294,21 @@ public class Controller {
         return d + "." + m + "." + y + ".";
     }
 
-    public List<String> getVehicles(String idVozac) {
+    public List<String> getVehicles(String idVozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getVehicles, idVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<String>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean deleteOtpremnica(String deleteOtpremnica) {
+    public boolean deleteOtpremnica(String deleteOtpremnica) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteOtpremnica, deleteOtpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public List<VzVV> getListVzVV(String idVozac) {
+    public List<VzVV> getListVzVV(String idVozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListVzVV, idVozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<VzVV>) Communication.getInstance().getResponce().getResponse();
@@ -372,7 +373,7 @@ public class Controller {
 
     }
 
-    public int insertVozac(String vozac) {
+    public int insertVozac(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
@@ -406,87 +407,87 @@ public class Controller {
 
     }
 
-    public List<VrstaVozaca> getListVrstaVozaca() {
+    public List<VrstaVozaca> getListVrstaVozaca() throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListVrstaVozaca, null);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<VrstaVozaca>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean updateVzVV(String update) {
+    public boolean updateVzVV(String update) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.updateVzVV, update);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteVzVV(String delete) {
+    public boolean deleteVzVV(String delete) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteVzVV, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public int insertVzVV(String vozac) {
+    public int insertVzVV(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVzVV, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteVrstaVozaca(int delete) {
+    public boolean deleteVrstaVozaca(String delete) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteVrstaVozaca, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public int insertVrstaVozaca(VrstaVozaca vrsta) {
+    public int insertVrstaVozaca(String vrsta) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVrstaVozaca, vrsta);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
     }
 
-    public List<Roba> getListRoba(HashMap<Integer, String> map) {
+    public List<Roba> getListRoba(String map) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListRoba, map);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<Roba>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean deleteRoba(String delete) {
+    public boolean deleteRoba(String delete) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteRoba, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean updateRoba(String update) {
+    public boolean updateRoba(String update) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.updateRoba, update);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public int insertRoba(String name) {
+    public int insertRoba(String name) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertRoba, name);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public List<NarucilacUsluge> getListNarucilacUsluge(HashMap<Integer, String> needSort) {
+    public List<NarucilacUsluge> getListNarucilacUsluge(String needSort) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListNarucilacUsluge, needSort);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<NarucilacUsluge>) Communication.getInstance().getResponce().getResponse();
     }
 
-    public List<StavkaOtpremnice> getListStavkeOtpremnice(int idOtpremnica) {
+    public List<StavkaOtpremnice> getListStavkeOtpremnice(String idOtpremnica) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListStavkeOtpremnice, idOtpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<StavkaOtpremnice>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public double sumPrices(int idOtpremnica) {
+    public double sumPrices(String idOtpremnica) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.sumPrices, idOtpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (double) Communication.getInstance().getResponce().getResponse();
@@ -515,21 +516,21 @@ public class Controller {
         }
     }
 
-    public VzVV getVzVV(String vozac) {
+    public VzVV getVzVV(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getVzVV, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (VzVV) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public List<Mesto> getListMesto() {
+    public List<Mesto> getListMesto() throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.getListMesto, null);
         Communication.getInstance().sendRequest(clientRequest);
         return (List<Mesto>) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public boolean updateOtpremnica(Otpremnica otpremnica, List<Object> liste) {
+    public boolean updateOtpremnica(Otpremnica otpremnica, List<Object> liste) throws IOException {
         List<Object> params = new ArrayList<>();
         params.add(liste);
         params.add(otpremnica);
@@ -539,57 +540,51 @@ public class Controller {
 
     }
 
-    public boolean updateNarucilacUsluge(String nu) {
+    public boolean updateNarucilacUsluge(String nu) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.updateNarucilacUsluge, nu);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public int insertNarucilacUsluge(String nu) {
+    public int insertNarucilacUsluge(String nu) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertNarucilacUsluge, nu);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
     }
 
-    public int insertOtpremnica(String otpremnica) {
+    public int insertOtpremnica(String otpremnica) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertOtpremnica, otpremnica);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
 
     }
 
-    public void insertNewVozac(String vozac) {
+    public void insertNewVozac(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         Communication.getInstance().getResponce().getResponse();
     }
 
-    public boolean deleteNarucilacUsluge(String delete) {
+    public boolean deleteNarucilacUsluge(String delete) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.deleteNarucilacUsluge, delete);
         Communication.getInstance().sendRequest(clientRequest);
         return (boolean) Communication.getInstance().getResponce().getResponse();
     }
 
-    public void userLogged(String vozac) {
-        ClientRequest clientRequest = new ClientRequest(Operations.userLogged, vozac);
-        Communication.getInstance().sendRequest(clientRequest);
-    }
-
-    public List<Vozac> getListLogged() {
-        ClientRequest clientRequest = new ClientRequest(Operations.getListLogged, null);
-        Communication.getInstance().sendRequest(clientRequest);
-        return (List<Vozac>) Communication.getInstance().getResponce().getResponse();
-    }
-
-    public void userLogout(String vozac) {
+    public void userLogout(String vozac) throws IOException {
         ClientRequest clientRequest = new ClientRequest(Operations.userLogout, vozac);
         Communication.getInstance().sendRequest(clientRequest);
     }
 
-    public boolean isServerLive() throws IOException {
-        ClientRequest clientRequest = new ClientRequest(Operations.checkConnection, null);
+    public HashMap<Integer, Vozac> login(String email, String password) throws IOException {
+        List<String> params = new ArrayList<>();
+        params.add(email);
+        params.add(password);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(params); // objekat u json
+        ClientRequest clientRequest = new ClientRequest(Operations.login, jsonString);
         Communication.getInstance().sendRequest(clientRequest);
-        return (boolean) Communication.getInstance().getResponce().getResponse();
+        return (HashMap<Integer, Vozac>) Communication.getInstance().getResponce().getResponse();
     }
 
 }

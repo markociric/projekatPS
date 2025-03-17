@@ -6,6 +6,7 @@ package form;
 
 import controller.Controller;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,8 +47,6 @@ public class TableModelLogged extends AbstractTableModel {
                 return v.getPhoneNumber();
             case 2:
                 return v.getEmail();
-            case 3:
-                return String.valueOf(new Date().getTime());
             default:
                 return "n/a";
         }
@@ -57,5 +56,5 @@ public class TableModelLogged extends AbstractTableModel {
     public String getColumnName(int column) {
         return columns[column];
     }
-
+    
 }

@@ -44,7 +44,6 @@ public enum Operations {
     getVzVV,
     isValidDate,
     getListMesto,
-    updateQtySO,
     insertStavkaOtpremnice,
     deleteStavkaOtpremnice,
     updateOtpremnica,
@@ -52,8 +51,7 @@ public enum Operations {
     insertNarucilacUsluge,
     insertOtpremnica,
     deleteNarucilacUsluge,
-    userLogged,
     getListLogged,
     userLogout,
-    checkConnection
+    login
 }

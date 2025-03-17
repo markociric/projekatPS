@@ -7,6 +7,8 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,8 +18,9 @@ import java.util.logging.Logger;
  */
 public class StartServer extends Thread {
 
-    private boolean running = true; 
+    private boolean running = true;
     private ServerSocket serverSocket;
+    List<Socket> activeClients = new ArrayList<>();
 
     @Override
     public void run() {
@@ -31,7 +34,11 @@ public class StartServer extends Thread {
                     Socket s = serverSocket.accept();
                     System.out.println("Klijent povezan");
 
-                    ProcessingClientRequest pcr = new ProcessingClientRequest(s);
+                    synchronized (activeClients) {
+                        activeClients.add(s);  // Dodaj klijenta u listu
+                    }
+
+                    ProcessingClientRequest pcr = new ProcessingClientRequest(s, this);
                     pcr.start();
                 } catch (IOException e) {
                     if (running) {
@@ -43,23 +50,40 @@ public class StartServer extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            stopServer();
+            stopServer();  // Osiguraj da se server zaustavi
         }
     }
 
     public void stopServer() {
         running = false;
+
+        // Zatvori sve aktivne klijentske konekcije
+        synchronized (activeClients) {
+            for (Socket client : activeClients) {
+                try {
+                    if (client != null && !client.isClosed()) {
+                        client.close();
+                    }
+                } catch (IOException e) {
+                    Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, e);
+                }
+            }
+            activeClients.clear();  // Očisti listu nakon zatvaranja
+        }
+
+        // Zatvori serverski soket
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
-                serverSocket.close(); 
+                serverSocket.close();
                 System.out.println("Server zaustavljen.");
             } catch (IOException e) {
                 Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }
-    
-    public boolean isClosed(){
-        return serverSocket.isClosed();
+
+    public List<Socket> getActiveClients() {
+        return activeClients;
     }
+        
 }

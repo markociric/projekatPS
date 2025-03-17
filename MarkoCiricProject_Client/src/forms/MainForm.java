@@ -4,7 +4,9 @@
  */
 package forms;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -63,6 +65,7 @@ public class MainForm extends javax.swing.JFrame {
         Time time = new Time(lblTime, lblDate);
         Thread nit = new Thread(time);
         nit.start();
+
     }
 
     /**
@@ -121,7 +124,7 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        btnUpdateV.setText("Azuriraj");
+        btnUpdateV.setText("Ažuriraj");
         btnUpdateV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateVActionPerformed(evt);
@@ -347,35 +350,42 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(96, 96, 96)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBasicInfoVozac)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(btnDetailsV)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnCreateV)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnUpdateV)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnDeleteV)
-                            .addGap(179, 179, 179))))
-                .addGap(59, 59, 59)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(98, 98, 98))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBasicInfoVozac)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(btnDetailsV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnCreateV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnUpdateV)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnDeleteV)
+                                    .addGap(179, 179, 179))))
+                        .addContainerGap(546, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTime1)
+                                    .addComponent(lblDate1))
+                                .addGap(53, 53, 53)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblDate)
+                                    .addComponent(lblTime))
+                                .addGap(76, 76, 76)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblLoggedUser)
-                .addGap(1401, 1401, 1401)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTime1)
-                    .addComponent(lblDate1))
-                .addGap(53, 53, 53)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDate)
-                    .addComponent(lblTime))
-                .addGap(174, 174, 174))
+                .addGap(1756, 1756, 1756))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,9 +393,6 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(lblLoggedUser)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(313, 313, 313)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -414,19 +421,25 @@ public class MainForm extends javax.swing.JFrame {
                                     .addComponent(btnCreateV)
                                     .addComponent(btnUpdateV)
                                     .addComponent(btnDeleteV)
-                                    .addComponent(btnDetailsV)))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(38, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTime)
-                    .addComponent(lblTime1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDate)
-                    .addComponent(lblDate1))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(btnDetailsV))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(108, 108, 108)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTime)
+                                    .addComponent(lblTime1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblDate)
+                                    .addComponent(lblDate1))
+                                .addGap(281, 281, 281))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(313, 313, 313)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -434,18 +447,21 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnDeleteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteVActionPerformed
         try {
-            if (Controller.getInstance().isServerLive()) {
-                System.out.println("Klijent je povezan sa serverom.");
-            } else {
+            if (!Communication.getInstance().isServerAlive()) {
                 switch (currentLocale.getLanguage()) {
-                        case "sr" ->
-                            JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
-                        case "sr_cir" ->
-                            JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
-                        default ->
-                            JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                this.dispose();
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
                 return;
             }
             int selectedRow = jTable1.getSelectedRow();
@@ -497,6 +513,24 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnCreateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateVActionPerformed
         try {
+            
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             boolean result = true;
             List<Vozac> list = Controller.getInstance().getListVozac();
             for (Vozac vozac1 : list) {
@@ -528,6 +562,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnUpdateVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateVActionPerformed
         try {
+            if (Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -556,6 +607,24 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnDetailsVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsVActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
+
             int selectedRow = jTable1.getSelectedRow();
 
             if (selectedRow == -1) {
@@ -582,6 +651,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnOtpremnicaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtpremnicaFormActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             OtpremnicaForm form = new OtpremnicaForm(currentLocale);
             form.setVisible(true);
             form.setLocationRelativeTo(null);
@@ -593,7 +679,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnUpdateMyInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyInfoActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
 
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             UpdateVozacForm u = new UpdateVozacForm(this, true, vozac, currentLocale);
             u.setLocationRelativeTo(null);
             u.setVisible(true);
@@ -606,6 +708,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnUpdateMyVrstaVozacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMyVrstaVozacaActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             MyVrstaVozacaForm u = new MyVrstaVozacaForm(this, true, vozac, currentLocale);
             u.setLocationRelativeTo(null);
             u.setVisible(true);
@@ -618,6 +737,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnVrstaVozacaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVrstaVozacaFormActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             VrstaVozacaForm u = new VrstaVozacaForm(currentLocale);
             u.setLocationRelativeTo(null);
             u.setVisible(true);
@@ -630,6 +766,23 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnRobaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRobaFormActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                System.out.println(jsonString);
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+                return;
+            }
             RobaForm r = new RobaForm(currentLocale);
             r.setLocationRelativeTo(null);
             r.setVisible(true);
@@ -639,6 +792,25 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRobaFormActionPerformed
 
     private void btnNarucilacUslugeFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNarucilacUslugeFormActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            try {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(vozac); // objekat u json
+                Controller.getInstance().userLogout(jsonString);
+                System.exit(0);
+            } catch (Exception ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         DetailsNarucilacUslugeForm nu = new DetailsNarucilacUslugeForm(currentLocale);
         nu.setLocationRelativeTo(null);
         nu.setVisible(true);
@@ -710,7 +882,6 @@ public class MainForm extends javax.swing.JFrame {
         int param = vozac.getIdVozac();
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(param); // objekat u json
-        System.out.println(jsonString);
         TableModelDetailsVozac detailsVozac = new TableModelDetailsVozac(Controller.getInstance().getListVzVV(jsonString));
         jTable2.setModel(detailsVozac);
     }
@@ -756,13 +927,13 @@ public class MainForm extends javax.swing.JFrame {
             public void windowClosing(WindowEvent e) {
                 int odgovor = switch (currentLocale.getLanguage()) {
                     case "sr" ->
-                        JOptionPane.showConfirmDialog(MainForm.this,"Da li ste sigurni da želite da zatvorite?", "Potvrda zatvaranja",JOptionPane.YES_NO_OPTION);
+                        JOptionPane.showConfirmDialog(MainForm.this, "Da li ste sigurni da želite da zatvorite?", "Potvrda zatvaranja", JOptionPane.YES_NO_OPTION);
                     case "sr_cir" ->
-                        JOptionPane.showConfirmDialog(MainForm.this,"Да ли сте сигурни да желите да затворите?","Потврда затварања",JOptionPane.YES_NO_OPTION);
+                        JOptionPane.showConfirmDialog(MainForm.this, "Да ли сте сигурни да желите да затворите?", "Потврда затварања", JOptionPane.YES_NO_OPTION);
                     default ->
-                        JOptionPane.showConfirmDialog(MainForm.this,"Are you sure you want to close??","Exit",JOptionPane.YES_NO_OPTION);
+                        JOptionPane.showConfirmDialog(MainForm.this, "Are you sure you want to close??", "Exit", JOptionPane.YES_NO_OPTION);
                 };
-                
+
                 if (odgovor == JOptionPane.YES_OPTION) {
                     try {
                         // Ovde možeš dodati kod koji treba da se izvrši pre zatvaranja

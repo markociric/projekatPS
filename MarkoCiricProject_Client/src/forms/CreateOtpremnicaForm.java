@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,14 +36,16 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
     private Locale currentLocale;
     private ResourceBundle messages;
     int id = -1;
+    private ChildDialogListener listener;
 
     /**
      * Creates new form DetailsOtpremnicaForm
      */
-    public CreateOtpremnicaForm(java.awt.Frame parent, boolean modal, Locale currentLocale) throws IOException {
+    public CreateOtpremnicaForm(java.awt.Frame parent, boolean modal, Locale currentLocale, ChildDialogListener listener) throws IOException {
         super(parent, modal);
         initComponents();
         this.currentLocale = currentLocale;
+        this.listener = listener;
         switch (currentLocale.getLanguage()) {
             case "sr" ->
                 lblDateOtpremnica.setText("Današnji datum : " + Controller.getInstance().convertDate(new Date()));
@@ -134,7 +137,7 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
 
         lblDateOtpremnica.setText("datum");
 
-        btnSave.setText("Sacuvaj");
+        btnSave.setText("Sačuvaj");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -157,9 +160,9 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
 
         lblErrorMail.setForeground(new java.awt.Color(255, 51, 51));
 
-        lblFind.setText("Pretrazi");
+        lblFind.setText("Pretraži");
 
-        btnFind.setText("jButton1");
+        btnFind.setText("Pretraži");
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindActionPerformed(evt);
@@ -325,6 +328,19 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (currentLocale.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         Vozac selectedVozac = (Vozac) comboVozac.getSelectedItem();
         Mesto selectedMesto = (Mesto) comboMesto.getSelectedItem();
 
@@ -386,7 +402,11 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
                         default ->
                             JOptionPane.showMessageDialog(this, "Changes saved successfully");
                     }
-                    UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(null, true, o, currentLocale);
+                    if (listener != null) {
+                        listener.onDataSent(true);
+                    }
+
+                    UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(null, true, o, currentLocale, null);
                     otpremnicaForm.setLocationRelativeTo(null);
                     otpremnicaForm.setVisible(true);
                     this.dispose();
@@ -429,10 +449,26 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         try {
+            if (!Communication.getInstance().isServerAlive()) {
+                switch (currentLocale.getLanguage()) {
+                    case "sr" ->
+                        JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                    case "sr_cir" ->
+                        JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                    default ->
+                        JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                this.dispose();
+                return;
+            }
             String search = txtFind.getText().trim();
             HashMap<Integer, String> map = new HashMap<>();
             map.put(7, search);
-            List<NarucilacUsluge> list = Controller.getInstance().getListNarucilacUsluge(map);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(map); // objekat u json
+            System.out.println(jsonString);
+            List<NarucilacUsluge> list = Controller.getInstance().getListNarucilacUsluge(jsonString);
             if (list.isEmpty()) {
                 switch (currentLocale.getLanguage()) {
                     case "sr" ->
@@ -605,4 +641,5 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
         btnFind.setText(messages.getString("btnFind.text"));
         lblFind.setText(messages.getString("btnFind.text"));
     }
+
 }

@@ -547,10 +547,6 @@ public class Controller {
         return so.isDeleted();
     }
 
-    public void userLogged(Vozac v) throws Exception {
-        dbb.userLogged(v);
-    }
-
     public List<Vozac> getListLogged() throws Exception {
         return dbb.getListLogged();
     }
@@ -558,5 +554,10 @@ public class Controller {
     public void userLogout(Vozac v) throws Exception {
          dbb.userLogout(v);
     }
+
+    public HashMap<Integer, Vozac> login(String email, String password) {
+        return dbb.login(email,password);
+    }
+
 
 }

@@ -5,6 +5,7 @@
 package forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.Communication;
 import controller.Controller;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -25,15 +26,17 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
     private Locale current;
     private ResourceBundle messages;
     NarucilacUsluge nu;
+    private ChildDialogListener listener;
 
     /**
      * Creates new form CreateNarucilacUsluge
      */
-    public UpdateNarucilacUslugeForm(NarucilacUsluge nu, Locale currentLocale) throws IOException {
+    public UpdateNarucilacUslugeForm(NarucilacUsluge nu, Locale currentLocale, ChildDialogListener listener) throws IOException {
         current = currentLocale;
         initComponents();
         addListeners();
         this.nu = nu;
+        this.listener = listener;
         fillcombo();
         txtId.setText(nu.getIdNarucilacUsluge() + "");
         txtId.setEnabled(false);
@@ -90,7 +93,7 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
 
         lblMail.setText("Mail:");
 
-        btnSaveChanges.setText("Sacuvaj izmene");
+        btnSaveChanges.setText("Sačuvaj izmene");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveChangesActionPerformed(evt);
@@ -211,6 +214,19 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
+        if (!Communication.getInstance().isServerAlive()) {
+            switch (current.getLanguage()) {
+                case "sr" ->
+                    JOptionPane.showMessageDialog(this, "Nema konekcije sa serverom", "Greška", JOptionPane.ERROR_MESSAGE);
+                case "sr_cir" ->
+                    JOptionPane.showMessageDialog(this, "Нема конекције са сервером", "Грешка", JOptionPane.ERROR_MESSAGE);
+                default ->
+                    JOptionPane.showMessageDialog(this, "No connection with servers", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            this.dispose();
+            return;
+        }
         if (lblErrorName.getText().trim().equals("") && lblErrorLastName.getText().trim().equals("")
                 && lblErrorPhone.getText().trim().equals("") && lblErrorMail.getText().trim().equals("")) {
             int answer = switch (current.getLanguage()) {
@@ -249,7 +265,9 @@ public class UpdateNarucilacUslugeForm extends javax.swing.JFrame {
                             default ->
                                 JOptionPane.showMessageDialog(this, "Successfully saved changes");
                         }
-
+                        if (listener != null) {
+                            listener.onDataSent(true);
+                        }
                         this.dispose();
                     } else {
                         switch (current.getLanguage()) {
