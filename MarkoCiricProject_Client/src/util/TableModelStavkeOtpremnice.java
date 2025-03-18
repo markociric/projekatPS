@@ -19,7 +19,7 @@ import javax.swing.table.AbstractTableModel;
 public class TableModelStavkeOtpremnice extends AbstractTableModel {
 
     List<StavkaOtpremnice> list = new ArrayList<>();
-    String columns[] = {"Redni broj","Naziv robe", "Količina", "Merna jedinica", "Jedinična cena (u dinarima)", "Iznos",}; //dovrsiti table model
+    String columns[] = {"Redni broj","Naziv robe", "Količina", "Merna jedinica", "Jedinična cena (u dinarima)", "Iznos",}; 
 
     public TableModelStavkeOtpremnice(List<StavkaOtpremnice> list) {
         this.list = list;

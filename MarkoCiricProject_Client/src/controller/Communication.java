@@ -65,10 +65,10 @@ public class Communication {
         if (s == null || s.isClosed()) {
             return false;
         }
-        s.sendUrgentData(0); // Testiranje veze - baca IOException ako veza ne postoji
+        s.sendUrgentData(0);  
         return true;
     } catch (IOException e) {
-        return false; // Ako baci IOException, server je prekinuo vezu
+        return false;
     }
 }
 

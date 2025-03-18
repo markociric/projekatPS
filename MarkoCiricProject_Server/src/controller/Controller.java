@@ -185,7 +185,7 @@ public class Controller {
             if (textField.getText().trim().isEmpty()) {
                 textField.setBorder(redBorder);
                 textField.setBackground(new Color(255, 224, 203));
-                allFilled = false; // Ako nađe prazno polje, postavlja na false
+                allFilled = false;
             } else {
                 textField.setBorder(UIManager.getBorder("TextField.border"));
                 textField.setBackground(Color.WHITE);
@@ -360,7 +360,7 @@ public class Controller {
 
         final String username = "prevozrobedoo@gmail.com";
         final String password = "fszh kpvh prgx abqa";
-        //
+        
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -368,7 +368,7 @@ public class Controller {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
-        // Kreiranje sesije
+        
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);

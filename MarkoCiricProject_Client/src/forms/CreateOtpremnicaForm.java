@@ -497,11 +497,6 @@ public class CreateOtpremnicaForm extends javax.swing.JDialog {
                         txtMailNU.setText(list.get(0).getEmail());
                         txtAdressNU.setText(list.get(0).getAdress());
                         id = list.get(0).getIdNarucilacUsluge();
-//                        txtAdressNU.setEditable(false);
-//                        txtMailNU.setEditable(false);
-//                        txtPhoneNU.setEditable(false);
-//                        txtLastNameNU.setEditable(false);
-//                        txtNameNU.setEditable(false);
                         break;
                     default:
 

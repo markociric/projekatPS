@@ -586,7 +586,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
                         StavkaOtpremnice param2 = new StavkaOtpremnice(0, listStavkaOtpremniceEdited.get(i).getRb(), null, Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
                         listStavkaOtpremniceEdited.get(i).setQty(Double.sum(listStavkaOtpremniceEdited.get(i).getQty(), qty));
                         listStavkaOtpremniceEdited.get(i).setStatus(Status.UPDATED);
-                        //Controller.getInstance().updateQtySO(param2);
+                        
                         switch (currentLocale.getLanguage()) {
                             case "sr" ->
                                 JOptionPane.showMessageDialog(this, "Uspešno izmenjena količina robe", "Obaveštenje", JOptionPane.INFORMATION_MESSAGE);
@@ -609,7 +609,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
                             if (listRoba.get(i).getQty() >= qty) {
                                 StavkaOtpremnice param = new StavkaOtpremnice(o.getIdOtpremnica(), -1, selected, qty, Status.ADDED);
                                 listStavkaOtpremniceEdited.add(param);
-                                //int id = Controller.getInstance().insertStavkaOtpremnice(param);
+                                
                                 Roba param2 = new Roba(selected.getIdRoba(), null, listRoba.get(i).getQty() - qty, null, -1);
                                 jsonString = objectMapper.writeValueAsString(param2); // objekat u json
                                 System.out.println(jsonString);
@@ -762,7 +762,7 @@ public class UpdateOtpremnicaForm extends javax.swing.JDialog implements ChildDi
         SwingUtilities.invokeLater(() -> {
             try {
 
-                // Otvaranje child JDialog-a
+               
                 openChildDialog();
 
             } catch (IOException ex) {

@@ -218,7 +218,7 @@ public class DetailsNarucilacUslugeForm extends javax.swing.JFrame implements Ch
                 this.dispose();
                 return;
             }
-            //SELECT * FROM narucilac_usluge WHERE email LIKE "a%"
+            
             String search = jTextField1.getText().trim();
             jTextField1.setText("");
             HashMap<Integer, String> map = new HashMap<>();

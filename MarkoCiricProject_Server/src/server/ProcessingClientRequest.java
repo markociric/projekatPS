@@ -221,7 +221,7 @@ public class ProcessingClientRequest extends Thread {
                         break;
                     default:
                         System.out.println("greska");
-                    //ovde izlistati operacije koje klijent moze da izvrsi
+                    
                 }
 
                 sendResponse(serverResponse);
@@ -239,7 +239,7 @@ public class ProcessingClientRequest extends Thread {
                 Logger.getLogger(ProcessingClientRequest.class.getName()).log(Level.SEVERE, null, e);
             }
 
-            // Ukloni klijenta iz liste aktivnih klijenata
+            
             synchronized (server.getActiveClients()) {
                 server.getActiveClients().remove(s);
             }

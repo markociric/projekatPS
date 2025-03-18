@@ -223,7 +223,7 @@ public class OtpremnicaForm extends javax.swing.JFrame implements ChildDialogLis
             SwingUtilities.invokeLater(() -> {
                 try {
 
-                    // Otvaranje child JDialog-a
+                    
                     UpdateOtpremnicaForm otpremnicaForm = new UpdateOtpremnicaForm(this, true, otpremnica, currentLocale, this);
                     otpremnicaForm.setLocationRelativeTo(null);
                     otpremnicaForm.setVisible(true);
@@ -255,7 +255,7 @@ public class OtpremnicaForm extends javax.swing.JFrame implements ChildDialogLis
         SwingUtilities.invokeLater(() -> {
             try {
                 
-                // Otvaranje child JDialog-a
+                
                 CreateOtpremnicaForm otpremnicaForm = new CreateOtpremnicaForm(this, true, currentLocale,this);
                 otpremnicaForm.setLocationRelativeTo(null);
                 otpremnicaForm.setVisible(true);

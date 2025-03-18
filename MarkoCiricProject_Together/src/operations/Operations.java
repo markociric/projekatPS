@@ -26,7 +26,6 @@ public enum Operations {
     sendMail,
     generateRandomPassword,
     insertVozac,
-    hashPassword,
     getListVrstaVozaca,
     updateVzVV,
     deleteVzVV,

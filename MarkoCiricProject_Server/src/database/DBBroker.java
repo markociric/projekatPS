@@ -670,7 +670,7 @@ public class DBBroker {
             Statement s = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = s.executeQuery(query);
             while (rs.next()) {
-                //ovde treba ucitati sve za otpremnicu
+                
                 int idOtpremnica = rs.getInt("o.idOtpremnica");
                 Date datum = rs.getDate("o.date");
 

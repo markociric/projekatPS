@@ -514,7 +514,7 @@ public class RegisterForm extends javax.swing.JDialog {
         }
     }
 
-    // Ažuriranje tekstova na komponentama
+    
     public void updateTexts() {
 
         lblLastName.setText(messages.getString("lblLastName.text"));

@@ -35,7 +35,7 @@ public class StartServer extends Thread {
                     System.out.println("Klijent povezan");
 
                     synchronized (activeClients) {
-                        activeClients.add(s);  // Dodaj klijenta u listu
+                        activeClients.add(s);  
                     }
 
                     ProcessingClientRequest pcr = new ProcessingClientRequest(s, this);
@@ -50,14 +50,14 @@ public class StartServer extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            stopServer();  // Osiguraj da se server zaustavi
+            stopServer();  
         }
     }
 
     public void stopServer() {
         running = false;
 
-        // Zatvori sve aktivne klijentske konekcije
+        
         synchronized (activeClients) {
             for (Socket client : activeClients) {
                 try {
@@ -68,10 +68,10 @@ public class StartServer extends Thread {
                     Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, e);
                 }
             }
-            activeClients.clear();  // Očisti listu nakon zatvaranja
+            activeClients.clear();  
         }
 
-        // Zatvori serverski soket
+        
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
                 serverSocket.close();

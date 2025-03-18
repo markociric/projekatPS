@@ -158,8 +158,8 @@ public class ServerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        removeAllLoggedUsers();  // Prvo brišemo prijavljene korisnike
-        System.exit(0);          // Zatim gasimo aplikaciju
+        removeAllLoggedUsers();  
+        System.exit(0);          
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
@@ -218,7 +218,7 @@ public class ServerForm extends javax.swing.JFrame {
         try {
             List<Vozac> loggedUsers = Controller.getInstance().getListLogged();
             for (Vozac v : loggedUsers) {
-                Controller.getInstance().userLogout(v); // Odjava svakog korisnika
+                Controller.getInstance().userLogout(v); 
             }
             System.out.println("Svi prijavljeni vozaci su odjavljeni.");
         } catch (Exception e) {

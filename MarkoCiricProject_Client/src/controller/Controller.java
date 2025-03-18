@@ -103,7 +103,7 @@ public class Controller {
             if (textField.getText().trim().isEmpty()) {
                 textField.setBorder(redBorder);
                 textField.setBackground(new Color(255, 224, 203));
-                allFilled = false; // Ako nađe prazno polje, postavlja na false
+                allFilled = false; 
             } else {
                 textField.setBorder(UIManager.getBorder("TextField.border"));
                 textField.setBackground(Color.WHITE);
@@ -319,7 +319,7 @@ public class Controller {
 
         final String username = "prevozrobedoo@gmail.com";
         final String password = "fszh kpvh prgx abqa";
-        //
+       
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -377,33 +377,6 @@ public class Controller {
         ClientRequest clientRequest = new ClientRequest(Operations.insertVozac, vozac);
         Communication.getInstance().sendRequest(clientRequest);
         return (int) Communication.getInstance().getResponce().getResponse();
-
-    }
-
-    public String hashPassword(String password) {
-        String input = password;
-        try {
-            // Kreiranje instance MessageDigest za algoritam SHA-256
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            // Pretvaranje ulaznog stringa u bajte i hesiranje
-            byte[] hashBytes = digest.digest(input.getBytes());
-
-            // Konvertovanje hesiranog niza bajtova u heksadecimalni string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0'); // Dodaj nulu ako je potrebno
-                }
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algoritam nije pronađen: " + e.getMessage());
-        }
-        return null;
 
     }
 

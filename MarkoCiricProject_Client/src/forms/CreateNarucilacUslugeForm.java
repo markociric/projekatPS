@@ -218,7 +218,7 @@ public class CreateNarucilacUslugeForm extends javax.swing.JFrame {
             if (answer == JOptionPane.YES_OPTION) {
 
                 try {
-                    //int id = Integer.parseInt(txtId.getText());
+                    
                     String name = txtName.getText();
                     String lastname = txtLastName.getText();
                     String phone = txtPhoneNumber.getText();
