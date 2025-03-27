@@ -18,6 +18,9 @@
             <file>file:/C:/Users/Marko/Desktop/usb%20ps/projekatPS/MarkoCiricProject_Client/src/forms/OtpremnicaForm.java</file>
             <file>file:/C:/Users/Marko/Desktop/usb%20ps/projekatPS/MarkoCiricProject_Client/src/forms/SelectRobaOtpremnicaForm.java</file>
         </group>
-        <group name="glavni"/>
+        <group name="glavni">
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/controller/Communication.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Client/src/forms/MainForm.java</file>
+        </group>
     </open-files>
 </project-private>

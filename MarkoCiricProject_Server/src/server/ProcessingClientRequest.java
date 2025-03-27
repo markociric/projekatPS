@@ -215,9 +215,7 @@ public class ProcessingClientRequest extends Thread {
                     case login:
                         json = (String) clientRequest.getParam();
                         List<String> params = objectMapper.readValue(json, List.class);
-                        String email = params.get(0);
-                        String password = params.get(1);
-                        serverResponse.setResponse(Controller.getInstance().login(email, password));
+                        serverResponse.setResponse(Controller.getInstance().login(params));
                         break;
                     default:
                         System.out.println("greska");

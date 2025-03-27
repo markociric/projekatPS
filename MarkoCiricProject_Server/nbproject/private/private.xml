@@ -15,6 +15,10 @@
             <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/controller/Controller.java</file>
         </group>
         <group/>
-        <group name="glavni"/>
+        <group name="glavni">
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/StartServer.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/database/DBBroker.java</file>
+            <file>file:/C:/Users/Marko/Documents/NetBeansProjects/MarkoCiricProject/projekatPS/MarkoCiricProject_Server/src/server/ProcessingClientRequest.java</file>
+        </group>
     </open-files>
 </project-private>

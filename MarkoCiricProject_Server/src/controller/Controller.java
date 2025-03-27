@@ -48,6 +48,12 @@ import so.narucilacUsluge.SOAddNarucilacUsluge;
 import so.narucilacUsluge.SODeleteNarucilacUsluge;
 import so.narucilacUsluge.SOGetListNarucilacUsluge;
 import so.narucilacUsluge.SOUpdateNarucilacUsluge;
+import so.other.SOGetListLogged;
+import so.other.SOGetVehicles;
+import so.other.SOGetVzVV;
+import so.other.SOLogin;
+import so.other.SOSumPrices;
+import so.other.SOUserLogout;
 import so.otpremnica.SOAddOtpremnica;
 import so.otpremnica.SODeleteOtpremnica;
 import so.otpremnica.SOGetListOtpremnica;
@@ -346,8 +352,10 @@ public class Controller {
 
     }
 
-    public List<String> getVehicles(int idVozac) {
-        return dbb.getVehicles(idVozac);
+    public List<String> getVehicles(int idVozac) throws Exception {
+        SOGetVehicles so = new SOGetVehicles();
+        so.templateExecute(null, idVozac);
+        return  so.getVehicles();
     }
 
     public boolean deleteOtpremnica(Otpremnica deleteOtpremnica) throws Exception {
@@ -467,8 +475,10 @@ public class Controller {
         return so.getId();
     }
 
-    public double sumPrices(int idOtpremnica) {
-        return dbb.sumPrices(idOtpremnica);
+    public double sumPrices(int idOtpremnica) throws Exception {
+        SOSumPrices so = new SOSumPrices();
+        so.templateExecute(null, idOtpremnica);
+        return so.getPrice();
     }
 
     public String formatNumber(double total) {
@@ -481,8 +491,10 @@ public class Controller {
         return roundTotal;
     }
 
-    public VzVV getVzVV(VzVV v) {
-        return dbb.getVzVV(v);
+    public VzVV getVzVV(VzVV v) throws Exception {
+        SOGetVzVV so = new SOGetVzVV();
+        so.templateExecute(null, v);
+        return so.getVzVV();
     }
 
     public static boolean isValidDate(String date, String format) {
@@ -548,15 +560,20 @@ public class Controller {
     }
 
     public List<Vozac> getListLogged() throws Exception {
-        return dbb.getListLogged();
+        SOGetListLogged so = new SOGetListLogged();
+        so.templateExecute(null, null);
+        return so.getListLogged();
     }
 
     public void userLogout(Vozac v) throws Exception {
-         dbb.userLogout(v);
+         SOUserLogout so = new SOUserLogout();
+         so.templateExecute(null,v);
     }
 
-    public HashMap<Integer, Vozac> login(String email, String password) {
-        return dbb.login(email,password);
+    public HashMap<Integer, Vozac> login(List<String> params) throws Exception {
+        SOLogin so = new SOLogin();
+        so.templateExecute(null, params);
+        return so.getMap();
     }
 
 

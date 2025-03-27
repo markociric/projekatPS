@@ -111,6 +111,10 @@ public class DBBroker {
         return result == 1;
     }
 
+
+    
+    
+/*------------stare fje----------------
     public List<String> getVehicles(int idVozac) {
         List<String> list = new ArrayList<>();
         String query = "SELECT vv.vehicle, vv.driverLicence FROM vozac v JOIN vzvv vz ON v.idVozac = vz.idVozac JOIN vrsta_vozaca vv ON vz.idVrstaVozaca = vv.idVrstaVozaca WHERE v.idVozac = " + idVozac;
@@ -126,23 +130,6 @@ public class DBBroker {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
-    }
-
-    public double sumPrices(int idOtpremnica) {
-        double total = 0;
-        String query = "SELECT so.qtySO, r.price FROM stavka_otpremnice so JOIN roba r ON r.idRoba = so.idRoba WHERE so.idOtpremnica =" + idOtpremnica;
-        try {
-            Statement s = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rs = s.executeQuery(query);
-            while (rs.next()) {
-                double qty = rs.getDouble("so.qtySO");
-                double priceRoba = rs.getDouble("r.price");
-                total += qty * priceRoba;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return total;
     }
 
     public VzVV getVzVV(VzVV vozac) {
@@ -166,6 +153,24 @@ public class DBBroker {
         return v;
     }
 
+    
+    public double sumPrices(int idOtpremnica) {
+        double total = 0;
+        String query = "SELECT so.qtySO, r.price FROM stavka_otpremnice so JOIN roba r ON r.idRoba = so.idRoba WHERE so.idOtpremnica =" + idOtpremnica;
+        try {
+            Statement s = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                double qty = rs.getDouble("so.qtySO");
+                double priceRoba = rs.getDouble("r.price");
+                total += qty * priceRoba;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    } 
+    
     public List<Vozac> getListLogged() throws Exception {
         List<Vozac> list = new ArrayList<>();
         String query = "SELECT * FROM logged JOIN vozac ON logged.idVozac=vozac.idVozac";
@@ -255,8 +260,7 @@ public class DBBroker {
         map.put(-1, null);
         return map;//-1 znaci nema takvog vozaca u bazi
     }
-
-    /*
+    
 ------------------------insert stare fje---------------------
     public int insertStavkaOtpremnice(StavkaOtpremnice stavka) {
         String query = "INSERT INTO stavka_otpremnice(idOtpremnica,idRoba,qtySO) VALUES(?,?,?)";
